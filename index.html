@@ -1,15 +1,57 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="theme-color" content="#000000"/>
-    <title>Telegram Mini App</title>
-    <script type="module" crossorigin src="/twa/assets/index-D3OrVjq3.js"></script>
-    <link rel="stylesheet" crossorigin href="/twa/assets/index-hc5LEyhd.css">
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="utf-8"/>
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+  />
+  <meta name="theme-color" content="#000000"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Funspot</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+      (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+      ym(97751698, "init", {
+          defer: true,
+          clickmap:true,
+          trackLinks:true,
+          accurateTrackBounce:true,
+          webvisor:true
+      });
+    </script>
+    <!-- /Yandex.Metrika counter -->
+  <script type="module" crossorigin src="/twa/assets/index-DSYE7OqU.js"></script>
+  <link rel="stylesheet" crossorigin href="/twa/assets/index-BGznK9kZ.css">
+</head>
+<body>
+  <!-- Yandex.Metrika counter -->
+  <noscript><div><img src="https://mc.yandex.ru/watch/97751698" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+  <!-- /Yandex.Metrika counter -->
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <script src="https://unpkg.com/@tma.js/sdk@2.5.0/dist/index.iife.js"></script>
+  <script>
+    (function() {
+      var { retrieveLaunchParams, postEvent } = window.tmajs.sdk;
+      var lp = retrieveLaunchParams();
+
+      // Some versions of Telegram don't need the classes above.
+      if (['macos', 'tdesktop', 'weba', 'web', 'webk'].includes(lp.platform)) {
+        return;
+      }
+
+      // Expand the application.
+      postEvent('web_app_expand');
+      postEvent('web_app_setup_swipe_behavior', { allow_vertical_swipe: false });
+    })();
+  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</body>
 </html>
