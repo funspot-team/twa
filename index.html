@@ -27,6 +27,26 @@
       });
     </script>
     <!-- /Yandex.Metrika counter -->
+    <style>
+      .mobile-body {
+        overflow: hidden;
+        height: 100vh;
+      }
+  
+      .mobile-wrap {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+  
+      .mobile-content {
+        height: calc(100% + 1px);
+      }
+    </style>
   <script type="module" crossorigin src="/twa/assets/index-Bhe3i2mW.js"></script>
   <link rel="stylesheet" crossorigin href="/twa/assets/index-BGznK9kZ.css">
 </head>
@@ -35,7 +55,11 @@
   <noscript><div><img src="https://mc.yandex.ru/watch/97751698" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
   <!-- /Yandex.Metrika counter -->
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
+  <div id="wrap">
+    <div id="content">
+      <div id="root"></div>
+    </div>
+  </div>
   <script src="https://unpkg.com/@tma.js/sdk@2.5.0/dist/index.iife.js"></script>
   <script>
     (function() {
@@ -50,6 +74,10 @@
       // Expand the application.
       postEvent('web_app_expand');
       postEvent('web_app_setup_swipe_behavior', { allow_vertical_swipe: false });
+
+      document.body.classList.add('mobile-body');
+      document.getElementById('wrap').classList.add('mobile-wrap');
+      document.getElementById('content').classList.add('mobile-content');
     })();
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
