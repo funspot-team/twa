@@ -1,0 +1,37 @@
+.leaflet-container {
+  height: 100vh;
+  width: 100%;
+
+  z-index: 1;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+.mycluster {
+  width: 40px;
+  height: 40px;
+  background-color: greenyellow;
+  text-align: center;
+  font-size: 24px;
+}
+
+.custom-marker-cluster{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  height: 33px;
+  line-height: 37px;
+  text-align: center;
+  width: 33px;
+  color: var(--tgui--button_text_color);
+  background: var(--tgui--button_color);
+  font-size: large;
+}

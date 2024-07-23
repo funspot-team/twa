@@ -1,0 +1,11 @@
+.small-map.leaflet-container {
+  height: 250px;
+  width: 100%;
+
+  z-index: 1;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}

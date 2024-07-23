@@ -1,0 +1,7 @@
+import { Icon } from "@telegram-apps/telegram-ui/dist/types/Icon";
+
+export const Icon28Burger = ({ ...restProps }: Icon) => (
+  <svg width="28" height="28" fill="none" xmlns="http://www.w3.org/2000/svg" {...restProps}>  
+    <path fillRule="evenodd" clipRule="evenodd" d="M3.1 9C3.1 8.50294 3.50294 8.1 4 8.1H24C24.4971 8.1 24.9 8.50294 24.9 9C24.9 9.49705 24.4971 9.9 24 9.9H4C3.50294 9.9 3.1 9.49705 3.1 9ZM3.1 14C3.1 13.5029 3.50294 13.1 4 13.1H24C24.4971 13.1 24.9 13.5029 24.9 14C24.9 14.4971 24.4971 14.9 24 14.9H4C3.50294 14.9 3.1 14.4971 3.1 14ZM3.1 19C3.1 18.5029 3.50294 18.1 4 18.1H24C24.4971 18.1 24.9 18.5029 24.9 19C24.9 19.4971 24.4971 19.9 24 19.9H4C3.50294 19.9 3.1 19.4971 3.1 19Z" fill="currentColor"/>
+  </svg>
+);
