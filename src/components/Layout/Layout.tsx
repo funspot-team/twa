@@ -1,22 +1,19 @@
-import { useEffect, useState, type FC } from 'react';
+import { type FC } from 'react';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
+import { useFakeLoading } from '@/hooks/useFakeLoading';
 
 export const Layout: FC = () => {
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
+  const { loading } = useFakeLoading(1000);
 
   return (
     <>
       <YandexMetrika />
 
-      {isLoading ? (
+      {loading ? (
         <SpinnerList />
       ) : (
         <>

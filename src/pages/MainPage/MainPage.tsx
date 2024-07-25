@@ -8,6 +8,7 @@ import ReactImageGallery from 'react-image-gallery';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
 
 import './MainPage.css';
+import { LastItem } from '@/components/LastItem/LastItem';
 
 const images = [
   {
@@ -26,16 +27,19 @@ const images = [
 
 const cards = [
   {
+    id: 1,
     title: 'BBQ Boats',
     img: '/twa/images/bbq-boats.png',
     description: 'Прогулка на лодке со вкусом барбекю'
   },
   {
+    id: 2,
     title: 'Прокат эндуро и питбайков в СПБ',
     img: '/twa/images/enduro.png',
     description: 'Поможем подобрать тур в зависимости от ваших навыков и пожеланий'
   },
   {
+    id: 3,
     title: 'Сплав на sup по реке Оредеж',
     img: '/twa/images/sup-board.png',
     description: 'Лучший загородный маршрут для начинающих сёрферов'
@@ -53,11 +57,11 @@ export const MainPage: FC = () => {
         <SectionHeader>Вам может понравится</SectionHeader>
 
         <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
-          {cards.map(({ title, img, description }) => {
+          {cards.map(({ id, title, img, description }) => {
             return (
               <Card key={title} style={{ minWidth: '254px' }} onClick={() => navigate('/item')}>
                 <>
-                  <AddFavourite title={title} withPadding />
+                  <AddFavourite id={id} title={title} isCard withPadding />
                   
                   <img
                     alt="Dog"
@@ -82,6 +86,7 @@ export const MainPage: FC = () => {
           })}
         </div>
 
+        {/* <BannerSpot /> */}
         <Banner
           before={<Image size={48} src='/twa/images/sup-board.png' />}
           header="Сплав на sup по реке Оредеж"
@@ -106,11 +111,11 @@ export const MainPage: FC = () => {
         <SectionHeader>Популярное</SectionHeader>
 
         <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', overflowX: 'scroll' }}>
-          {cards.slice(0).reverse().map(({ title, img, description }) => {
+          {cards.slice(0).reverse().map(({ id, title, img, description }) => {
             return (
               <Card key={title} style={{ minWidth: '254px' }} onClick={() => navigate('/item')}>
                 <>
-                  <AddFavourite title={title} withPadding />
+                  <AddFavourite id={id} title={title} isCard withPadding />
                   
                   <img
                     alt="Dog"
@@ -138,7 +143,7 @@ export const MainPage: FC = () => {
 
       <div style={{ height: '100px', backgroundImage: 'url(/twa/images/add-spot.jpeg)', backgroundSize: 'cover' }}></div>
 
-      <div style={{ width: '100%', height: '100px' }}></div>
+      <LastItem />
     </>
   );
 };

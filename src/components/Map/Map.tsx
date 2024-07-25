@@ -15,12 +15,18 @@ import SPOTS from '../../mocks/catalog.json';
 import { $filters } from '../Filters/model';
 import { Filters } from '../Filters/components/Filters';
 
+import { SpinnerList } from '../SpinnerList/SpinnerList';
+import { useFakeLoading } from '@/hooks/useFakeLoading';
+import { LastItem } from '../LastItem/LastItem';
+
+import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
+
 import './Map.css';
 
 // https://street-map.gosur.com/?ll=60.03975637586652,30.313518537422397&z=17.264217556471927&t=streets
 
 const customIcon = new L.Icon({
-  iconUrl: '/twa/images/marker.svg',
+  iconUrl: '/twa/images/marker2.svg',
   iconSize: new L.Point(40, 40),
 })
 
@@ -55,45 +61,21 @@ export const Map: FC = () => {
   const center = useUnit($mapCenter);
   const filters = useUnit($filters);
 
-  
-  const valueArr = filters.map(({ value }) => value);
-  const markers = filters.length
-    ? SPOTS.data.filter(({ tags }: any) => {
-        return tags.filter((tag: string) => valueArr.includes(tag)).length === filters.length
-      })
-    : SPOTS.data;
+  const { loading } = useFakeLoading(1000, filters);
+  const markers = getSpotsByFilters(SPOTS.data, filters);
 
   return (
     <>
-      {/* <div style={{ zIndex: 1000, position: 'fixed', width: '90%', margin: '5%' }}>
-        <Multiselect
-          header="Фильтры"
-          placeholder="Выберете фильтры"
-          options={FILTER_OPTIONS}
-          value={value}
-          onChange={(newOptions) => {
-            console.log(newOptions);
-            setValue(newOptions);
-          }}
-        />
-      </div> */}
+      <Filters isMap />
 
-      {/* <IconButton style={{ zIndex: 1000, position: 'fixed', margin: '5%' }}
-        mode="bezeled"
-        size="l"
-      >
-        <Icon28Search />
-      </IconButton> */}
-      <Filters />
+      {loading && <SpinnerList />}
 
       <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom={false} zoomControl={false} preferCanvas>
         <HandlerContainer />
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
         {/* https://www.npmjs.com/package/react-leaflet-cluster */}
-        <MarkerClusterGroup
-          // @ts-ignore
-          // onClick={(e) => console.log('onClick', e)}
+        {!loading && <MarkerClusterGroup
           iconCreateFunction={createClusterCustomIcon}
           maxClusterRadius={150}
           spiderfyOnMaxZoom={true}
@@ -111,7 +93,7 @@ export const Map: FC = () => {
               );
             })
           }
-        </MarkerClusterGroup>
+        </MarkerClusterGroup>}
       </MapContainer>
       
 
@@ -146,7 +128,7 @@ export const Map: FC = () => {
           </Banner>
         )}
 
-        <div style={{ width: '100%', height: '106px' }}></div>
+        <LastItem />
       </Modal>
     </>
   );

@@ -14,7 +14,7 @@ import { ModalHeader } from '../ModalHeader/ModalHeader';
 
 const tabs = [
   {
-    path: ROUTE_NAMES.MAIN_ROUTE,
+    path: ROUTE_NAMES.CATALOGUE_ROUTE,
     Icon: Icon28Catalogue,
     text: 'Каталог',
   },
@@ -86,7 +86,7 @@ export const Tabbar: FC = () => {
       <Modal
         style={{ zIndex: 50, background: 'var(--tg-theme-secondary-bg-color, white)' }}
         header={<ModalHeader
-          title="Меню"
+          title="Alexey Belousov"
           onClose={() => setIsShowUserMenu(false)}
         />}
         open={isShowUserMenu}

@@ -1,26 +1,35 @@
-import { Button, Cell, Divider, Image, InlineButtons, List, Placeholder, Section, Text } from '@telegram-apps/telegram-ui';
-import { useState, type FC } from 'react';
+import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
+import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
+import { type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
-import { Icon28Guard } from '@/icons/guard';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { SmallMap } from '@/components/SmallMap/SmallMap';
 import { useParams } from 'react-router-dom';
 import SPOTS from '../../mocks/catalog.json';
 
+import { Icon28Chat } from '@/icons/chat';
+import { Icon28Link } from '@/icons/link';
+import { Icon16ChevronRight } from '@/icons/chevronRight';
+import { Icon28Location } from '@/icons/location';
+
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
 
+const nameOfdayWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
 export const ItemPage: FC = () => {
-  const [isShowContact, setIsShowContact] = useState(false);
   const { id } = useParams();
   const item = SPOTS.data.find((spot) => spot.id === Number(id));
 
   if (!item) return null;
 
-  const { name, mainImg, description, tags, link, address, phone, operating, minPrice, raiting, coords } = item;
-
+  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting } = item;
+  const scheduleArr = schedule
+    .split(';')
+    .map((scheduleDay: string) => {
+      return scheduleDay.split('/').join('-');
+    });
   {/* https://github.com/xiaolin/react-image-gallery */}
   return (
       <>  
@@ -37,50 +46,106 @@ export const ItemPage: FC = () => {
           slideDuration={200}
         />
         
-        <AddFavourite title={name} withPadding />
+        <AddFavourite id={Number(id)} title={name} isCard withPadding />
 
-        <List>
-          <Placeholder
-            // description={description}
-            header={name}
+        <List style={{
+            background: 'var(--tg-theme-secondary-bg-color, white)'
+          }}
+        >
+          <Title
+            level="2"
+            weight="1"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}
+          >
+            {name}
+
+            <Subheadline
+              level="2"
+              weight="1"
+              style={{ display: 'flex', alignItems: 'end', minWidth: '68px' }}
             >
-            <Image size={96} src={mainImg} />
-          </Placeholder>
+              <IconContainer>
+                {raiting} <IconStar style={{ marginBottom: '-5px' }} />
+              </IconContainer>
+            </Subheadline>
+          </Title>
 
-          <InlineButtons mode="plain">
-            <InlineButtonsItem text="Оценка">
-              <Text weight="1">
-                {raiting}
-              </Text>
+          <Subheadline
+            level="1"
+            weight="3"
+            style={{
+              marginBottom: '24px',
+              color: 'var(--tgui--section_header_text_color)',
+            }}
+          >
+            {`от ${minPrice} ₽`}
+          </Subheadline>
+
+          <InlineButtons mode="bezeled">
+            <InlineButtonsItem
+              text="Связаться со спотом"
+              onClick={() => window.open(`tel:${phone}`, '_blank')}
+            >
+              <IconContainer>
+                <Icon28Chat />
+              </IconContainer>
             </InlineButtonsItem>
-            <InlineButtonsItem text="Лучшее место">
-              <Icon28Guard />
+
+            <InlineButtonsItem
+              text="Перейти на сайт"
+              onClick={() => window.open(link, '_blank')}
+            >
+              <IconContainer>
+                <Icon28Link />
+              </IconContainer>
             </InlineButtonsItem>
-            {/* <InlineButtonsItem text="В рейтинге">
-              <Text weight="1">
-                5
-              </Text>
-            </InlineButtonsItem> */}
           </InlineButtons>
 
+          <Section>
+            <Cell
+              multiline
+              subtitle={address}
+              after={<Icon16ChevronRight />}
+              onClick={() => () => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
+              before={
+                <IconContainer>
+                  <Icon28Location />
+                </IconContainer>
+              }
+            />
+          </Section>
+
           <Section
-            header="Подробнее"
+            header="Описание"
           >
             <Cell
               multiline
               subtitle={description}
-            >
-              Описание
-            </Cell>
+            />
+          </Section>
 
+          <Section
+            header="Детали"
+          >
             <Cell
               multiline
               subtitle={
-                <>
+                <div style={{
+                  display: 'flex',
+                  gap: '8px',
+                  flexWrap: 'wrap',
+                }}>
                   {tags.map((tag) => {
-                    return <a key={tag} href="/">{`#${tag} `}</a>;
+                    return (
+                      <Chip
+                        key={tag}
+                        mode="mono"
+                      >
+                        {tag}
+                      </Chip>
+                    );
                   })}
-                </>
+                </div>
               }
             />
 
@@ -88,76 +153,39 @@ export const ItemPage: FC = () => {
 
             <Cell
               multiline
-              subtitle={address}
+              subtitle={minAge < 18 ? 'Да' : 'Нет'}
             >
-              Адрес
+              С детьми
             </Cell>
 
             <Divider />
 
             <Cell
               multiline
-              subtitle={operating}
+              subtitle={parking ? 'Да' : 'Нет'}
             >
-              Режим работы
+              Парковка
             </Cell>
-
-            <Cell
-              multiline
-              subtitle={`от ${minPrice} руб.`}
-            >
-              Стоимость
-            </Cell>
-
-            {isShowContact && (
-              <>
-                <Divider />
-
-                <Cell
-                  multiline
-                  subtitle={<a href={link} rel="noreferrer" target="_blank">{link}</a>}
-                  onClick={() => window.open(link, '_blank')}
-                >
-                  Сайт
-                </Cell>
-    
-                <Divider />
-    
-                <Cell
-                  multiline
-                  subtitle={<a href={`tel:${phone}`}>{phone}</a>}
-                  onClick={() => window.open(`tel:${phone}`, '_blank')}
-                >
-                  Контакты
-                </Cell>
-              </>
-            )}
           </Section>
 
-          {!isShowContact && <Placeholder
-            action={<Button onClick={() => setIsShowContact(!isShowContact)} size="s">Контакты</Button>}
+          <Section
+            header="Режим работы"
+            style={{ marginBottom: '20px' }}
           >
-          </Placeholder>}
+            {scheduleArr.map((day, i) => {
+              return (
+                <Cell
+                  key={`${day}-${i}`}
+                  subtitle={day}
+                >
+                  {nameOfdayWeek[i]}
+                </Cell>
+              );
+            })}
+          </Section>
         </List>
 
         <SmallMap center={coords as L.LatLngExpression} />
       </>
   );
 };
-
-
-          {/* <div style={{
-            display: 'flex',
-            gap: 16,
-            justifyContent: 'center'
-          }}>
-            <Chip mode="elevated">
-              Летнее
-            </Chip>
-            <Chip mode="elevated">
-              Семья
-            </Chip>
-            <Chip mode="elevated">
-              Водные
-            </Chip>
-          </div> */}

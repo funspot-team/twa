@@ -1,4 +1,4 @@
-import { Section, Cell, List, Title, } from '@telegram-apps/telegram-ui';
+import { Section, Cell, List, } from '@telegram-apps/telegram-ui';
 import { ButtonCell } from '@telegram-apps/telegram-ui/dist/components/Blocks';
 import { type FC } from 'react';
 import { IconContainer } from '@telegram-apps/telegram-ui/dist/components/Blocks';
@@ -21,18 +21,18 @@ export const UserMenu: FC = () => {
 
   return (
       <List>
-        <div className="index-page__user-section">
-          {/* <Avatar
+        {/* <div className="index-page__user-section">
+          <Avatar
             size={48}
             src="/twa/images/user-avatar.png"
-          /> */}
+          />
           <Title
             level="3"
             weight="2"
           >
             Alexey Belousov
           </Title>
-        </div>
+        </div> */}
 
         {/* <InlineButtons mode="plain">
           <InlineButtonsItem text="Избранное" onClick={() => navigate('/favourites')}>

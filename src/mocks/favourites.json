@@ -1,10 +1,5 @@
 {
     "data": [
-        {
-            "id": 4,
-            "name": "BBQ Boats",
-            "mainImg": "https://prod-files-secure.s3.us-west-2.amazonaws.com/917369d3-ec5e-4441-9a57-889ae9bc30ae/ba91bb5c-a1b3-4d54-9a15-0f350e1e4741/4f70968fa8955c356ea3dd57271f88c3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45HZZMZUHI%2F20240712%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20240712T232703Z&X-Amz-Expires=3600&X-Amz-Signature=85c978b4989e46491d87a8fd300fbc17f7d2ee6ce18a55e66585e6988233415f&X-Amz-SignedHeaders=host&x-id=GetObject",
-            "description": "Прогулка на лодке со вкусом барбекю"
-        }
+        {"id": 4 }
     ]
 }

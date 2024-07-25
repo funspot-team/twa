@@ -1,4 +1,4 @@
-import { Button, IconButton, IconContainer, Text } from '@telegram-apps/telegram-ui';
+import { Button, IconButton, Text } from '@telegram-apps/telegram-ui';
 import { Icon28Close } from '@telegram-apps/telegram-ui/dist/icons/28/close';
 import { type FC } from 'react';
 
@@ -58,9 +58,7 @@ export const ModalHeader: FC<IModalHeaderProps> = ({
           size="s"
           onClick={onClose}
         >
-          <IconContainer>
-            <Icon28Close />
-          </IconContainer>
+          <Icon28Close />
         </IconButton>}
       </div>
     </div>

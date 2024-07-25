@@ -1,46 +1,98 @@
-import { type FC, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { type FC, SyntheticEvent, useState } from 'react';
 
-import { IconContainer, Snackbar } from '@telegram-apps/telegram-ui';
+import { IconButton, IconContainer } from '@telegram-apps/telegram-ui';
 import { CardChip } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardChip/CardChip';
 import { Icon28HeartFill } from '@/icons/heartFill';
 import { Icon28Heart } from '@/icons/heart';
 import { useHapticFeedback } from '@telegram-apps/sdk-react';
+import { FavouriteSnackbar } from './components/FavouriteSnackbar';
 
 interface IAddFavouriteProps {
+  id: number;
   title: string;
+  isCard?: boolean;
   withPadding?: boolean;
+  iconAdd?: any;
+  iconNotAdd?: any;
+  added?: boolean;
+  onFavourite?: (e: SyntheticEvent, id: number) => void;
 }
 
-export const AddFavourite: FC<IAddFavouriteProps> = ({ title, withPadding = false}) => {
+export const AddFavourite: FC<IAddFavouriteProps> = ({
+  id,
+  title,
+  isCard = false,
+  withPadding = false,
+  iconAdd = Icon28HeartFill,
+  iconNotAdd = Icon28Heart,
+  added,
+  onFavourite,
+}) => {
+  const IconAdd = iconAdd;
+  const IconNotAdd = iconNotAdd;
+
   const haptic = useHapticFeedback();
 
-  const [isAdd, setIsAdd] = useState(false);
-  const [isShowSnackbar, setIsShowSnackbar] = useState(false);
+  const [isAdd, setIsAdd] = useState(!!added);
+  const [isDeleteSnackbarShown, setIsDeleteSnackbarShown] = useState(false);
+  const [isUndoSnackbarShown, setIsUndoSnackbarShown] = useState(false);
 
-  const addHandler = (e: React.SyntheticEvent) => {
+
+  const clickHandler = (e: SyntheticEvent) => {
     haptic.selectionChanged();
 
+    if (!isAdd) {
+      setIsDeleteSnackbarShown(false);
+      setIsUndoSnackbarShown(true);
+    } else {
+      setIsUndoSnackbarShown(false);
+      setIsDeleteSnackbarShown(true);
+    }
+
     setIsAdd(!isAdd);
-    setIsShowSnackbar(true);
+
+    if (onFavourite) onFavourite(e, id);
+
+    e.stopPropagation();
+  }
+
+  const undoHandler = (e: SyntheticEvent) => {
+    setIsAdd(!isAdd);
+
+    setIsDeleteSnackbarShown(false);
+    setIsUndoSnackbarShown(true);
+    
     e.stopPropagation();
   }
 
   return (
     <>
-      <CardChip className='card-chip' onClick={addHandler}>
-        <IconContainer>
-          {isAdd ? <Icon28HeartFill /> : <Icon28Heart />}
-        </IconContainer>
-      </CardChip>
-    
-      {isShowSnackbar && <Snackbar
-        description={title}
-        duration={3000}
-        onClose={() => setIsShowSnackbar(false)}
-        style={{ bottom: withPadding ? '96px' : '25px' }}
-      >
-        {isAdd ? 'Добавлено в избранное' : 'Удалено из избранного'}
-      </Snackbar>}
+      {isCard ? (
+        <CardChip className='card-chip' onClick={clickHandler}>
+          <IconContainer>
+            {isAdd ? <IconAdd /> : <IconNotAdd />}
+          </IconContainer>
+        </CardChip>
+        ) : (
+          <IconButton
+            mode="plain"
+            size="l"
+            onClick={clickHandler}
+          >
+            {isAdd ? <IconAdd /> : <IconNotAdd />}
+          </IconButton>
+        )}
+
+      <FavouriteSnackbar
+        title={title}
+        isDeleteSnackbarShown={isDeleteSnackbarShown}
+        isUndoSnackbarShown={isUndoSnackbarShown}
+        setIsDeleteSnackbarShown={setIsDeleteSnackbarShown}
+        setIsUndoSnackbarShown={setIsUndoSnackbarShown}
+        undoHandler={undoHandler}
+        withPadding={withPadding}
+      />
     </>
   );
 };

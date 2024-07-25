@@ -1,5 +1,5 @@
 import { useUnit } from "effector-react";
-import { Button, Cell, Chip, Divider, List, Modal, Section, Slider, Switch, Text } from '@telegram-apps/telegram-ui';
+import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slider, Switch, Text } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types';
 import { $filters, onChangeFilters, onResetFilters } from '../model';
@@ -7,17 +7,27 @@ import { ModalHeader } from '../../ModalHeader/ModalHeader';
 import { FiltersButton } from './FiltersButton';
 import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
 import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
-import TAGS from '@/mocks/categories.json';
+import SPOTS from '@/mocks/catalog.json';
+import { LastItem } from "@/components/LastItem/LastItem";
 
-const FILTER_OPTIONS: MultiselectOption[] = TAGS.data.map((value) => {
+const allTags = SPOTS.data.reduce((acc: string[], { tags }) => {
+  return [...acc, ...tags];
+}, []);
+const tags = [...new Set(allTags)];
+const FILTER_OPTIONS: MultiselectOption[] = tags.map((value) => {
   const label = value.charAt(0).toUpperCase() + value.slice(1);
   return { value, label }
 });
 
-export const Filters: FC = () => {
+interface IFiltersProps {
+  isMap?: boolean;
+}
+
+export const Filters: FC<IFiltersProps> = ({ isMap }) => {
   const filters = useUnit($filters);
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState('');
+  const [price, setPrice] = useState(25000);
 
   const expandHandler = (id: string) => {
     if (expanded === id) {
@@ -29,9 +39,12 @@ export const Filters: FC = () => {
 
   return (
     <>
-      {!isOpen && <FiltersButton
-        onClick={() => setIsOpen(true)}
-      />}
+      {(!isOpen || !isMap) && (
+        <FiltersButton
+          isMap={isMap}
+          onClick={() => setIsOpen(true)}
+        />
+      )}
 
       <Modal
         style={{ zIndex: 30, background: 'var(--tg-theme-secondary-bg-color, white)' }}
@@ -40,37 +53,40 @@ export const Filters: FC = () => {
             title="Фильтры"
             titleAction='Очистить'
             onAction={onResetFilters}
-            onClose={() => setIsOpen(false)}
+            onClose={() => {
+              setIsOpen(false);
+              setExpanded('');
+            }}
           />
         }
         open={isOpen}
         onOpenChange={setIsOpen}
       >
+        {filters.length > 0 && !expanded && (
+          <div style={{
+            display: 'flex',
+            padding: '10px 18px',
+            gap: '8px',
+            flexWrap: 'wrap',
+          }}>
+            {filters.map(({ value, label }) => {
+              return (
+                <Chip
+                  key={value}
+                  mode="elevated"
+                  after={<Icon16Cancel />}
+                  onClick={() => onChangeFilters({ value, label })}
+                >
+                  {label}
+                </Chip>
+              );
+            })}
+          </div>
+        )}
+
         <List>
           <Section>
-            {filters.length > 0 && (
-              <div style={{
-                display: 'flex',
-                padding: '16px 20px',
-                gap: '8px',
-                flexWrap: 'wrap',
-              }}>
-                {filters.map(({ value, label }) => {
-                  return (
-                    <Chip
-                      key={value}
-                      mode="elevated"
-                      after={<Icon16Cancel />}
-                      onClick={() => onChangeFilters({ value, label })}
-                    >
-                      {label}
-                    </Chip>
-                  );
-                })}
-              </div>
-            )}
-
-            <Cell after={<Icon20ChevronDown />} onClick={() => expandHandler('1')}>
+            <Cell after={<IconContainer><Icon20ChevronDown /></IconContainer>} onClick={() => expandHandler('1')}>
               Направление активности
             </Cell>
 
@@ -103,7 +119,7 @@ export const Filters: FC = () => {
 
             <Divider />
 
-            <Cell after={<Icon20ChevronDown />} onClick={() => expandHandler('2')}>
+            <Cell after={<IconContainer><Icon20ChevronDown /></IconContainer>} onClick={() => expandHandler('2')}>
               Расположение
             </Cell>
 
@@ -150,20 +166,20 @@ export const Filters: FC = () => {
           </Section>
 
           <Section
-            header='Ценовой диапазон'
+            header='Цена до'
           >
             <Slider
-              multiple
               min={500}
-              max={15000}
-              before={<Text weight="3">500</Text>}
-              after={<Text weight="3">15000</Text>}
-              defaultValue={[500, 15000]}
+              max={25000}
+              before={<Text weight="3">{price}</Text>}
+              defaultValue={25000}
+              value={price as number}
+              onChange={setPrice}
             />
           </Section>
         </List>
 
-        <div style={{ width: '100%', height: '106px' }}></div>
+        <LastItem />
       </Modal>
     </>
   );
