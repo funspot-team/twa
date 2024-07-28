@@ -1,43 +1,51 @@
-import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
+import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Snackbar, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
-import { SmallMap } from '@/components/SmallMap/SmallMap';
+import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
 import { useParams } from 'react-router-dom';
 import SPOTS from '../../mocks/catalog.json';
+import { useFakeLoading } from '@/hooks/useFakeLoading';
 
 import { Icon28Chat } from '@/icons/chat';
 import { Icon28Link } from '@/icons/link';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
 import { Icon28Location } from '@/icons/location';
+import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
+import { Icon28Navi } from '@/icons/navi';
+import { getWeekRange } from './helpers/itemPageHelpers';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
 
-const nameOfdayWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-
 export const ItemPage: FC = () => {
+  const { loading } = useFakeLoading(300);
+  const [isSnackbarShown, setIsSnackbarShown] = useState(false);
+
   const { id } = useParams();
   const item = SPOTS.data.find((spot) => spot.id === Number(id));
 
   if (!item) return null;
 
-  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting } = item;
-  const scheduleArr = schedule
-    .split(';')
-    .map((scheduleDay: string) => {
-      return scheduleDay.split('/').join('-');
-    });
+  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item;
+  const scheduleArr = schedule ? getWeekRange(schedule) : [];
+
+  if (loading) {
+    return <SpinnerList />;
+  }
+
   {/* https://github.com/xiaolin/react-image-gallery */}
   return (
-      <>  
+      <div className="spot-page">  
         <ImageGallery
           items={[{
-            original: mainImg,
-            thumbnail: mainImg,
-          }]}
+              original: mainImg,
+              thumbnail: mainImg,
+            },
+            ...images.map(img => ({ original: img, thumbnail: img })),
+          ]}
           showNav
           showThumbnails={false}
           showFullscreenButton={false}
@@ -52,61 +60,99 @@ export const ItemPage: FC = () => {
             background: 'var(--tg-theme-secondary-bg-color, white)'
           }}
         >
-          <Title
-            level="2"
-            weight="1"
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}
-          >
-            {name}
-
-            <Subheadline
+          <div style={{ marginBottom: '24px' }}>
+            <Title
               level="2"
               weight="1"
-              style={{ display: 'flex', alignItems: 'end', minWidth: '68px' }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}
             >
-              <IconContainer>
-                {raiting} <IconStar style={{ marginBottom: '-5px' }} />
-              </IconContainer>
-            </Subheadline>
-          </Title>
+              {name}
 
-          <Subheadline
-            level="1"
-            weight="3"
-            style={{
-              marginBottom: '24px',
-              color: 'var(--tgui--section_header_text_color)',
-            }}
-          >
-            {`от ${minPrice} ₽`}
-          </Subheadline>
+              <Subheadline
+                level="2"
+                weight="1"
+                style={{ display: 'flex', alignItems: 'end', minWidth: '68px' }}
+              >
+                <IconContainer>
+                  {raiting} <IconStar style={{ marginBottom: '-5px' }} />
+                </IconContainer>
+              </Subheadline>
+            </Title>
 
-          <InlineButtons mode="bezeled">
-            <InlineButtonsItem
-              text="Связаться со спотом"
-              onClick={() => window.open(`tel:${phone}`, '_blank')}
+            {minPrice && <Subheadline
+              level="1"
+              weight="3"
+              style={{
+                color: 'var(--tgui--section_header_text_color)',
+              }}
             >
-              <IconContainer>
-                <Icon28Chat />
-              </IconContainer>
-            </InlineButtonsItem>
+              {`от ${minPrice} ₽`}
+            </Subheadline>}
+          </div>
 
-            <InlineButtonsItem
-              text="Перейти на сайт"
-              onClick={() => window.open(link, '_blank')}
-            >
-              <IconContainer>
-                <Icon28Link />
-              </IconContainer>
-            </InlineButtonsItem>
-          </InlineButtons>
+          {phone ? (
+            <InlineButtons mode="bezeled">
+              <InlineButtonsItem
+                text="Связаться"
+                onClick={() => window.open(`tel:${phone}`, '_blank')}
+              >
+                <IconContainer>
+                  <Icon28Chat />
+                </IconContainer>
+              </InlineButtonsItem>
+
+              <InlineButtonsItem
+                text="Сайт"
+                onClick={() => window.open(link, '_blank')}
+              >
+                <IconContainer>
+                  <Icon28Link />
+                </IconContainer>
+              </InlineButtonsItem>
+
+              <InlineButtonsItem
+                text="Маршрут"
+                onClick={() => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
+              >
+                <IconContainer>
+                  <Icon28Navi />
+                </IconContainer>
+              </InlineButtonsItem>
+            </InlineButtons>
+          ) : (
+            <InlineButtons mode="bezeled">
+              <InlineButtonsItem
+                text="Перейти на сайт"
+                onClick={() => window.open(link, '_blank')}
+              >
+                <IconContainer>
+                  <Icon28Link />
+                </IconContainer>
+              </InlineButtonsItem>
+
+              <InlineButtonsItem
+                text="Маршрут"
+                onClick={() => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
+              >
+                <IconContainer>
+                  <Icon28Navi />
+                </IconContainer>
+              </InlineButtonsItem>
+            </InlineButtons>
+          )}
 
           <Section>
             <Cell
               multiline
               subtitle={address}
               after={<Icon16ChevronRight />}
-              onClick={() => () => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
+              onClick={() => {
+                if (navigator.clipboard) {
+                  navigator.clipboard.writeText(address).then(function() {
+                    setIsSnackbarShown(true);
+                  });
+                }
+              }}
               before={
                 <IconContainer>
                   <Icon28Location />
@@ -115,14 +161,31 @@ export const ItemPage: FC = () => {
             />
           </Section>
 
-          <Section
-            header="Описание"
-          >
-            <Cell
-              multiline
-              subtitle={description}
-            />
-          </Section>
+          {youtube ? (
+            <Section header="Описание">
+              <Cell
+                after={<Icon16ChevronRight />}
+                subtitle="Открыть обзор"
+                onClick={() => window.open(youtube, '_blank')}
+              >
+                Youtube
+              </Cell>
+
+              <Divider />
+
+              <Cell
+                multiline
+                subtitle={description}
+              />
+            </Section>
+          ) : (
+            <Section header="Описание">
+              <Cell
+                multiline
+                subtitle={description}
+              />
+            </Section>
+          )}
 
           <Section
             header="Детали"
@@ -167,25 +230,58 @@ export const ItemPage: FC = () => {
               Парковка
             </Cell>
           </Section>
-
-          <Section
+          
+          {scheduleArr.length > 0 && <Section
             header="Режим работы"
-            style={{ marginBottom: '20px' }}
           >
-            {scheduleArr.map((day, i) => {
+            {scheduleArr.length > 1 ? scheduleArr.map((range) => {
               return (
                 <Cell
-                  key={`${day}-${i}`}
-                  subtitle={day}
+                  key={`${range[0]}`}
+                  subtitle={range[1]}
                 >
-                  {nameOfdayWeek[i]}
+                  {range[0]}
                 </Cell>
               );
-            })}
-          </Section>
+            }) : (
+              <Cell subtitle={scheduleArr[0][1]}>{scheduleArr[0][0]}</Cell>
+            )}
+          </Section>}
+
+          <div style={{ marginBottom: '20px' }}></div>
         </List>
 
-        <SmallMap center={coords as L.LatLngExpression} />
-      </>
+        <SpotSmallMap center={coords as L.LatLngExpression} />
+
+        {isSnackbarShown && (
+          <Snackbar
+            duration={3000}
+            onClose={() => setIsSnackbarShown(false)}
+            style={{ bottom: '96px' }}
+          >
+            Адрес скопирован в буфер обмена
+          </Snackbar>
+        )}
+      </div>
   );
 };
+
+// {
+//   "id": 10,
+//   "link": "",
+//   "name": "",
+//   "pets": false,
+//   "tags": ["aктивное", "вождение", "экстрим", "за городом"],
+//   "phone": "",
+//   "coords": [],
+//   "images": [],
+//   "minAge": 7,
+//   "address": "",
+//   "mainImg": "/twa/images/-1.png",
+//   "parking": false,
+//   "raiting": 5.0,
+//   "youtube": "",
+//   "minPrice": 2500,
+//   "schedule": "10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00",
+//   "description": ""
+// }

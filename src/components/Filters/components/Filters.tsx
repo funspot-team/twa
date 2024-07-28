@@ -2,7 +2,7 @@ import { useUnit } from "effector-react";
 import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slider, Switch, Text } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types';
-import { $filters, onChangeFilters, onResetFilters } from '../model';
+import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onChangeChildrenFilter, onResetFilters, $childrenFilter, $priceFilter } from '../model';
 import { ModalHeader } from '../../ModalHeader/ModalHeader';
 import { FiltersButton } from './FiltersButton';
 import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
@@ -13,7 +13,8 @@ import { LastItem } from "@/components/LastItem/LastItem";
 const allTags = SPOTS.data.reduce((acc: string[], { tags }) => {
   return [...acc, ...tags];
 }, []);
-const tags = [...new Set(allTags)];
+const tags = [...new Set(allTags)]
+  .filter((tag) => !['в городе', 'за городом', 'плохая погода'].includes(tag));
 const FILTER_OPTIONS: MultiselectOption[] = tags.map((value) => {
   const label = value.charAt(0).toUpperCase() + value.slice(1);
   return { value, label }
@@ -24,10 +25,12 @@ interface IFiltersProps {
 }
 
 export const Filters: FC<IFiltersProps> = ({ isMap }) => {
-  const filters = useUnit($filters);
+  const filters = useUnit($mainFilters);
+  const childrenFilter = useUnit($childrenFilter);
+  const priceFilter = useUnit($priceFilter);
+
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState('');
-  const [price, setPrice] = useState(25000);
 
   const expandHandler = (id: string) => {
     if (expanded === id) {
@@ -75,7 +78,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
                   key={value}
                   mode="elevated"
                   after={<Icon16Cancel />}
-                  onClick={() => onChangeFilters({ value, label })}
+                  onClick={() => onChangeMainFilters({ value, label })}
                 >
                   {label}
                 </Chip>
@@ -107,7 +110,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
                         stretched={false}
                         size="s"
                         mode={filters.find(({ value }) => value === filter.value) ? 'filled' : 'bezeled'}
-                        onClick={() => onChangeFilters(filter)}
+                        onClick={() => onChangeMainFilters(filter)}
                       >
                         {filter.label}
                       </Button>
@@ -144,7 +147,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
                         stretched={false}
                         size="s"
                         mode={filters.find(({ value }) => value === filter.value) ? 'filled' : 'bezeled'}
-                        onClick={() => onChangeFilters(filter)}
+                        onClick={() => onChangeMainFilters(filter)}
                       >
                         {filter.label}
                       </Button>
@@ -158,7 +161,12 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
 
             <Cell
               Component="label"
-              after={<Switch defaultChecked={false} />}
+              after={
+                <Switch
+                  checked={childrenFilter}
+                  onChange={() => onChangeChildrenFilter(!childrenFilter)}
+                />
+              }
               multiline
             >
               Отдых с детьми
@@ -169,12 +177,11 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
             header='Цена до'
           >
             <Slider
-              min={500}
-              max={25000}
-              before={<Text weight="3">{price}</Text>}
-              defaultValue={25000}
-              value={price as number}
-              onChange={setPrice}
+              min={100}
+              max={35000}
+              before={<Text weight="3">{priceFilter}</Text>}
+              value={priceFilter as number}
+              onChange={onChangePriceFilters}
             />
           </Section>
         </List>

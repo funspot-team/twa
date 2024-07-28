@@ -11,15 +11,14 @@ import { ModalHeader } from '@telegram-apps/telegram-ui/dist/components/Overlays
 import { useNavigate } from 'react-router-dom';
 import { Icon28Heart } from '@/icons/heart';
 import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from '@/pages/MapPage/model';
-import SPOTS from '../../mocks/catalog.json';
-import { $filters } from '../Filters/model';
+import { $childrenFilter, $mainFilters, $priceFilter } from '../Filters/model';
 import { Filters } from '../Filters/components/Filters';
-
 import { SpinnerList } from '../SpinnerList/SpinnerList';
 import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { LastItem } from '../LastItem/LastItem';
-
 import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
+import { Icon28HeartFill } from '@/icons/heartFill';
+import SPOTS from '../../mocks/catalog.json';
 
 import './Map.css';
 
@@ -36,7 +35,7 @@ const createClusterCustomIcon = function (cluster) {
     html: `<span>${cluster.getChildCount()}</span>`,
     className: 'custom-marker-cluster',
     iconSize: L.point(33, 33, true),
-  })
+  });
 };
 
 function HandlerContainer() {
@@ -55,14 +54,17 @@ function HandlerContainer() {
 export const Map: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>(null);
+  const [isAdd, setIsAdd] = useState(false);
   const navigate = useNavigate();
   
   const zoom = useUnit($mapZoom);
   const center = useUnit($mapCenter);
-  const filters = useUnit($filters);
+  const filters = useUnit($mainFilters);
+  const childrenFilter = useUnit($childrenFilter);
+  const priceFilter = useUnit($priceFilter);
 
-  const { loading } = useFakeLoading(1000, filters);
-  const markers = getSpotsByFilters(SPOTS.data, filters);
+  const { loading } = useFakeLoading(500, [filters, childrenFilter, priceFilter]);
+  const markers = getSpotsByFilters(SPOTS.data, filters, childrenFilter, priceFilter);
 
   return (
     <>
@@ -70,14 +72,14 @@ export const Map: FC = () => {
 
       {loading && <SpinnerList />}
 
-      <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom={false} zoomControl={false} preferCanvas>
+      <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom={false} zoomControl={false}>
         <HandlerContainer />
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
 
         {/* https://www.npmjs.com/package/react-leaflet-cluster */}
         {!loading && <MarkerClusterGroup
           iconCreateFunction={createClusterCustomIcon}
-          maxClusterRadius={150}
+          maxClusterRadius={40}
           spiderfyOnMaxZoom={true}
           showCoverageOnHover={true}
         >
@@ -119,8 +121,11 @@ export const Map: FC = () => {
               <Button
                 mode="plain"
                 size="s"
-                before={<Icon28Heart />}
-                onClick={() => navigate('/item' + data.id)}
+                before={isAdd ? <Icon28HeartFill /> : <Icon28Heart />}
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  setIsAdd(!isAdd)
+                }}
               >
                 В избранное
               </Button>

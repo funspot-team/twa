@@ -1,4 +1,5 @@
-import { List, Card, Banner, Image, Button } from '@telegram-apps/telegram-ui';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { List, Card } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 
@@ -6,9 +7,57 @@ import { useNavigate } from 'react-router-dom';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import ReactImageGallery from 'react-image-gallery';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
+import SPOTS from '@/mocks/catalog.json';
+import { LastItem } from '@/components/LastItem/LastItem';
+
+import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
 
 import './MainPage.css';
-import { LastItem } from '@/components/LastItem/LastItem';
+
+interface ISpotsBlockProps {
+  title: string;
+  spots: any;
+}
+
+const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <SectionHeader>{title}</SectionHeader>
+
+      <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
+        {spots.map(({ id, name, mainImg, description }: any) => {
+          return (
+            <Card key={name} style={{ minWidth: '254px' }} onClick={() => navigate('/item/' + id)}>
+              <>
+                <AddFavourite id={id} title={name} isCard withPadding />
+                
+                <img
+                  alt="Dog"
+                  src={mainImg}
+                  style={{
+                    display: 'block',
+                    height: 200,
+                    objectFit: 'cover',
+                    width: 254
+                  }}
+                />
+
+                <CardCell
+                  readOnly
+                  subtitle={description}
+                >
+                  {name}
+                </CardCell>
+              </>
+            </Card>
+          );
+        })}
+      </div>
+    </>
+  );
+}
 
 const images = [
   {
@@ -25,123 +74,47 @@ const images = [
   },
 ];
 
-const cards = [
-  {
-    id: 1,
-    title: 'BBQ Boats',
-    img: '/twa/images/bbq-boats.png',
-    description: 'Прогулка на лодке со вкусом барбекю'
-  },
-  {
-    id: 2,
-    title: 'Прокат эндуро и питбайков в СПБ',
-    img: '/twa/images/enduro.png',
-    description: 'Поможем подобрать тур в зависимости от ваших навыков и пожеланий'
-  },
-  {
-    id: 3,
-    title: 'Сплав на sup по реке Оредеж',
-    img: '/twa/images/sup-board.png',
-    description: 'Лучший загородный маршрут для начинающих сёрферов'
-  },
-];
+const recomended = SPOTS.data
+  .filter(({id}) => [10, 11, 2].includes(id))
+  .slice(0).reverse();
+const popular = SPOTS.data.filter(({id}) => [8, 1, 4, 15, 16].includes(id));
+const eco = SPOTS.data.filter(({id}) => [13, 14, 18, 20, 19].includes(id));
+const baner = SPOTS.data.find(({id}) => 9 === id);
 
 export const MainPage: FC = () => {
-  const navigate = useNavigate();
-
   return (
     <>
-      <ReactImageGallery items={images} showNav={false} showThumbnails={false} showFullscreenButton={false} showPlayButton={false} showBullets={false} slideDuration={200} autoPlay />
+      <ReactImageGallery
+        items={images}
+        showNav={false}
+        showThumbnails={false}
+        showFullscreenButton={false}
+        showPlayButton={false}
+        showBullets={false}
+        slideDuration={200}
+        slideInterval={3000}
+        autoPlay
+      />
 
       <List>
-        <SectionHeader>Вам может понравится</SectionHeader>
+        <SpotsBlock title="Вам понравится" spots={recomended} />
 
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
-          {cards.map(({ id, title, img, description }) => {
-            return (
-              <Card key={title} style={{ minWidth: '254px' }} onClick={() => navigate('/item')}>
-                <>
-                  <AddFavourite id={id} title={title} isCard withPadding />
-                  
-                  <img
-                    alt="Dog"
-                    src={img}
-                    style={{
-                      display: 'block',
-                      height: 200,
-                      objectFit: 'cover',
-                      width: 254
-                    }}
-                  />
+        <BannerSpot spot={baner} />
 
-                  <CardCell
-                    readOnly
-                    subtitle={description}
-                  >
-                    {title}
-                  </CardCell>
-                </>
-              </Card>
-            );
-          })}
-        </div>
+        <SpotsBlock title="Популярное" spots={popular} />
 
-        {/* <BannerSpot /> */}
-        <Banner
-          before={<Image size={48} src='/twa/images/sup-board.png' />}
-          header="Сплав на sup по реке Оредеж"
-          subheader="Лучший загородный маршрут для начинающих сёрферов"
-          type="section"
-        >
-          <>
-            <Button size="s" onClick={() => navigate('/item')}>
-              Бронировать
-            </Button>
-
-            <Button
-              mode="plain"
-              size="s"
-              onClick={() => navigate('/item')}
-            >
-              В избранное
-            </Button>
-          </>
-        </Banner>
-
-        <SectionHeader>Популярное</SectionHeader>
-
-        <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', overflowX: 'scroll' }}>
-          {cards.slice(0).reverse().map(({ id, title, img, description }) => {
-            return (
-              <Card key={title} style={{ minWidth: '254px' }} onClick={() => navigate('/item')}>
-                <>
-                  <AddFavourite id={id} title={title} isCard withPadding />
-                  
-                  <img
-                    alt="Dog"
-                    src={img}
-                    style={{
-                      display: 'block',
-                      height: 200,
-                      objectFit: 'cover',
-                      width: 254
-                    }}
-                  />
-
-                  <CardCell
-                    readOnly
-                    subtitle={description}
-                  >
-                    {title}
-                  </CardCell>
-                </>
-              </Card>
-            );
-          })}
-        </div>
+        <SpotsBlock title="Экотропы" spots={eco} />
       </List>
 
-      <div style={{ height: '100px', backgroundImage: 'url(/twa/images/add-spot.jpeg)', backgroundSize: 'cover' }}></div>
+      <div style={{
+        height: '100px',
+        backgroundImage: 'url(/twa/images/add-spot.jpeg)',
+        backgroundSize: 'contain',
+        padding: '20px 0',
+        backgroundPosition: 'center',
+        backgroundColor: '#C9E3FF',
+        backgroundRepeat: 'no-repeat',
+      }}/>
 
       <LastItem />
     </>

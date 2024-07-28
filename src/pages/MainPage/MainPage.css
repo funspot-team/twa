@@ -1,3 +1,13 @@
 .image-gallery {
   margin-bottom: 12px;
 }
+
+.image-gallery-slides {
+  height: 390px;
+}
+
+.image-gallery-slide, .image-gallery-image {
+  height: 100%;
+  max-height: unset;
+  object-fit: cover !important;
+}

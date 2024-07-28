@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Banner, Button, Image } from '@telegram-apps/telegram-ui';
+import { Banner, Button } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import './BannerSpot.css';
 
 interface IBannerSpotProps {
   spot: any;
@@ -13,23 +15,27 @@ export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
 
   return (
     <Banner
-      before={<Image size={48} src={mainImg} />}
+      // before={<Image size={48} src={mainImg} />}
       header={name}
       subheader={description}
       type="section"
+      className="banerspot"
+      style={{
+        backgroundImage: `url(${mainImg})`,
+      }}
     >
       <>
         <Button size="s" onClick={() => navigate('/item/' + id)}>
           Бронировать
         </Button>
 
-        <Button
+        {/* <Button
           mode="plain"
           size="s"
           onClick={() => navigate('/item/' + id)}
         >
           В избранное
-        </Button>
+        </Button> */}
       </>
     </Banner>
   );

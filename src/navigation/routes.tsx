@@ -6,6 +6,7 @@ import { ItemPage } from '@/pages/ItemPage/ItemPage';
 import { FavouritesPage } from '@/pages/FavouritesPage/FavouritesPage';
 import { CatalogPage } from '@/pages/CatalogPage/CatalogPage';
 import { MapPage } from '@/pages/MapPage/MapPage';
+import { SpotMapPage } from '@/pages/SpotMapPage/SpotMapPage';
 
 export const ROUTE_NAMES = {
   MAIN_ROUTE: '/',
@@ -15,6 +16,7 @@ export const ROUTE_NAMES = {
   USER_ROUTE: '/user',
   PARTNER_ROUTE: '/partner',
   ITEM_ROUTE: '/item/:id',
+  SPOT_MAP_ROUTE: '/spot/map/:lat/:lng'
 }
 
 interface Route {
@@ -31,4 +33,5 @@ export const routes: Route[] = [
   { path: ROUTE_NAMES.FAVOURITES_ROUTE, Component: FavouritesPage, title: 'Избранное' },
   { path: ROUTE_NAMES.PARTNER_ROUTE, Component: PartnerPage, title: 'Стать партнером' },
   { path: ROUTE_NAMES.ITEM_ROUTE, Component: ItemPage },
+  { path: ROUTE_NAMES.SPOT_MAP_ROUTE, Component: SpotMapPage },
 ];
