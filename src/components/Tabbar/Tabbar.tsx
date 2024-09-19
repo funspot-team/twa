@@ -1,7 +1,7 @@
 import { Modal, Tabbar as UITabbar } from '@telegram-apps/telegram-ui';
 import { useEffect, useState, type FC } from 'react';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useMatch, useNavigate } from 'react-router-dom';
 
 import { Icon28Burger } from '@/icons/burger';
 import { Icon28Heart } from '@/icons/heart';
@@ -24,9 +24,9 @@ const tabs = [
     text: 'Карта',
   },
   {
-    path: ROUTE_NAMES.FAVOURITES_ROUTE,
+    path: ROUTE_NAMES.SELECTIONS_ROUTE,
     Icon: Icon28Heart,
-    text: 'Избранное',
+    text: 'Подборки',
   },
   {
     path: ROUTE_NAMES.USER_ROUTE,
@@ -73,14 +73,20 @@ export const Tabbar: FC = () => {
           path,
           text,
           Icon
-        }) => <UITabbar.Item
-            key={path}
-            text={text}
-            selected={location.pathname === path}
-            onClick={() => clickHandler(path)}
-          >
-              <Icon />
-          </UITabbar.Item>)}
+        }) => {
+          const match = useMatch(path);
+
+          return (
+            <UITabbar.Item
+              key={path}
+              text={text}
+              selected={!!match}
+              onClick={() => clickHandler(path)}
+            >
+                <Icon />
+            </UITabbar.Item>
+          );
+        })}
       </UITabbar>
 
       <Modal

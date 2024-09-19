@@ -1,19 +1,32 @@
-import { type FC } from 'react';
+import { useEffect, useMemo, type FC } from 'react';
+import { $isLoading, fetchCatalog, onChangeUserData } from './model';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
-import { useFakeLoading } from '@/hooks/useFakeLoading';
+import { useUnit } from 'effector-react';
+import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
+import { useInitData } from '@telegram-apps/sdk-react';
 
 export const Layout: FC = () => {
-  const { loading } = useFakeLoading(1000);
+  const initData = useInitData();
+  const isLoading = useUnit($isLoading);
+
+  const userData = useMemo(() => {
+    return initData && initData.user ? initData.user : undefined;
+  }, [initData]);
+
+  useEffect(() => {
+    onChangeUserData(userData);
+    fetchCatalog();
+  }, []);
 
   return (
     <>
       <YandexMetrika />
 
-      {loading ? (
+      {isLoading ? (
         <SpinnerList />
       ) : (
         <>
@@ -22,6 +35,8 @@ export const Layout: FC = () => {
               <Route path='*' element={<Navigate to='/'/>}/>
           </Routes>
 
+          <AddFavouriteModal />
+          
           <Tabbar />
         </>
       )}

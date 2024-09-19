@@ -7,10 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import ReactImageGallery from 'react-image-gallery';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
-import SPOTS from '@/mocks/catalog.json';
 import { LastItem } from '@/components/LastItem/LastItem';
-
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
+import { $catalog } from '@/components/Layout/model';
+import { useUnit } from 'effector-react';
 
 import './MainPage.css';
 
@@ -74,14 +74,20 @@ const images = [
   },
 ];
 
-const recomended = SPOTS.data
-  .filter(({id}) => [10, 11, 2].includes(id))
-  .slice(0).reverse();
-const popular = SPOTS.data.filter(({id}) => [8, 1, 4, 15, 16].includes(id));
-const eco = SPOTS.data.filter(({id}) => [13, 14, 18, 20, 19].includes(id));
-const baner = SPOTS.data.find(({id}) => 9 === id);
-
 export const MainPage: FC = () => {
+  const spots = useUnit($catalog);
+
+  if (!spots || !spots.length) {
+    return null;
+  }
+
+  const recomended = spots
+    .filter(({id}) => [21, 22, 13].includes(Number(id)))
+    .slice(0).reverse();
+  const popular = spots.filter(({id}) => [19, 12, 15, 26, 27].includes(Number(id)));
+  const eco = spots.filter(({id}) => [24, 25, 29, 31, 30].includes(Number(id)));
+  const baner = spots.find(({id}) => 20 === Number(id));
+
   return (
     <>
       <ReactImageGallery

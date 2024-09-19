@@ -3,22 +3,12 @@ import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slide
 import { useState, type FC } from 'react';
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types';
 import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onChangeChildrenFilter, onResetFilters, $childrenFilter, $priceFilter } from '../model';
+import { $catalog } from "@/components/Layout/model";
 import { ModalHeader } from '../../ModalHeader/ModalHeader';
 import { FiltersButton } from './FiltersButton';
 import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
 import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
-import SPOTS from '@/mocks/catalog.json';
 import { LastItem } from "@/components/LastItem/LastItem";
-
-const allTags = SPOTS.data.reduce((acc: string[], { tags }) => {
-  return [...acc, ...tags];
-}, []);
-const tags = [...new Set(allTags)]
-  .filter((tag) => !['в городе', 'за городом', 'плохая погода'].includes(tag));
-const FILTER_OPTIONS: MultiselectOption[] = tags.map((value) => {
-  const label = value.charAt(0).toUpperCase() + value.slice(1);
-  return { value, label }
-});
 
 interface IFiltersProps {
   isMap?: boolean;
@@ -28,9 +18,22 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
   const filters = useUnit($mainFilters);
   const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
+  const spots = useUnit($catalog);
 
   const [isOpen, setIsOpen] = useState(false);
   const [expanded, setExpanded] = useState('');
+
+  const allTags = spots.reduce((acc: string[], { tags }) => {
+    return [...acc, ...tags];
+  }, []);
+  
+  const tags = [...new Set(allTags)]
+    .filter((tag) => !['в городе', 'за городом', 'плохая погода'].includes(tag));
+    
+  const FILTER_OPTIONS: MultiselectOption[] = tags.map((value) => {
+    const label = value.charAt(0).toUpperCase() + value.slice(1);
+    return { value, label }
+  });
 
   const expandHandler = (id: string) => {
     if (expanded === id) {

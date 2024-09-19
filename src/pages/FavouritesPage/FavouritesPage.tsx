@@ -2,7 +2,6 @@
 import { List } from '@telegram-apps/telegram-ui';
 import { SyntheticEvent, useState, type FC } from 'react';
 import FAVOURITES from '@/mocks/favourites.json';
-import SPOTS from '@/mocks/catalog.json';
 import { Icon28Remove } from '@/icons/remove';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
 import { CatalogItem } from '@/components/CatalogItem/CatalogItem';
@@ -10,14 +9,21 @@ import { FavouriteSnackbar } from '@/components/AddFavourite/components/Favourit
 import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { LastItem } from '@/components/LastItem/LastItem';
-
-const favouritesIds = FAVOURITES.data.map(({ id }) => id);
-const favouritesList = SPOTS.data
-  .filter(({ id }) => favouritesIds.includes(id))
-  .map((spot) => ({...spot, show: true}));
+import { useUnit } from 'effector-react';
+import { $catalog } from '@/components/Layout/model';
 
 export const FavouritesPage: FC = () => {
-  const { loading } = useFakeLoading(500);
+  const spots = useUnit($catalog);
+
+  const favouritesIds = FAVOURITES.data.map(({ id }) => id);
+  const favouritesList = spots
+    .filter(({ id }) => favouritesIds.includes(Number(id)))
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    .map((spot) => ({ ...spot, show: true }));
+
+
+  const { loading } = useFakeLoading(0);
   const [favourites, setFavourites] = useState(favouritesList);
   const [deleted, setDeleted] = useState<any>(null);
   

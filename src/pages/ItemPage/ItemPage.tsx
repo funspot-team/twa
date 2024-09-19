@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Snackbar, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
 import { useState, type FC } from 'react';
@@ -6,7 +7,6 @@ import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Bl
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
 import { useParams } from 'react-router-dom';
-import SPOTS from '../../mocks/catalog.json';
 import { useFakeLoading } from '@/hooks/useFakeLoading';
 
 import { Icon28Chat } from '@/icons/chat';
@@ -16,20 +16,24 @@ import { Icon28Location } from '@/icons/location';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { Icon28Navi } from '@/icons/navi';
 import { getWeekRange } from './helpers/itemPageHelpers';
+import { useUnit } from 'effector-react';
+import { $catalog } from '@/components/Layout/model';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
 
 export const ItemPage: FC = () => {
-  const { loading } = useFakeLoading(300);
+  const spots = useUnit($catalog);
+
+  const { loading } = useFakeLoading(0);
   const [isSnackbarShown, setIsSnackbarShown] = useState(false);
 
   const { id } = useParams();
-  const item = SPOTS.data.find((spot) => spot.id === Number(id));
+  const item = spots.find((spot: any) => spot.id === id);
 
   if (!item) return null;
 
-  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item;
+  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
   const scheduleArr = schedule ? getWeekRange(schedule) : [];
 
   if (loading) {
@@ -44,7 +48,7 @@ export const ItemPage: FC = () => {
               original: mainImg,
               thumbnail: mainImg,
             },
-            ...images.map(img => ({ original: img, thumbnail: img })),
+            ...images.map((img: string) => ({ original: img, thumbnail: img })),
           ]}
           showNav
           showThumbnails={false}
@@ -198,7 +202,7 @@ export const ItemPage: FC = () => {
                   gap: '8px',
                   flexWrap: 'wrap',
                 }}>
-                  {tags.map((tag) => {
+                  {tags.map((tag: string) => {
                     return (
                       <Chip
                         key={tag}

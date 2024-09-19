@@ -12,13 +12,13 @@ import { useNavigate } from 'react-router-dom';
 import { Icon28Heart } from '@/icons/heart';
 import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from '@/pages/MapPage/model';
 import { $childrenFilter, $mainFilters, $priceFilter } from '../Filters/model';
+import { $catalog } from '../Layout/model';
 import { Filters } from '../Filters/components/Filters';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
 import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { LastItem } from '../LastItem/LastItem';
 import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
 import { Icon28HeartFill } from '@/icons/heartFill';
-import SPOTS from '../../mocks/catalog.json';
 
 import './Map.css';
 
@@ -62,9 +62,10 @@ export const Map: FC = () => {
   const filters = useUnit($mainFilters);
   const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
+  const spots = useUnit($catalog);
 
   const { loading } = useFakeLoading(500, [filters, childrenFilter, priceFilter]);
-  const markers = getSpotsByFilters(SPOTS.data, filters, childrenFilter, priceFilter);
+  const markers = getSpotsByFilters(spots, filters, childrenFilter, priceFilter);
 
   return (
     <>
