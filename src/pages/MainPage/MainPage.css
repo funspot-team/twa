@@ -4,6 +4,7 @@
 
 .image-gallery-slides {
   height: 390px;
+  cursor: pointer;
 }
 
 .image-gallery-slide, .image-gallery-image {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { $userData } from '@/components/Layout/model';
 import { createEvent, createStore, createEffect, attach, sample } from 'effector';
-import { $userData } from '../Layout/model';
 
 export const fetchGroups = createEvent();
 export const createGroup = createEvent();
@@ -71,7 +71,10 @@ const deleteGroupFx = attach({
 });
 
 export const $groups = createStore([])
-  .on(fetchGroupsFx.doneData, (_, result) => result.data)
+  .on(fetchGroupsFx.doneData, (_, result) => {
+    if (!result?.data) return [];
+    return result.data;
+  });
 
 export const $isLoadingGroups = fetchGroupsFx.pending || createGroupFx.pending || deleteGroupFx.pending;
 

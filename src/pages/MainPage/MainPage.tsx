@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { List, Card } from '@telegram-apps/telegram-ui';
-import { type FC } from 'react';
+import { useRef, type FC } from 'react';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,10 +10,12 @@ import ReactImageGallery from 'react-image-gallery';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
-import { $catalog } from '@/components/Layout/model';
+import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { useUnit } from 'effector-react';
 
 import './MainPage.css';
+import { ROUTE_NAMES } from '@/navigation/routes';
+import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 
 interface ISpotsBlockProps {
   title: string;
@@ -46,7 +49,7 @@ const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
 
                 <CardCell
                   readOnly
-                  subtitle={description}
+                  subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
                 >
                   {name}
                 </CardCell>
@@ -75,7 +78,14 @@ const images = [
 ];
 
 export const MainPage: FC = () => {
+  const imageGalleryRef = useRef(null);
+  const navigate = useNavigate();
   const spots = useUnit($catalog);
+  const isLoading = useUnit($isLoadingCatalog);
+
+  if (isLoading) {
+    return <SpinnerList />;
+  }
 
   if (!spots || !spots.length) {
     return null;
@@ -88,18 +98,36 @@ export const MainPage: FC = () => {
   const eco = spots.filter(({id}) => [24, 25, 29, 31, 30].includes(Number(id)));
   const baner = spots.find(({id}) => 20 === Number(id));
 
+  const clickHandler = () => {
+    // @ts-ignore
+    const currentSlide = imageGalleryRef.current.getCurrentIndex();
+
+    switch(currentSlide) {
+      case 1:
+        navigate(ROUTE_NAMES.CATALOGUE_ROUTE);
+        break;
+      case 2:
+        navigate(ROUTE_NAMES.MAP_ROUTE);
+        break;
+      default:
+        return null;
+    }
+  }
+
   return (
     <>
       <ReactImageGallery
+        ref={imageGalleryRef}
         items={images}
         showNav={false}
         showThumbnails={false}
         showFullscreenButton={false}
         showPlayButton={false}
         showBullets={false}
-        slideDuration={200}
-        slideInterval={3000}
+        slideDuration={500}
+        slideInterval={4000}
         autoPlay
+        onClick={clickHandler}
       />
 
       <List>

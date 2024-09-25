@@ -17,7 +17,7 @@ export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
     <Banner
       // before={<Image size={48} src={mainImg} />}
       header={name}
-      subheader={description}
+      subheader={<span dangerouslySetInnerHTML={{ __html: description }} />}
       type="section"
       className="banerspot"
       style={{

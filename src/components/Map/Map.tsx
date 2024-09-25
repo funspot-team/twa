@@ -2,23 +2,23 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import L from 'leaflet';
+import L, { CRS } from 'leaflet';
 import { useState, type FC } from 'react';
 import { useUnit } from "effector-react";
 
 import { Banner, Button, Image, Modal } from '@telegram-apps/telegram-ui';
 import { ModalHeader } from '@telegram-apps/telegram-ui/dist/components/Overlays/Modal/components/ModalHeader/ModalHeader';
 import { useNavigate } from 'react-router-dom';
-import { Icon28Heart } from '@/icons/heart';
 import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from '@/pages/MapPage/model';
-import { $childrenFilter, $mainFilters, $priceFilter } from '../Filters/model';
+import { $childrenFilter, $mainFilters, $priceFilter, $searchFilter } from '../Filters/model';
 import { $catalog } from '../Layout/model';
 import { Filters } from '../Filters/components/Filters';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
 import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { LastItem } from '../LastItem/LastItem';
 import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
-import { Icon28HeartFill } from '@/icons/heartFill';
+
+import { AddFavourite } from '../AddFavourite/AddFavourite';
 
 import './Map.css';
 
@@ -54,7 +54,6 @@ function HandlerContainer() {
 export const Map: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>(null);
-  const [isAdd, setIsAdd] = useState(false);
   const navigate = useNavigate();
   
   const zoom = useUnit($mapZoom);
@@ -62,10 +61,11 @@ export const Map: FC = () => {
   const filters = useUnit($mainFilters);
   const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
+  const searchFilter = useUnit($searchFilter);
   const spots = useUnit($catalog);
 
   const { loading } = useFakeLoading(500, [filters, childrenFilter, priceFilter]);
-  const markers = getSpotsByFilters(spots, filters, childrenFilter, priceFilter);
+  const markers = getSpotsByFilters(spots, filters, childrenFilter, priceFilter, searchFilter);
 
   return (
     <>
@@ -73,14 +73,15 @@ export const Map: FC = () => {
 
       {loading && <SpinnerList />}
 
-      <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom={false} zoomControl={false}>
+      <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom={false} zoomControl={false} crs={CRS.EPSG3395}>
         <HandlerContainer />
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+        {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/> */}
+        <TileLayer url="https://core-renderer-tiles.maps.yandex.net/tiles?l=map&v=24.09.23-4-b240906182700&x={x}&y={y}&z={z}&scale=1&lang=ru_RU&apikey=33547b10-f284-4c4e-8e66-e6c96affaddf" />
 
         {/* https://www.npmjs.com/package/react-leaflet-cluster */}
         {!loading && <MarkerClusterGroup
           iconCreateFunction={createClusterCustomIcon}
-          maxClusterRadius={40}
+          maxClusterRadius={50}
           spiderfyOnMaxZoom={true}
           showCoverageOnHover={true}
         >
@@ -110,7 +111,7 @@ export const Map: FC = () => {
           <Banner
             before={<Image size={96} src={data.mainImg} />}
             header={data.name}
-            subheader={data.description}
+            subheader={<span dangerouslySetInnerHTML={{ __html: data.description }} />}
             type="section"
             onClick={() => navigate('/item/' + data.id)}
           >
@@ -119,7 +120,8 @@ export const Map: FC = () => {
                 Подробнее
               </Button>
 
-              <Button
+              <AddFavourite id={data.id} title={data.name} withPadding />
+              {/* <Button
                 mode="plain"
                 size="s"
                 before={isAdd ? <Icon28HeartFill /> : <Icon28Heart />}
@@ -129,7 +131,7 @@ export const Map: FC = () => {
                 }}
               >
                 В избранное
-              </Button>
+              </Button> */}
             </>
           </Banner>
         )}

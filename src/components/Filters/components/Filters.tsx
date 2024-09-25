@@ -2,13 +2,14 @@ import { useUnit } from "effector-react";
 import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slider, Switch, Text } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types';
-import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onChangeChildrenFilter, onResetFilters, $childrenFilter, $priceFilter } from '../model';
+import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onChangeChildrenFilter, onResetFilters, $childrenFilter, $priceFilter, onChangeSearch } from '../model';
 import { $catalog } from "@/components/Layout/model";
 import { ModalHeader } from '../../ModalHeader/ModalHeader';
 import { FiltersButton } from './FiltersButton';
 import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
 import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
 import { LastItem } from "@/components/LastItem/LastItem";
+import { FiltersSearch } from "./FiltersSearch";
 
 interface IFiltersProps {
   isMap?: boolean;
@@ -43,13 +44,33 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
     }
   }
 
+  let style = {
+    margin: '16px 18px 10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    width: 'calc(100% - 36px)'
+  };
+
+  if (isMap) {
+    style = {...style, ...{ zIndex: 1000, position: 'fixed', margin: '5%' }};
+  } else {
+    style = {...style, ...{ margin: '16px 18px 10px 18px' }};
+  }
+
   return (
     <>
       {(!isOpen || !isMap) && (
-        <FiltersButton
-          isMap={isMap}
-          onClick={() => setIsOpen(true)}
-        />
+        <div style={style}>
+          {/* {!isMap && ( */}
+            <FiltersSearch onSearch={(str) => onChangeSearch(str)}/>
+          {/* )} */}
+
+          <FiltersButton
+            isMap={isMap}
+            onClick={() => setIsOpen(true)}
+          />
+        </div>
       )}
 
       <Modal

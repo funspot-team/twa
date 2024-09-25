@@ -7,11 +7,13 @@ import { useUnit } from 'effector-react';
 import { $favouriteSnakbar, $isShowFavouriteModal, onChangeFavouriteModal, onChangeFavouriteSnackbar } from './model';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
 import { Icon28Add } from '@/icons/add';
-import { FavouriteSnackbarNew } from './components/FavouriteSnackbarNew';
+import { FavouriteSnackbar } from './components/FavouriteSnackbar';
 import { useNavigate } from 'react-router-dom';
-import { $groups, $isLoadingGroups, fetchGroups } from '../FavoriteGroups/model';
-import { addFavourite } from '../Favourites/model';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
+import { $groups, $isLoadingGroups, fetchGroups } from '@/pages/FavoriteGroupsPage/model';
+import { addFavourite } from '@/pages/FavouritesPage/model';
+import { ROUTE_NAMES } from '@/navigation/routes';
+import { $userData } from '../Layout/model';
 
 const FavoriteDefaultState = { isShow: false, spotId: null, title: '' };
 
@@ -19,12 +21,15 @@ export const AddFavouriteModal: FC = () => {
   const navigate = useNavigate();
   const { isShow: isShowModal, spotId, title } = useUnit($isShowFavouriteModal);
   const { isShow: isShowSnackbar, title: titleSnackbar, isDelete, spotId: spotIdSnackbar } = useUnit($favouriteSnakbar);
+  const { id: userId } = useUnit($userData);
   const groups = useUnit($groups);
   const isLoadingGroups = useUnit($isLoadingGroups);
 
   useEffect(() => {
-    fetchGroups();
-  }, []);
+    if (userId) {
+      fetchGroups();
+    }
+  }, [userId]);
 
   const undoHandler = () => {
     console.log('add spot ', spotIdSnackbar, ' ', titleSnackbar );
@@ -41,41 +46,48 @@ export const AddFavouriteModal: FC = () => {
           />
         }
         open={isShowModal}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) onChangeFavouriteModal(FavoriteDefaultState);
+        }}
       >
         {isLoadingGroups ? (
           <SpinnerList />
         ) : (
           <List>
-            <Section header='Мои подборки'>
-              {groups && groups.length > 0 && groups.map((group: any) => (
-                <Cell
-                  key={group.id}
-                  after={<Icon16ChevronRight />}
-                  onClick={() => {
-                    // @ts-ignore
-                    addFavourite({ spot: spotId, group: Number(group.id) });
+            {groups && groups.length > 0 && (
+              <Section header='Мои подборки'>
+                {groups.map((group: any) => (
+                  <Cell
+                    key={group.id}
+                    after={<Icon16ChevronRight />}
+                    onClick={() => {
+                      // @ts-ignore
+                      addFavourite({ spot: spotId, group: Number(group.id) });
 
-                    onChangeFavouriteModal(FavoriteDefaultState);
+                      onChangeFavouriteModal(FavoriteDefaultState);
 
-                    onChangeFavouriteSnackbar({
-                      isShow: true,
-                      title,
-                      spotId,
-                      isDelete: false,
-                    });
-                  }}
-                >
-                  {group.name}
-                </Cell>
-              ))}
+                      onChangeFavouriteSnackbar({
+                        isShow: true,
+                        title,
+                        spotId,
+                        isDelete: false,
+                      });
+                    }}
+                  >
+                    {group.name}
+                  </Cell>
+                ))}
+              </Section>
+            )}
 
+            <Section>
               <ButtonCell
                 before={<Icon28Add />}
                 interactiveAnimation="opacity"
                 mode="default"
                 onClick={() => {
                   onChangeFavouriteModal(FavoriteDefaultState);
-                  navigate('/selections/favorite-groups');
+                  navigate(ROUTE_NAMES.FAVOURITE_GROUPS_ROUTE);
                 }}
               >
                 Добавить новую подборку
@@ -87,7 +99,7 @@ export const AddFavouriteModal: FC = () => {
         <div style={{ width: '100%', height: '40px' }}></div>
       </Modal>
 
-      <FavouriteSnackbarNew
+      <FavouriteSnackbar
         isShowSnackbar={isShowSnackbar}
         title={titleSnackbar}
         isDelete={isDelete}

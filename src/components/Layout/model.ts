@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { decodeHtmlEntities, LSgetItem, LSsetItem } from '@/helpers/helpers';
 import { createEvent, createStore, createEffect } from 'effector';
 
 // catalog
 export const fetchCatalog = createEvent();
 
-const fetchCatalogFx = createEffect(async () => {
+export const fetchCatalogFx = createEffect(async () => {
   const response = await fetch('https://funspot.ru/places/ '); 
 
   if (!response.ok) {
@@ -19,9 +20,16 @@ const fetchCatalogFx = createEffect(async () => {
 });
 
 export const $catalog = createStore([])
-  .on(fetchCatalogFx.doneData, (_, result) => result.data);
+  .on(fetchCatalogFx.doneData, (_, result) => {
+    if (!result?.data) return [];
 
-export const $isLoading = fetchCatalogFx.pending;
+    return result.data.map((spot: any) => ({
+      ...spot,
+      name: decodeHtmlEntities(spot.name),
+    }));
+  });
+
+export const $isLoadingCatalog = fetchCatalogFx.pending;
 
 fetchCatalog.watch(fetchCatalogFx);
 
@@ -32,5 +40,17 @@ export const $userData = createStore<any>({});
 
 $userData
   .on(onChangeUserData, (_, value) => {
+    return value;
+  });
+
+// stepper guide
+export const onChangeStepperGuide = createEvent<boolean>();
+
+const initValue = Boolean(LSgetItem('stepper-guide'));
+export const $isShowStepperGuide = createStore<boolean>(!initValue);
+
+$isShowStepperGuide
+  .on(onChangeStepperGuide, (_, value) => {
+    LSsetItem('stepper-guide', true);
     return value;
   });

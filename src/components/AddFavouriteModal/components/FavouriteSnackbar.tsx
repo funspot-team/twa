@@ -11,7 +11,7 @@ interface IFavouriteSnackbarProps {
   withPadding?: boolean;
 }
 
-export const FavouriteSnackbarNew: FC<IFavouriteSnackbarProps> = ({
+export const FavouriteSnackbar: FC<IFavouriteSnackbarProps> = ({
   title,
   isShowSnackbar,
   isDelete,

@@ -4,11 +4,8 @@ import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating
 import { useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
-import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
 import { useParams } from 'react-router-dom';
-import { useFakeLoading } from '@/hooks/useFakeLoading';
-
 import { Icon28Chat } from '@/icons/chat';
 import { Icon28Link } from '@/icons/link';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
@@ -17,28 +14,32 @@ import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { Icon28Navi } from '@/icons/navi';
 import { getWeekRange } from './helpers/itemPageHelpers';
 import { useUnit } from 'effector-react';
-import { $catalog } from '@/components/Layout/model';
+import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
+import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
+import { ShareButton } from '@/components/ShareButton/ShareButton';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
+import { useFakeLoading } from '@/hooks/useFakeLoading';
 
 export const ItemPage: FC = () => {
   const spots = useUnit($catalog);
-
-  const { loading } = useFakeLoading(0);
-  const [isSnackbarShown, setIsSnackbarShown] = useState(false);
-
+  const isLoading = useUnit($isLoadingCatalog);
   const { id } = useParams();
+
+  const [isSnackbarShown, setIsSnackbarShown] = useState(false);
+  const { loading: isFakeLoading } = useFakeLoading(0);
+
+  if (isLoading || isFakeLoading) {
+    return <SpinnerList />;
+  }
+
   const item = spots.find((spot: any) => spot.id === id);
 
-  if (!item) return null;
+  if (!item || !id) return null;
 
   const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
   const scheduleArr = schedule ? getWeekRange(schedule) : [];
-
-  if (loading) {
-    return <SpinnerList />;
-  }
 
   {/* https://github.com/xiaolin/react-image-gallery */}
   return (
@@ -75,7 +76,7 @@ export const ItemPage: FC = () => {
               <Subheadline
                 level="2"
                 weight="1"
-                style={{ display: 'flex', alignItems: 'end', minWidth: '68px' }}
+                style={{ display: 'flex', alignItems: 'end', minWidth: '70px' }}
               >
                 <IconContainer>
                   {raiting} <IconStar style={{ marginBottom: '-5px' }} />
@@ -94,56 +95,29 @@ export const ItemPage: FC = () => {
             </Subheadline>}
           </div>
 
-          {phone ? (
-            <InlineButtons mode="bezeled">
+          <InlineButtons mode="bezeled">
+            {phone && (
               <InlineButtonsItem
-                text="Связаться"
+                text="Позвонить"
                 onClick={() => window.open(`tel:${phone}`, '_blank')}
               >
                 <IconContainer>
                   <Icon28Chat />
                 </IconContainer>
               </InlineButtonsItem>
+            )}
 
-              <InlineButtonsItem
-                text="Сайт"
-                onClick={() => window.open(link, '_blank')}
-              >
-                <IconContainer>
-                  <Icon28Link />
-                </IconContainer>
-              </InlineButtonsItem>
+            <InlineButtonsItem
+              text="Открыть сайт"
+              onClick={() => window.open(link, '_blank')}
+            >
+              <IconContainer>
+                <Icon28Link />
+              </IconContainer>
+            </InlineButtonsItem>
 
-              <InlineButtonsItem
-                text="Маршрут"
-                onClick={() => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
-              >
-                <IconContainer>
-                  <Icon28Navi />
-                </IconContainer>
-              </InlineButtonsItem>
-            </InlineButtons>
-          ) : (
-            <InlineButtons mode="bezeled">
-              <InlineButtonsItem
-                text="Перейти на сайт"
-                onClick={() => window.open(link, '_blank')}
-              >
-                <IconContainer>
-                  <Icon28Link />
-                </IconContainer>
-              </InlineButtonsItem>
-
-              <InlineButtonsItem
-                text="Маршрут"
-                onClick={() => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
-              >
-                <IconContainer>
-                  <Icon28Navi />
-                </IconContainer>
-              </InlineButtonsItem>
-            </InlineButtons>
-          )}
+            <ShareButton spotId={id} />
+          </InlineButtons>
 
           <Section>
             <Cell
@@ -163,6 +137,17 @@ export const ItemPage: FC = () => {
                 </IconContainer>
               }
             />
+
+            <Cell
+              subtitle="Построить маршрут"
+              after={<Icon16ChevronRight />}
+              onClick={() => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
+              before={
+                <IconContainer>
+                  <Icon28Navi />
+                </IconContainer>
+              }
+            />
           </Section>
 
           {youtube ? (
@@ -179,14 +164,14 @@ export const ItemPage: FC = () => {
 
               <Cell
                 multiline
-                subtitle={description}
-              />
+                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
+                />
             </Section>
           ) : (
             <Section header="Описание">
               <Cell
                 multiline
-                subtitle={description}
+                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
               />
             </Section>
           )}

@@ -2,9 +2,8 @@
 import { Card, Cell, Image, Section } from '@telegram-apps/telegram-ui';
 import { SyntheticEvent, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
-import { AddFavouriteNew } from '../AddFavouriteNew/AddFavouriteNew';
+import { AddFavourite } from '../AddFavourite/AddFavourite';
 
 interface ICatalogItemProps {
   spot: any;
@@ -25,7 +24,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
     <Card style={{ width: '100%' }} onClick={() => navigate('/item/' + spot.id)}>
       <>
         {/* <AddFavourite id={spot.id} title={spot.name} isCard withPadding iconAdd={iconAdd} iconNotAdd={iconNotAdd} added={added} onFavourite={onFavourite} /> */}
-        <AddFavouriteNew id={spot.id} title={spot.name} isCard withPadding added={added} onFavourite={onFavourite} />
+        <AddFavourite id={spot.id} title={spot.name} isCard withPadding added={added} onFavourite={onFavourite} />
 
         <img
           alt="Dog"
@@ -40,7 +39,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
 
         <CardCell
           readOnly
-          subtitle={spot.description}
+          subtitle={<span dangerouslySetInnerHTML={{ __html: spot.description }} />}
         >
           {spot.name}
         </CardCell>
@@ -50,9 +49,9 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
     <Section>
       <Cell
         // after={<AddFavourite id={spot.id} title={spot.name} withPadding iconAdd={iconAdd} iconNotAdd={iconNotAdd} added={added} onFavourite={onFavourite} />}
-        after={<AddFavouriteNew id={spot.id} title={spot.name} isCard withPadding added={added} onFavourite={onFavourite} />}
+        after={<AddFavourite id={spot.id} title={spot.name} withPadding added={added} onFavourite={onFavourite} />}
         before={<Image size={96} src={spot.mainImg} />}
-        description={spot.description}
+        description={<span dangerouslySetInnerHTML={{ __html: spot.description }} />}
         subtitle={`Оценка: ${spot.raiting}`}
         style={{ minHeight: '124px '}}
         onClick={() => {

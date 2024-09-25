@@ -6,17 +6,20 @@ import { ItemPage } from '@/pages/ItemPage/ItemPage';
 import { CatalogPage } from '@/pages/CatalogPage/CatalogPage';
 import { MapPage } from '@/pages/MapPage/MapPage';
 import { SpotMapPage } from '@/pages/SpotMapPage/SpotMapPage';
-import { CollectionsPage } from '@/pages/CollectionsPage/CollectionsPage';
-import { SelectionPage } from '@/pages/SelectionPage/SelectionPage';
-import { Favourites } from '@/components/Favourites/Favourites';
+import { RecommendedGroupsPage } from '@/pages/RecommendedGroupsPage/RecommendedGroupsPage';
+import { IdeasPage } from '@/pages/IdeasPage/IdeasPage';
+import { FavoriteGroupsPage } from '@/pages/FavoriteGroupsPage/FavoriteGroupsPage';
+import { FavouritesPage } from '@/pages/FavouritesPage/FavouritesPage';
 
 export const ROUTE_NAMES = {
   MAIN_ROUTE: '/',
   CATALOGUE_ROUTE: '/catalog',
   MAP_ROUTE: '/map',
-  SELECTIONS_ROUTE: '/selections/*',
-  SELECTION_ROUTE: '/selections/recommended-groups/:id',
-  FAVOURITES_ROUTE: '/selections/favourite-groups/:id',
+  IDEAS_ROUTE: '/ideas/*',
+  IDEAS_RECOMMENDED_LIST_ROUTE: '/ideas/recommended-groups',
+  IDEAS_RECOMMENDED_ITEM_ROUTE: '/ideas/recommended-groups/:id',
+  FAVOURITE_GROUPS_ROUTE: '/favourite-groups',
+  FAVOURITE_GROUP_ROUTE: '/favourite-groups/:id',
   USER_ROUTE: '/user',
   PARTNER_ROUTE: '/partner',
   ITEM_ROUTE: '/item/:id',
@@ -34,9 +37,10 @@ export const routes: Route[] = [
   { path: ROUTE_NAMES.MAIN_ROUTE, Component: MainPage, title: 'Главная' },
   { path: ROUTE_NAMES.CATALOGUE_ROUTE, Component: CatalogPage, title: 'Каталог' },
   { path: ROUTE_NAMES.MAP_ROUTE, Component: MapPage, title: 'Карта' },
-  { path: ROUTE_NAMES.SELECTIONS_ROUTE, Component: CollectionsPage, title: 'Подборки' },
-  { path: ROUTE_NAMES.SELECTION_ROUTE, Component: SelectionPage, title: 'Рекомендованное' },
-  { path: ROUTE_NAMES.FAVOURITES_ROUTE, Component: Favourites, title: 'Избранное' },
+  { path: ROUTE_NAMES.IDEAS_ROUTE, Component: IdeasPage, title: 'Идеи' },
+  { path: ROUTE_NAMES.IDEAS_RECOMMENDED_ITEM_ROUTE, Component: RecommendedGroupsPage, title: 'Рекомендованное' },
+  { path: ROUTE_NAMES.FAVOURITE_GROUPS_ROUTE, Component: FavoriteGroupsPage, title: 'Избранное' },
+  { path: ROUTE_NAMES.FAVOURITE_GROUP_ROUTE, Component: FavouritesPage, title: 'Избранное' },
   { path: ROUTE_NAMES.PARTNER_ROUTE, Component: PartnerPage, title: 'Стать партнером' },
   { path: ROUTE_NAMES.ITEM_ROUTE, Component: ItemPage },
   { path: ROUTE_NAMES.SPOT_MAP_ROUTE, Component: SpotMapPage },

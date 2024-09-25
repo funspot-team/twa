@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SyntheticEvent, useEffect, useState, type FC } from 'react';
 import { LastItem } from '@/components/LastItem/LastItem';
-import { Button, Cell, IconButton, Input, Section, Tappable } from '@telegram-apps/telegram-ui';
+import { Button, Cell, IconButton, Input, List, Section, Tappable } from '@telegram-apps/telegram-ui';
 import { Icon24Close } from '@telegram-apps/telegram-ui/dist/icons/24/close';
 import { $groups, $isLoadingGroups, createGroup, deleteGroup, fetchGroups } from './model';
 import { useUnit } from 'effector-react';
-import { SpinnerList } from '../SpinnerList/SpinnerList';
 import { useNavigate } from 'react-router-dom';
 import { Icon28Remove } from '@/icons/remove';
+import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 
-export const FavoriteGroups: FC = () => {
+export const FavoriteGroupsPage: FC = () => {
   const navigate = useNavigate();
 
   const groups = useUnit($groups);
@@ -36,28 +36,31 @@ export const FavoriteGroups: FC = () => {
   if (isLoading) return <SpinnerList />;
 
   return (
-    <>
-      {groups && groups.length > 0 && groups.map((group: any) => (
-        <Section key={group.id}>
-          <Cell
-            onClick={() => {
-              navigate('/selections/favourite-groups/' + group.id);
-            }}
-            after={
-              <IconButton
-                mode="plain"
-                size="l"
-                onClick={(e) => onRemoveGroup(e, group.id)}
-              >
-                <Icon28Remove />
-              </IconButton>
-            }
-            multiline
-          >
-            {group.name}
-          </Cell>
+    <List>
+      {groups && groups.length > 0 && (
+        <Section header="Мои подборки">
+          {groups.map((group: any) => (
+            <Cell
+              key={group.id}
+              onClick={() => {
+                navigate('/favourite-groups/' + group.id);
+              }}
+              after={
+                <IconButton
+                  mode="plain"
+                  size="l"
+                  onClick={(e) => onRemoveGroup(e, group.id)}
+                >
+                  <Icon28Remove />
+                </IconButton>
+              }
+              multiline
+            >
+              {group.name}
+            </Cell>
+          ))}
         </Section>
-      ))}
+      )}
 
       <Section header="Добавить новую подборку">
         <Input
@@ -87,6 +90,6 @@ export const FavoriteGroups: FC = () => {
       </div>
 
       <LastItem />
-    </>
+    </List>
   );
 };

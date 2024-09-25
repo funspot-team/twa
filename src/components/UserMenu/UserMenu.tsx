@@ -2,17 +2,14 @@ import { Section, Cell, List, } from '@telegram-apps/telegram-ui';
 import { ButtonCell } from '@telegram-apps/telegram-ui/dist/components/Blocks';
 import { type FC } from 'react';
 import { IconContainer } from '@telegram-apps/telegram-ui/dist/components/Blocks';
-
-import { Link } from '@/components/Link/Link.tsx';
-
+// import { Link } from '@/components/Link/Link.tsx';
 import { Icon28Add } from '@/icons/add';
-import { Icon28Lightbulb } from '@/icons/lightbulb';
-import { Icon28Person } from '@/icons/person';
-import { Icon28Theme } from '@/icons/theme';
+// import { Icon28Person } from '@/icons/person';
+// import { Icon28Theme } from '@/icons/theme';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
 import { Icon28Question } from '@/icons/question';
-
 import { useNavigate } from 'react-router-dom';
+import { onChangeStepperGuide } from '../Layout/model';
 
 import './UserMenu.css';
 
@@ -57,7 +54,7 @@ export const UserMenu: FC = () => {
             </Cell>
           </Link> */}
 
-          <Link to='/catalog'>
+          {/* <Link to='/catalog'>
             <Cell
               before={<IconContainer><Icon28Lightbulb /></IconContainer>}
               subtitle="Ищите вдохновение в нашем блоге"
@@ -65,21 +62,21 @@ export const UserMenu: FC = () => {
             >
               Идеи
             </Cell>
-          </Link>
+          </Link> */}
           <ButtonCell
             before={<Icon28Add />}
             interactiveAnimation="opacity"
             mode="default"
             onClick={() => navigate('/map')}
           >
-            Добавить место
+            Рекомендовать место
           </ButtonCell>
         </Section>
 
         <Section
           header='Другие сервисы'
         >
-          <Link to='/default'>
+          {/* <Link to='/default'>
             <Cell
               before={<IconContainer><Icon28Person /></IconContainer>}
               subtitle="Расширяйте свои возможности"
@@ -87,8 +84,16 @@ export const UserMenu: FC = () => {
             >
               Пригласить друга
             </Cell>
-          </Link>
-          <Link to='/default'>
+          </Link> */}
+          <Cell
+            before={<IconContainer><Icon28Question /></IconContainer>}
+            subtitle="Узнайте как эффективно использовать приложение"
+            after={<Icon16ChevronRight />}
+            onClick={() => onChangeStepperGuide(true)}
+          >
+            Как пользоваться приложением
+          </Cell>
+          {/* <Link to='/default'>
             <Cell
               before={<IconContainer><Icon28Question /></IconContainer>}
               subtitle="Узнайте подробности в разделе информации"
@@ -96,8 +101,8 @@ export const UserMenu: FC = () => {
             >
               Вопросы и ответы
             </Cell>
-          </Link>
-          <Link to='/partner'>
+          </Link> */}
+          {/* <Link to='/partner'>
             <Cell
               before={<IconContainer><Icon28Theme /></IconContainer>}
               subtitle="Мы расскажем вам про наши партнерские программы"
@@ -105,7 +110,7 @@ export const UserMenu: FC = () => {
             >
               Стать партнером
             </Cell>
-          </Link>
+          </Link> */}
           {/* <Link to='/new-index'>
             <Cell
               after={<Icon16ChevronRight />}

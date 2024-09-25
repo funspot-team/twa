@@ -21,7 +21,7 @@ export const RecommendedGroups: FC = () => {
                 description={item.description}
                 style={{ minHeight: '124px '}}
                 onClick={() => {
-                  navigate('/selections/recommended-groups/' + item.id);
+                  navigate('/ideas/recommended-groups/' + item.id);
                 }}
                 multiline
               >

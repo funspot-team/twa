@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { $userData } from '@/components/Layout/model';
 import { createEvent, createStore, createEffect, attach, sample } from 'effector';
-import { $userData } from '../Layout/model';
 
 export const fetchFavourites = createEvent();
 export const addFavourite = createEvent();
@@ -71,7 +71,10 @@ const deleteFavouriteFx = attach({
 });
 
 export const $favourites = createStore([])
-  .on(fetchFavouritesFx.doneData, (_, result) => JSON.parse(result.data));
+  .on(fetchFavouritesFx.doneData, (_, result) => {
+    if (!result?.data) return [];
+    return JSON.parse(result.data);
+  });
 
 export const $isLoadingFavourites = fetchFavouritesFx.pending; // || addFavouriteFx.pending || deleteFavouriteFx.pending;
 

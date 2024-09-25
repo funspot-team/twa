@@ -11,7 +11,7 @@ import { useUnit } from 'effector-react';
 import { $catalog } from '@/components/Layout/model';
 import { useParams } from 'react-router-dom';
 
-export const SelectionPage: FC = () => {
+export const RecommendedGroupsPage: FC = () => {
   const { id } = useParams();
   
   const spots = useUnit($catalog);

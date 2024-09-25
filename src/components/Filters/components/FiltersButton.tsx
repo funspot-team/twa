@@ -2,17 +2,14 @@ import { useUnit } from "effector-react";
 import { Badge, Button } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
 import { $childrenFilter, $mainFilters, $priceFilter } from '../model';
-import { Icon28Filters } from '@/icons/filters';
+import { Icon28Filter } from "@/icons/filter";
 
 interface IFiltersButtonProps {
   onClick: () => void;
   isMap?: boolean;
 }
 
-export const FiltersButton: FC<IFiltersButtonProps> = ({
-  onClick,
-  isMap = false,
-}) => {
+export const FiltersButton: FC<IFiltersButtonProps> = ({ onClick }) => {
   const filters = useUnit($mainFilters);
   const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
@@ -28,43 +25,20 @@ export const FiltersButton: FC<IFiltersButtonProps> = ({
   }
 
   return (
-    <>
-      {isMap && <Button
-        before={<Icon28Filters />}
-        mode="filled"
-        size="s"
-        style={{ zIndex: 1000, position: 'fixed', margin: '5%' }}
-        onClick={onClick}
-        after={
-          filtersLength > 0 && <Badge
-            mode="white"
-            type="number"
-          >
-            {filtersLength}
-          </Badge>
-        }
-      >
-        Фильтры
-      </Button>}
-
-      {/* gray secondary */}
-      {!isMap && <Button
-        before={<Icon28Filters />}
-        mode="filled"
-        size="s"
-        style={{ margin: '16px 18px 10px 18px' }}
-        onClick={onClick}
-        after={
-          filtersLength > 0 && <Badge
-            mode="white"
-            type="number"
-          >
-            {filtersLength}
-          </Badge>
-        }
-      >
-        Фильтры
-      </Button>}
-    </>
+    <Button
+      before={<Icon28Filter />}
+      mode="filled"
+      size="m"
+      style={{ gap: 0 }}
+      onClick={onClick}
+      after={
+        filtersLength > 0 && <Badge
+          mode="white"
+          type="number"
+        >
+          {filtersLength}
+        </Badge>
+      }
+    />
   );
 };

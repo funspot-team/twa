@@ -1,45 +1,65 @@
-import { useEffect, useMemo, type FC } from 'react';
-import { $isLoading, fetchCatalog, onChangeUserData } from './model';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useEffect, useMemo, useRef, type FC } from 'react';
+import { $isShowStepperGuide, fetchCatalog, onChangeUserData } from './model';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
-import { SpinnerList } from '../SpinnerList/SpinnerList';
-import { useUnit } from 'effector-react';
 import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
 import { useInitData } from '@telegram-apps/sdk-react';
+import { StepperGuide } from '../StepperGuide /StepperGuide';
+import { useUnit } from 'effector-react';
 
 export const Layout: FC = () => {
+  const redirectAllow = useRef(true);
+  const navigate = useNavigate();
   const initData = useInitData();
-  const isLoading = useUnit($isLoading);
+  const isShowGuide = useUnit($isShowStepperGuide);
 
   const userData = useMemo(() => {
     return initData && initData.user ? initData.user : undefined;
   }, [initData]);
 
+  const startParam = useMemo(() => {
+    return initData && initData.startParam ? initData.startParam : undefined;
+  }, [initData]);
+
   useEffect(() => {
     onChangeUserData(userData);
     fetchCatalog();
+
+    if (startParam) {
+      const parsedParam = startParam.split('_');
+      const left = parsedParam[0];
+      const right = parsedParam[1];
+      const isSpotPage = left === 'spotId';
+
+      if (isSpotPage && right && redirectAllow.current) {
+        redirectAllow.current = false;
+        
+        setTimeout(() => {
+          navigate('/item/' + right);
+        }, 0);
+      }
+    }
   }, []);
+
+  if (isShowGuide) {
+    return <StepperGuide />;
+  }
 
   return (
     <>
       <YandexMetrika />
 
-      {isLoading ? (
-        <SpinnerList />
-      ) : (
-        <>
-          <Routes>
-            {routes.map((route) => <Route key={route.path} {...route} />)}
-              <Route path='*' element={<Navigate to='/'/>}/>
-          </Routes>
+      <Routes>
+        {routes.map((route) => <Route key={route.path} {...route} />)}
+          <Route path='*' element={<Navigate to='/'/>}/>
+      </Routes>
 
-          <AddFavouriteModal />
-          
-          <Tabbar />
-        </>
-      )}
+      <AddFavouriteModal />
+      
+      <Tabbar />
     </>
   );
 };
