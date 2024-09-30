@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Snackbar, Subheadline, Title } from '@telegram-apps/telegram-ui';
+import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
-import { useState, type FC } from 'react';
+import { type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
@@ -17,17 +17,16 @@ import { useUnit } from 'effector-react';
 import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { ShareButton } from '@/components/ShareButton/ShareButton';
+import { useFakeLoading } from '@/hooks/useFakeLoading';
+import { onChangeSnackbar } from '@/components/Snackbar/model';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
-import { useFakeLoading } from '@/hooks/useFakeLoading';
 
 export const ItemPage: FC = () => {
   const spots = useUnit($catalog);
   const isLoading = useUnit($isLoadingCatalog);
   const { id } = useParams();
-
-  const [isSnackbarShown, setIsSnackbarShown] = useState(false);
   const { loading: isFakeLoading } = useFakeLoading(0);
 
   if (isLoading || isFakeLoading) {
@@ -119,7 +118,30 @@ export const ItemPage: FC = () => {
             <ShareButton spotId={id} />
           </InlineButtons>
 
-          <Section>
+          {/* {id === '55' && (
+            <Section header="Предложение для друзей">
+              <Cell
+                subtitle="Специальное предложение для гостей бара Сайгон, сет настоек со скидкой 20%! Просто покажите бармену этот код и не мерзнете осенью!"
+                // after={<Icon16ChevronRight />}
+                multiline
+                // onClick={}
+                before={
+                  <IconContainer>
+                    <Icon28Smile />
+                  </IconContainer>
+                }
+              >
+                <div className="blur-element">
+                  ТЕПЛАЯОСЕНЬ24
+                </div>
+                <Spoiler>
+                  ТЕПЛАЯОСЕНЬ24
+                </Spoiler>
+              </Cell>
+            </Section>
+          )} */}
+
+          <Section header="Адрес">
             <Cell
               multiline
               subtitle={address}
@@ -127,7 +149,13 @@ export const ItemPage: FC = () => {
               onClick={() => {
                 if (navigator.clipboard) {
                   navigator.clipboard.writeText(address).then(function() {
-                    setIsSnackbarShown(true);
+                    onChangeSnackbar({
+                      isShow: true,
+                      title: 'Адрес скопирован в буфер обмена',
+                      description: '',
+                      spotId: null,
+                      isDelete: false,
+                    });
                   });
                 }
               }}
@@ -241,16 +269,6 @@ export const ItemPage: FC = () => {
         </List>
 
         <SpotSmallMap center={coords as L.LatLngExpression} />
-
-        {isSnackbarShown && (
-          <Snackbar
-            duration={3000}
-            onClose={() => setIsSnackbarShown(false)}
-            style={{ bottom: '96px' }}
-          >
-            Адрес скопирован в буфер обмена
-          </Snackbar>
-        )}
       </div>
   );
 };

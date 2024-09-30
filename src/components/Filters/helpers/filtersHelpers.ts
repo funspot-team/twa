@@ -22,8 +22,9 @@ export const getSpotsByFilters = (data: any, filters: MultiselectOption[], withC
         : filteredSpots;
 
     if (searchStr) {
-        result = result.filter(({ name }: any) => {
-            return name.toLowerCase().includes(searchStr.toLowerCase())
+        result = result.filter(({ name, search }: any) => {
+            const str = searchStr.toLowerCase();
+            return name.toLowerCase().includes(str) || search.toLowerCase().includes(str);
         });
     }
 

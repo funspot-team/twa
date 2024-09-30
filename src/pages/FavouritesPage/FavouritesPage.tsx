@@ -10,7 +10,7 @@ import { useUnit } from 'effector-react';
 import { $catalog } from '@/components/Layout/model';
 import { $favourites, $isLoadingFavourites, deleteFavourite, fetchFavourites } from './model';
 import { useParams } from 'react-router-dom';
-import { onChangeFavouriteSnackbar } from '@/components/AddFavouriteModal/model';
+import { onChangeSnackbar } from '@/components/Snackbar/model';
 
 export const FavouritesPage: FC = () => {
   const { id: groupId } = useParams();
@@ -45,9 +45,10 @@ export const FavouritesPage: FC = () => {
 
     setDeleted([...deleted, spotId]);
 
-    onChangeFavouriteSnackbar({
+    onChangeSnackbar({
       isShow: true,
       title,
+      description: 'Удалено из подборки',
       spotId,
       isDelete: true,
     });

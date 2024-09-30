@@ -1,7 +1,10 @@
-import { Button, List, Placeholder, Steps } from '@telegram-apps/telegram-ui';
+import { Button, IconButton, List, Placeholder, Steps, Text } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
 import { onChangeStepperGuide } from '../Layout/model';
 import { useLaunchParams } from '@telegram-apps/sdk-react';
+import { Icon28Close } from '@telegram-apps/telegram-ui/dist/icons/28/close';
+
+import './StepperGuide.css';
 
 const stepsData = [
   {
@@ -24,7 +27,9 @@ const stepsData = [
     title: 'Идеи и избранные места',
     description: 'В разделе "Идеи" мы подготовили подборки самых интересных мест и статей, которые вдохновят вас на новые открытия. Сохраняйте понравившиеся места в "Избранное" и создавайте свои собственные группы для удобного доступа к ним в будущем.',
   }
-]
+];
+
+const TOTAL_STEPS = 5;
 
 export const StepperGuide: FC = () => {
   const { platform } = useLaunchParams();
@@ -39,19 +44,28 @@ export const StepperGuide: FC = () => {
         borderRadius: '0 0 16px 16px',
         height: '50vh',
         width: '100%'
-      }}></div>
+      }}>
+        <IconButton
+          mode="plain"
+          size="s"
+          onClick={() => onChangeStepperGuide(false)}
+          style={{ position: 'absolute', right: '8px', top: '8px' }}
+        >
+          <Icon28Close />
+        </IconButton>
+      </div>
 
       <List style={{ height: '50vh', display: 'flex', flexDirection: 'column' }}>
         <div style={{ flexGrow: 1 }}>
           <Steps
-            count={5}
+            count={TOTAL_STEPS}
             progress={step}
           />
 
           <Placeholder
             header={stepsData[step - 1].title}
             description={stepsData[step - 1].description}
-            style={{ padding: '12px' }}
+            className="stepper-guide-placeholder"
           />
         </div>
 
@@ -59,32 +73,44 @@ export const StepperGuide: FC = () => {
           gap: '16px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'space-between',
+          padding: '12px',
           paddingBottom: isIos ? '20px' : '0',
         }}>
-          {step !== 1 && <Button
-            mode="gray"
-            size="m"
-            onClick={() => setStep(step - 1)}
-          >
-            Назад
-          </Button>}
+          <Text weight='2'>
+            {`${step} из ${TOTAL_STEPS}`}
+          </Text>
 
-          {step !== 5 && <Button
-            mode="filled"
-            size="m"
-            onClick={() => setStep(step + 1)}
+          <div
+            style={{
+              gap: '16px',
+              display: 'flex',
+            }}
           >
-            Вперед
-          </Button>}
+            {step !== 1 && <Button
+              mode="gray"
+              size="m"
+              onClick={() => setStep(step - 1)}
+            >
+              Назад
+            </Button>}
 
-          {step === 5 && <Button
-            mode="filled"
-            size="m"
-            onClick={() => onChangeStepperGuide(false)}
-          >
-            Закрыть
-          </Button>}
+            {step !== 5 && <Button
+              mode="filled"
+              size="m"
+              onClick={() => setStep(step + 1)}
+            >
+              Вперед
+            </Button>}
+
+            {step === 5 && <Button
+              mode="filled"
+              size="m"
+              onClick={() => onChangeStepperGuide(false)}
+            >
+              Закрыть
+            </Button>}
+          </div>
         </div>
       </List>
     </>

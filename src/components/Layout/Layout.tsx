@@ -9,6 +9,7 @@ import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { StepperGuide } from '../StepperGuide /StepperGuide';
 import { useUnit } from 'effector-react';
+import { Snackbar } from '../Snackbar/Snackbar';
 
 export const Layout: FC = () => {
   const redirectAllow = useRef(true);
@@ -58,6 +59,8 @@ export const Layout: FC = () => {
       </Routes>
 
       <AddFavouriteModal />
+
+      <Snackbar />
       
       <Tabbar />
     </>

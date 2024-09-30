@@ -4,23 +4,22 @@ import { ButtonCell, Cell, List, Modal, Section } from '@telegram-apps/telegram-
 import { useEffect, type FC } from 'react';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import { useUnit } from 'effector-react';
-import { $favouriteSnakbar, $isShowFavouriteModal, onChangeFavouriteModal, onChangeFavouriteSnackbar } from './model';
+import { $isShowFavouriteModal, onChangeFavouriteModal } from './model';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
 import { Icon28Add } from '@/icons/add';
-import { FavouriteSnackbar } from './components/FavouriteSnackbar';
 import { useNavigate } from 'react-router-dom';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
 import { $groups, $isLoadingGroups, fetchGroups } from '@/pages/FavoriteGroupsPage/model';
 import { addFavourite } from '@/pages/FavouritesPage/model';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { $userData } from '../Layout/model';
+import { onChangeSnackbar } from '../Snackbar/model';
 
 const FavoriteDefaultState = { isShow: false, spotId: null, title: '' };
 
 export const AddFavouriteModal: FC = () => {
   const navigate = useNavigate();
   const { isShow: isShowModal, spotId, title } = useUnit($isShowFavouriteModal);
-  const { isShow: isShowSnackbar, title: titleSnackbar, isDelete, spotId: spotIdSnackbar } = useUnit($favouriteSnakbar);
   const { id: userId } = useUnit($userData);
   const groups = useUnit($groups);
   const isLoadingGroups = useUnit($isLoadingGroups);
@@ -30,10 +29,6 @@ export const AddFavouriteModal: FC = () => {
       fetchGroups();
     }
   }, [userId]);
-
-  const undoHandler = () => {
-    console.log('add spot ', spotIdSnackbar, ' ', titleSnackbar );
-  }
   
   return (
     <>
@@ -66,9 +61,10 @@ export const AddFavouriteModal: FC = () => {
 
                       onChangeFavouriteModal(FavoriteDefaultState);
 
-                      onChangeFavouriteSnackbar({
+                      onChangeSnackbar({
                         isShow: true,
                         title,
+                        description: 'Добавлено в подборку',
                         spotId,
                         isDelete: false,
                       });
@@ -98,14 +94,6 @@ export const AddFavouriteModal: FC = () => {
 
         <div style={{ width: '100%', height: '40px' }}></div>
       </Modal>
-
-      <FavouriteSnackbar
-        isShowSnackbar={isShowSnackbar}
-        title={titleSnackbar}
-        isDelete={isDelete}
-        onChangeFavouriteSnackbar={onChangeFavouriteSnackbar}
-        undoHandler={undoHandler}
-      />
     </>
   );
 };

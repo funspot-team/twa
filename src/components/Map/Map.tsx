@@ -27,7 +27,7 @@ import './Map.css';
 const customIcon = new L.Icon({
   iconUrl: '/twa/images/marker2.svg',
   iconSize: new L.Point(40, 40),
-})
+});
 
 // @ts-ignore
 const createClusterCustomIcon = function (cluster) {

@@ -12,10 +12,10 @@ import { LastItem } from '@/components/LastItem/LastItem';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
 import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { useUnit } from 'effector-react';
-
-import './MainPage.css';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
+
+import './MainPage.css';
 
 interface ISpotsBlockProps {
   title: string;
