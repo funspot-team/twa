@@ -28,7 +28,11 @@ export const $catalog = createStore([])
         ...spot,
         name: decodeHtmlEntities(spot.name),
       }))
-      .sort((a: any, b: any) => b.rating - a.rating);
+      .sort((a: any, b: any) => {
+        if (a.raiting === null) return 1;
+        if (b.raiting === null) return -1;
+        return parseFloat(b.raiting) - parseFloat(a.raiting);
+      });
   });
 
 export const $isLoadingCatalog = fetchCatalogFx.pending;

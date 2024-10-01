@@ -107,7 +107,7 @@ export const MainPage: FC = () => {
         navigate(ROUTE_NAMES.CATALOGUE_ROUTE);
         break;
       case 2:
-        navigate(ROUTE_NAMES.MAP_ROUTE);
+        // navigate(ROUTE_NAMES.MAP_ROUTE);
         break;
       default:
         return null;

@@ -18,6 +18,7 @@ import RECOMMENDED from '@/mocks/recommended.json';
 import { GroupsBlock } from './components/GroupsBlock';
 
 import './MainPage.css';
+import { onChangeIsViewAsMap } from '@/components/Filters/model';
 
 interface ISpotsBlockProps {
   title: string;
@@ -98,8 +99,11 @@ export const MainPage: FC = () => {
         <Button
           mode="white"
           size="s"
-          style={{ marginTop: '100px' }}
-          onClick={() => navigate(ROUTE_NAMES.CATALOGUE_ROUTE)}
+          style={{ marginTop: '100px', opacity: 0.7 }}
+          onClick={() => {
+            onChangeIsViewAsMap(false);
+            navigate(ROUTE_NAMES.CATALOGUE_ROUTE);
+          }}
         >
           Открыть каталог
         </Button>
@@ -125,7 +129,10 @@ export const MainPage: FC = () => {
           mode="filled"
           size="s"
           style={{ marginTop: '10px' }}
-          onClick={() => navigate(ROUTE_NAMES.MAP_ROUTE)}
+          onClick={() => {
+            onChangeIsViewAsMap(true);
+            navigate(ROUTE_NAMES.CATALOGUE_ROUTE);
+          }}
         >
           Искать на карте
         </Button>

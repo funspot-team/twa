@@ -3,7 +3,6 @@ import { useEffect, useState, type FC } from 'react';
 import { useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { Icon28Burger } from '@/icons/burger';
 import { Icon28Heart } from '@/icons/heart';
-import { Icon28Globe } from '@/icons/globe';
 import { Icon28Catalogue } from '@/icons/catalogue';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { useHapticFeedback, useLaunchParams } from '@telegram-apps/sdk-react';
@@ -21,11 +20,6 @@ const tabs = [
     path: ROUTE_NAMES.CATALOGUE_ROUTE,
     Icon: Icon28Catalogue,
     text: 'Каталог',
-  },
-  {
-    path: ROUTE_NAMES.MAP_ROUTE,
-    Icon: Icon28Globe,
-    text: 'Карта',
   },
   {
     path: ROUTE_NAMES.FAVOURITE_GROUPS_ROUTE,
