@@ -23,10 +23,12 @@ export const $catalog = createStore([])
   .on(fetchCatalogFx.doneData, (_, result) => {
     if (!result?.data) return [];
 
-    return result.data.map((spot: any) => ({
-      ...spot,
-      name: decodeHtmlEntities(spot.name),
-    }));
+    return result.data
+      .map((spot: any) => ({
+        ...spot,
+        name: decodeHtmlEntities(spot.name),
+      }))
+      .sort((a: any, b: any) => b.rating - a.rating);
   });
 
 export const $isLoadingCatalog = fetchCatalogFx.pending;

@@ -5,6 +5,7 @@ export const onChangeMainFilters = createEvent<MultiselectOption>();
 export const onChangeChildrenFilter = createEvent<boolean>();
 export const onChangePriceFilters = createEvent<number>();
 export const onChangeSearch = createEvent<string>();
+export const onChangeIsViewAsMap = createEvent<boolean>();
 
 export const onResetFilters = createEvent();
 
@@ -12,6 +13,7 @@ export const $mainFilters = createStore<MultiselectOption[]>([]);
 export const $childrenFilter = createStore<boolean>(false);
 export const $priceFilter = createStore<number>(35000);
 export const $searchFilter = createStore<string>('');
+export const $isViewAsMap = createStore<boolean>(false);
 
 $mainFilters
   .on(onChangeMainFilters, (filters, filter) => {
@@ -50,3 +52,8 @@ $searchFilter
   .on(onResetFilters, () => {
     return '';
   });
+
+$isViewAsMap
+  .on(onChangeIsViewAsMap, (_, value) => {
+    return value;
+  })

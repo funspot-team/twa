@@ -36,3 +36,8 @@
   background: #5290F5;
   font-size: large;
 }
+
+.leaflet-bar {
+  bottom: 50vh;
+  border: none !important;
+}

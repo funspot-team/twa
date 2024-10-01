@@ -5,6 +5,8 @@ import { Icon24Close } from "@telegram-apps/telegram-ui/dist/icons/24/close";
 import { useDebounce } from "use-debounce";
 import { $searchFilter } from "../model";
 
+import './FiltersSearch.css';
+
 interface IFiltersSearchProps {
   onSearch: (searchStr: string) => void;
 }
@@ -21,7 +23,7 @@ export const FiltersSearch: FC<IFiltersSearchProps> = ({
   }, [debouncedSearchStr]);
 
   return (
-    <div style={{ width: 'inherit' }}>
+    <div style={{ width: 'inherit' }} className="filters-search">
       <Input
         value={searchStr}
         placeholder="Поиск"
@@ -35,7 +37,6 @@ export const FiltersSearch: FC<IFiltersSearchProps> = ({
             <Icon24Close />
           </Tappable>
         )}
-        className="filters-search"
       />
     </div>
   );

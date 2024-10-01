@@ -13,9 +13,9 @@ import { Icon28Lightbulb } from '@/icons/lightbulb';
 
 const tabs = [
   {
-    path: ROUTE_NAMES.IDEAS_RECOMMENDED_LIST_ROUTE,
+    path: ROUTE_NAMES.MAIN_ROUTE,
     Icon: Icon28Lightbulb,
-    text: 'Идеи',
+    text: 'Главная',
   },
   {
     path: ROUTE_NAMES.CATALOGUE_ROUTE,
@@ -80,12 +80,13 @@ export const Tabbar: FC = () => {
         }) => {
           const match = useMatch(path);
           const contained = location.pathname.startsWith(path);
+          const isMainPage = path === ROUTE_NAMES.MAIN_ROUTE;
 
           return (
             <UITabbar.Item
               key={path}
               text={text}
-              selected={!!match || contained}
+              selected={!!match || (contained && !isMainPage)}
               onClick={() => clickHandler(path)}
             >
                 <Icon />

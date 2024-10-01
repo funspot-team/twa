@@ -22,11 +22,12 @@ export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
       className="banerspot"
       style={{
         backgroundImage: `url(${mainImg})`,
+        marginTop: '24px'
       }}
     >
       <>
         <Button size="s" onClick={() => navigate('/item/' + id)}>
-          Бронировать
+          Попробовать сквош
         </Button>
 
         {/* <Button

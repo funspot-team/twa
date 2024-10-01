@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { List, Card, Button } from '@telegram-apps/telegram-ui';
-import { type FC } from 'react';
+import { List, Card } from '@telegram-apps/telegram-ui';
+import { useRef, type FC } from 'react';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 
 import { useNavigate } from 'react-router-dom';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
-// import ReactImageGallery from 'react-image-gallery';
+import ReactImageGallery from 'react-image-gallery';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
@@ -14,8 +14,6 @@ import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { useUnit } from 'effector-react';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
-import RECOMMENDED from '@/mocks/recommended.json';
-import { GroupsBlock } from './components/GroupsBlock';
 
 import './MainPage.css';
 
@@ -64,7 +62,23 @@ const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
   );
 }
 
+const images = [
+  {
+    original: '/twa/images/catalogue0.png',
+    thumbnail: '/twa/images/catalogue0.png',
+  },
+  {
+    original: '/twa/images/catalogue1.png',
+    thumbnail: '/twa/images/catalogue1.png',
+  },
+  {
+    original: '/twa/images/catalogue2.png',
+    thumbnail: '/twa/images/catalogue2.png',
+  },
+];
+
 export const MainPage: FC = () => {
+  const imageGalleryRef = useRef(null);
   const navigate = useNavigate();
   const spots = useUnit($catalog);
   const isLoading = useUnit($isLoadingCatalog);
@@ -81,55 +95,40 @@ export const MainPage: FC = () => {
     .filter(({id}) => [21, 22, 13].includes(Number(id)))
     .slice(0).reverse();
   const popular = spots.filter(({id}) => [19, 12, 15, 26, 27].includes(Number(id)));
-  const baner = spots.find(({id}) => 34 === Number(id));
+  const eco = spots.filter(({id}) => [24, 25, 29, 31, 30].includes(Number(id)));
+  const baner = spots.find(({id}) => 20 === Number(id));
+
+  const clickHandler = () => {
+    // @ts-ignore
+    const currentSlide = imageGalleryRef.current.getCurrentIndex();
+
+    switch(currentSlide) {
+      case 1:
+        navigate(ROUTE_NAMES.CATALOGUE_ROUTE);
+        break;
+      case 2:
+        navigate(ROUTE_NAMES.MAP_ROUTE);
+        break;
+      default:
+        return null;
+    }
+  }
 
   return (
     <>
-      <div style={{
-        height: '200px',
-        backgroundImage: 'url(/twa/images/catalogue0.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'bottom -60px right 0px',
-        backgroundRepeat: 'no-repeat',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-        <Button
-          mode="white"
-          size="s"
-          style={{ marginTop: '100px' }}
-          onClick={() => navigate(ROUTE_NAMES.CATALOGUE_ROUTE)}
-        >
-          Открыть каталог
-        </Button>
-      </div>
-
-      <List>
-        <GroupsBlock title="Наши подборки" groups={RECOMMENDED.data} />
-      </List>
-
-      <div style={{
-        height: '150px',
-        backgroundImage: 'url(/twa/images/main-map.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: '16px',
-        margin: '0 18px',
-      }}>
-        <Button
-          mode="filled"
-          size="s"
-          style={{ marginTop: '10px' }}
-          onClick={() => navigate(ROUTE_NAMES.MAP_ROUTE)}
-        >
-          Искать на карте
-        </Button>
-      </div>
+      <ReactImageGallery
+        ref={imageGalleryRef}
+        items={images}
+        showNav={false}
+        showThumbnails={false}
+        showFullscreenButton={false}
+        showPlayButton={false}
+        showBullets={false}
+        slideDuration={500}
+        slideInterval={4000}
+        autoPlay
+        onClick={clickHandler}
+      />
 
       <List>
         <SpotsBlock title="Вам понравится" spots={recomended} />
@@ -137,6 +136,8 @@ export const MainPage: FC = () => {
         <BannerSpot spot={baner} />
 
         <SpotsBlock title="Популярное" spots={popular} />
+
+        <SpotsBlock title="Экотропы" spots={eco} />
       </List>
 
       <div style={{

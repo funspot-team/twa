@@ -21,6 +21,7 @@ import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
 
 import './Map.css';
+import { MapMyPosition } from './components/MapMyPosition';
 
 // https://street-map.gosur.com/?ll=60.03975637586652,30.313518537422397&z=17.264217556471927&t=streets
 
@@ -73,15 +74,14 @@ export const Map: FC = () => {
 
       {loading && <SpinnerList />}
 
-      <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom={false} zoomControl={false} crs={CRS.EPSG3395}>
+      <MapContainer center={center} attributionControl zoom={zoom} scrollWheelZoom zoomControl={false} crs={CRS.EPSG3395}>
         <HandlerContainer />
         {/* <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/> */}
         <TileLayer url="https://core-renderer-tiles.maps.yandex.net/tiles?l=map&v=24.09.23-4-b240906182700&x={x}&y={y}&z={z}&scale=1&lang=ru_RU&apikey=33547b10-f284-4c4e-8e66-e6c96affaddf" />
 
-        {/* https://www.npmjs.com/package/react-leaflet-cluster */}
         {!loading && <MarkerClusterGroup
           iconCreateFunction={createClusterCustomIcon}
-          maxClusterRadius={50}
+          maxClusterRadius={40}
           spiderfyOnMaxZoom={true}
           showCoverageOnHover={true}
         >
@@ -98,6 +98,7 @@ export const Map: FC = () => {
             })
           }
         </MarkerClusterGroup>}
+        <MapMyPosition />
       </MapContainer>
       
 
@@ -121,17 +122,6 @@ export const Map: FC = () => {
               </Button>
 
               <AddFavourite id={data.id} title={data.name} withPadding />
-              {/* <Button
-                mode="plain"
-                size="s"
-                before={isAdd ? <Icon28HeartFill /> : <Icon28Heart />}
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  setIsAdd(!isAdd)
-                }}
-              >
-                В избранное
-              </Button> */}
             </>
           </Banner>
         )}

@@ -115,7 +115,7 @@ export const ItemPage: FC = () => {
               </IconContainer>
             </InlineButtonsItem>
 
-            <ShareButton spotId={id} />
+            <ShareButton spotId={id} title={name} />
           </InlineButtons>
 
           {/* {id === '55' && (

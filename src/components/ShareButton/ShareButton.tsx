@@ -6,14 +6,32 @@ import { onChangeSnackbar } from '../Snackbar/model';
 
 interface IShareButtonProps {
   spotId: string;
+  title: string;
 }
 
-export const ShareButton: FC<IShareButtonProps> = ({ spotId }) => {
-  const onShare = () => {
-    if (navigator.clipboard) {
-      const link = `https://t.me/fun_spot_official_bot/app?startapp=spotId_${spotId}`;
+export const ShareButton: FC<IShareButtonProps> = ({ spotId, title }) => {
+  const shareData = {
+    text: `Нашел отличное место - ${title}. Посмотри в telegram приложении Funspot!`,
+    url: `https://t.me/fun_spot_official_bot/app?startapp=spotId_${spotId}`,
+  };
 
-      navigator.clipboard.writeText(link).then(function() {
+
+  const onShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Ошибка при попытке поделиться ссылкой:', err);
+      }
+    } else {
+      // Если Web Share API не поддерживается, копируем ссылку
+      copyToClipboard(shareData.url);
+    }
+  };
+
+  const copyToClipboard = (url: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function() {
         onChangeSnackbar({
           isShow: true,
           title: 'Ссылка скопирована в буфер обмена',

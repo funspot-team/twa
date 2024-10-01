@@ -29,7 +29,10 @@ export const FiltersButton: FC<IFiltersButtonProps> = ({ onClick }) => {
       before={<Icon28Filter />}
       mode="filled"
       size="m"
-      style={{ gap: 0 }}
+      style={{
+        gap: 0,
+        backgroundColor: 'grey',
+      }}
       onClick={onClick}
       after={
         filtersLength > 0 && <Badge

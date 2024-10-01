@@ -10,6 +10,7 @@ import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chev
 import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
 import { LastItem } from "@/components/LastItem/LastItem";
 import { FiltersSearch } from "./FiltersSearch";
+import { FiltersToggle } from "./FiltersToggle";
 
 interface IFiltersProps {
   isMap?: boolean;
@@ -45,32 +46,36 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
   }
 
   let style = {
-    margin: '16px 18px 10px',
+    margin: '10px',
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    width: 'calc(100% - 36px)'
+    width: 'calc(100% - 20px)'
   };
 
   if (isMap) {
-    style = {...style, ...{ zIndex: 1000, position: 'fixed', margin: '5%' }};
+    style = {...style, ...{ zIndex: 1000, position: 'fixed' }};
   } else {
-    style = {...style, ...{ margin: '16px 18px 10px 18px' }};
+    style = {
+      ...style,
+      ...{ margin:'16px 18px 10px 18px', width: 'calc(100% - 36px)' }};
   }
 
   return (
     <>
       {(!isOpen || !isMap) && (
-        <div style={style}>
-          {/* {!isMap && ( */}
+        <>
+          <div style={style}>
             <FiltersSearch onSearch={(str) => onChangeSearch(str)}/>
-          {/* )} */}
 
-          <FiltersButton
-            isMap={isMap}
-            onClick={() => setIsOpen(true)}
-          />
-        </div>
+            <FiltersButton
+              isMap={isMap}
+              onClick={() => setIsOpen(true)}
+            />
+
+            <FiltersToggle />
+          </div>
+        </>
       )}
 
       <Modal

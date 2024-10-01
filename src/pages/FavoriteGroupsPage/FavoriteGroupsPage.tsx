@@ -8,7 +8,7 @@ import { $groups, $isLoadingGroups, createGroup, deleteGroup, fetchGroups } from
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
-import { onChangeSnackbar } from '@/components/Snackbar/model';
+// import { onChangeSnackbar } from '@/components/Snackbar/model';
 import { Icon28Ellipsis } from '@/icons/ellipsis';
 import { ModalHeader } from '@/components/ModalHeader/ModalHeader';
 
