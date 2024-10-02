@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type FC } from 'react';
 import RECOMMENDED from '@/mocks/recommended.json';
-// import { useFakeLoading } from '@/hooks/useFakeLoading';
-// import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { Cell, Image, Section } from '@telegram-apps/telegram-ui';
 import { useNavigate } from 'react-router-dom';

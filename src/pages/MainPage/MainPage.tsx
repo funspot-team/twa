@@ -16,9 +16,9 @@ import { ROUTE_NAMES } from '@/navigation/routes';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import RECOMMENDED from '@/mocks/recommended.json';
 import { GroupsBlock } from './components/GroupsBlock';
+import { onChangeIsViewAsMap } from '@/components/Filters/model';
 
 import './MainPage.css';
-import { onChangeIsViewAsMap } from '@/components/Filters/model';
 
 interface ISpotsBlockProps {
   title: string;

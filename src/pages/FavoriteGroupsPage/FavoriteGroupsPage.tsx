@@ -2,13 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, type FC } from 'react';
 import { LastItem } from '@/components/LastItem/LastItem';
-import { Button, Cell, IconButton, Input, List, Modal, Section, Tappable } from '@telegram-apps/telegram-ui';
+import { Badge, Button, Cell, IconButton, Input, List, Modal, Section, Tappable } from '@telegram-apps/telegram-ui';
 import { Icon24Close } from '@telegram-apps/telegram-ui/dist/icons/24/close';
 import { $groups, $isLoadingGroups, createGroup, deleteGroup, fetchGroups } from './model';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
-// import { onChangeSnackbar } from '@/components/Snackbar/model';
 import { Icon28Ellipsis } from '@/icons/ellipsis';
 import { ModalHeader } from '@/components/ModalHeader/ModalHeader';
 
@@ -28,13 +27,6 @@ export const FavoriteGroupsPage: FC = () => {
       setError(true);
 
       return;
-      // onChangeSnackbar({
-      //   isShow: true,
-      //   title: 'Добавьте название подборки',
-      //   description: '',
-      //   spotId: null,
-      //   isDelete: false,
-      // });
     }
     // @ts-ignore
     createGroup(name);
@@ -78,7 +70,14 @@ export const FavoriteGroupsPage: FC = () => {
                 }
                 multiline
               >
-                {group.name}
+                {group.name} 
+                
+                <Badge
+                  mode="gray"
+                  type="number"
+                >
+                  {group.count}
+                </Badge>
               </Cell>
             ))}
           </Section>

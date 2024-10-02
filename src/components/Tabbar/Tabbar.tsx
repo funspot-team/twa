@@ -9,6 +9,8 @@ import { useHapticFeedback, useLaunchParams } from '@telegram-apps/sdk-react';
 import { UserMenu } from '../UserMenu/UserMenu';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import { Icon28Lightbulb } from '@/icons/lightbulb';
+import { $userData } from '../Layout/model';
+import { useUnit } from 'effector-react';
 
 const tabs = [
   {
@@ -41,6 +43,7 @@ export const Tabbar: FC = () => {
   const location = useLocation();
 
   const [isShowUserMenu, setIsShowUserMenu] = useState(false);
+  const { username } = useUnit($userData);
 
   const clickHandler = (path: string) => {
     if (path === ROUTE_NAMES.USER_ROUTE) {
@@ -90,9 +93,9 @@ export const Tabbar: FC = () => {
       </UITabbar>
 
       <Modal
-        style={{ zIndex: 50, background: 'var(--tg-theme-secondary-bg-color, white)' }}
+        style={{ zIndex: 1001, background: 'var(--tg-theme-secondary-bg-color, white)' }}
         header={<ModalHeader
-          title="Alexey Belousov"
+          title={username}
           onClose={() => setIsShowUserMenu(false)}
         />}
         open={isShowUserMenu}
