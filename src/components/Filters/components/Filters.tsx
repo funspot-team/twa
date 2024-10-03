@@ -54,7 +54,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
   };
 
   if (isMap) {
-    style = {...style, ...{ zIndex: 1000, position: 'fixed' }};
+    style = {...style, ...{ zIndex: 50, position: 'fixed' }};
   } else {
     style = {
       ...style,
@@ -79,7 +79,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
       )}
 
       <Modal
-        style={{ zIndex: 30, background: 'var(--tg-theme-secondary-bg-color, white)' }}
+        style={{ zIndex: 55, background: 'var(--tg-theme-secondary-bg-color, white)' }}
         header={
           <ModalHeader
             title="Фильтры"

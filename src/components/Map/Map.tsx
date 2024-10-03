@@ -94,7 +94,7 @@ export const Map: FC = () => {
         header={<ModalHeader />}
         open={isOpen}
         onOpenChange={setIsOpen}
-        style={{ zIndex: 30 }}
+        style={{ zIndex: 70 }}
       >
         {data && (
           <Banner

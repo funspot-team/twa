@@ -33,7 +33,7 @@ export const AddFavouriteModal: FC = () => {
   return (
     <>
       <Modal
-        style={{ zIndex: 50, background: 'var(--tg-theme-secondary-bg-color, white)' }}
+        style={{ zIndex: 95, background: 'var(--tg-theme-secondary-bg-color, white)' }}
         header={
           <ModalHeader
             title="Добавить в подборку"

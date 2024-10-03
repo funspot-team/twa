@@ -17,7 +17,7 @@ export const FiltersToggle: FC = () => {
     <div
       style={{
         margin: '10px',
-        zIndex: '1000',
+        zIndex: 50,
         position: 'fixed',
         right: 0,
         bottom: isIos ? '80px' : '60px',

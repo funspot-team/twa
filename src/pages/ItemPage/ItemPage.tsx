@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
-import { type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
@@ -13,31 +13,46 @@ import { Icon28Location } from '@/icons/location';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { Icon28Navi } from '@/icons/navi';
 import { getWeekRange } from './helpers/itemPageHelpers';
-import { useUnit } from 'effector-react';
-import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { ShareButton } from '@/components/ShareButton/ShareButton';
-import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { onChangeSnackbar } from '@/components/Snackbar/model';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
 
 export const ItemPage: FC = () => {
-  const spots = useUnit($catalog);
-  const isLoading = useUnit($isLoadingCatalog);
+  const [item, setItem] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
-  const { loading: isFakeLoading } = useFakeLoading(0);
 
-  if (isLoading || isFakeLoading) {
+  useEffect(() => {
+    const fetchSpot = async () => {
+      const response = await fetch(`https://funspot.ru/places/?SpotID=${id}`); 
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch catalog');
+      }
+
+      try {
+        const result = await response.json();
+
+        setItem(result.data[0]);
+        setIsLoading(false);
+      } catch (error) {
+        throw new Error('Failed to parse JSON response');
+      }
+    }
+
+    fetchSpot();
+  }, []);
+
+  if (isLoading) {
     return <SpinnerList />;
   }
 
-  const item = spots.find((spot: any) => spot.id === id);
-
   if (!item || !id) return null;
 
-  const { name, mainImg, longDescription, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
+  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
   const scheduleArr = schedule ? getWeekRange(schedule) : [];
 
   {/* https://github.com/xiaolin/react-image-gallery */}
@@ -192,14 +207,14 @@ export const ItemPage: FC = () => {
 
               <Cell
                 multiline
-                subtitle={<span dangerouslySetInnerHTML={{ __html: longDescription }} />}
+                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
                 />
             </Section>
           ) : (
             <Section header="Описание">
               <Cell
                 multiline
-                subtitle={<span dangerouslySetInnerHTML={{ __html: longDescription }} />}
+                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
               />
             </Section>
           )}

@@ -65,7 +65,7 @@ export const Tabbar: FC = () => {
     <>
       <UITabbar
         style={{
-          zIndex: 40,
+          zIndex: 90,
           paddingBottom: isIos ? '20px' : '0',
           pointerEvents: 'all'
         }}
@@ -93,7 +93,7 @@ export const Tabbar: FC = () => {
       </UITabbar>
 
       <Modal
-        style={{ zIndex: 1001, background: 'var(--tg-theme-secondary-bg-color, white)' }}
+        style={{ zIndex: 100, background: 'var(--tg-theme-secondary-bg-color, white)' }}
         header={<ModalHeader
           title={username}
           onClose={() => setIsShowUserMenu(false)}
