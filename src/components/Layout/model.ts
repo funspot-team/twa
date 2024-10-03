@@ -24,10 +24,21 @@ export const $catalog = createStore([])
     if (!result?.data) return [];
 
     return result.data
-      .map((spot: any) => ({
-        ...spot,
-        name: decodeHtmlEntities(spot.name),
-      }))
+      .map((spot: any) => {
+        const longDescription = spot.description;
+        const description = spot.description
+          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/[\r\n]+/g, " ")
+          .slice(0, 100)
+          .trim();
+
+        return {
+          ...spot,
+          name: decodeHtmlEntities(spot.name),
+          description: `${description}...`,
+          longDescription,
+        };
+      })
       .sort((a: any, b: any) => {
         if (a.raiting === null) return 1;
         if (b.raiting === null) return -1;

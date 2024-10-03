@@ -37,7 +37,7 @@ export const ItemPage: FC = () => {
 
   if (!item || !id) return null;
 
-  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
+  const { name, mainImg, longDescription, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
   const scheduleArr = schedule ? getWeekRange(schedule) : [];
 
   {/* https://github.com/xiaolin/react-image-gallery */}
@@ -192,14 +192,14 @@ export const ItemPage: FC = () => {
 
               <Cell
                 multiline
-                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
+                subtitle={<span dangerouslySetInnerHTML={{ __html: longDescription }} />}
                 />
             </Section>
           ) : (
             <Section header="Описание">
               <Cell
                 multiline
-                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
+                subtitle={<span dangerouslySetInnerHTML={{ __html: longDescription }} />}
               />
             </Section>
           )}
