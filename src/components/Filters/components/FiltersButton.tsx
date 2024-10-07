@@ -31,7 +31,8 @@ export const FiltersButton: FC<IFiltersButtonProps> = ({ onClick }) => {
       size="m"
       style={{
         gap: 0,
-        backgroundColor: 'grey',
+        // backgroundColor: 'grey',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
       }}
       onClick={onClick}
       after={

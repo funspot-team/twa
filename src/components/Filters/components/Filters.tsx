@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUnit } from "effector-react";
 import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slider, Switch, Text } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
@@ -31,7 +32,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
   
   const tags = [...new Set(allTags)]
     .filter((tag) => !['в городе', 'за городом', 'плохая погода'].includes(tag));
-    
+      
   const FILTER_OPTIONS: MultiselectOption[] = tags.map((value) => {
     const label = value.charAt(0).toUpperCase() + value.slice(1);
     return { value, label }
@@ -50,12 +51,12 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    width: 'calc(100% - 20px)'
+    width: 'calc(100% - 20px)',
+    zIndex: 50,
+    position: 'fixed' as any,
   };
 
-  if (isMap) {
-    style = {...style, ...{ zIndex: 50, position: 'fixed' }};
-  } else {
+  if (!isMap) {
     style = {
       ...style,
       ...{ margin:'16px 18px 10px 18px', width: 'calc(100% - 36px)' }};

@@ -10,22 +10,27 @@ const stepsData = [
   {
     title: 'Добро пожаловать в Funspot!',
     description: 'Откройте для себя самые интересные места для отдыха и развлечений в вашем регионе! Наше приложение поможет вам найти лучшие локации для активного досуга, семейного отдыха, свиданий и многого другого. Начнем путешествие вместе!',
+    src: '/twa/images/step1.png',
   },
   {
     title: 'Ищите места быстро и удобно',
     description: 'На главной странице вы найдете галерею рекомендаций и мест, которые могут вас заинтересовать. Листайте, выбирайте и открывайте для себя новые локации каждый день!',
+    src: '/twa/images/step2.png',
   },
   {
     title: 'Фильтры для быстрого поиска',
     description: 'Перейдите в каталог, чтобы воспользоваться расширенными фильтрами. Вы можете сортировать места по типу отдыха, активности, популярности и многим другим параметрам, чтобы найти то, что вам нужно!',
+    src: '/twa/images/step3.png',
   },
   {
     title: 'Вся карта в ваших руках',
     description: 'Используйте карту, чтобы увидеть все доступные места в вашем регионе. Маркеры помогут быстро найти локации рядом с вами, а встроенные фильтры позволят сузить поиск по интересам.',
+    src: '/twa/images/step4.png',
   },
   {
     title: 'Идеи и избранные места',
     description: 'В разделе "Идеи" мы подготовили подборки самых интересных мест и статей, которые вдохновят вас на новые открытия. Сохраняйте понравившиеся места в "Избранное" и создавайте свои собственные группы для удобного доступа к ним в будущем.',
+    src: '/twa/images/step5.png',
   }
 ];
 
@@ -36,14 +41,33 @@ export const StepperGuide: FC = () => {
 
   const [step, setStep] = useState(1);
   const isIos = platform === 'ios';
+
+  const onBack = () => {
+    if (step === 1) return;
+
+    setStep(step - 1);
+  }
+
+  const onNext = () => {
+    if (step === 5) {
+      return onChangeStepperGuide(false);
+    }
+
+    setStep(step + 1)
+  }
   
   return (
     <>
       <div style={{
-        backgroundColor: 'grey',
+        backgroundColor: '#e8e8f1',
         borderRadius: '0 0 16px 16px',
-        height: '50vh',
-        width: '100%'
+        height: '45vh',
+        width: '100%',
+        backgroundImage: `url(${stepsData[step - 1].src})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        display: 'flex',
       }}>
         <IconButton
           mode="plain"
@@ -53,9 +77,12 @@ export const StepperGuide: FC = () => {
         >
           <Icon28Close />
         </IconButton>
+
+        <div style={{ width: '50%' }} onClick={onBack} />
+        <div style={{ width: '50%' }} onClick={onNext} />
       </div>
 
-      <List style={{ height: '50vh', display: 'flex', flexDirection: 'column' }}>
+      <List style={{ height: '55vh', display: 'flex', flexDirection: 'column' }}>
         <div style={{ flexGrow: 1 }}>
           <Steps
             count={TOTAL_STEPS}
@@ -98,7 +125,7 @@ export const StepperGuide: FC = () => {
             {step !== 5 && <Button
               mode="filled"
               size="m"
-              onClick={() => setStep(step + 1)}
+              onClick={onNext}
             >
               Вперед
             </Button>}
@@ -106,7 +133,7 @@ export const StepperGuide: FC = () => {
             {step === 5 && <Button
               mode="filled"
               size="m"
-              onClick={() => onChangeStepperGuide(false)}
+              onClick={onNext}
             >
               Закрыть
             </Button>}

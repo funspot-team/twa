@@ -23,11 +23,9 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   return isLarge ? (
     <Card style={{ width: '100%' }} onClick={() => navigate('/item/' + spot.id)}>
       <>
-        {/* <AddFavourite id={spot.id} title={spot.name} isCard withPadding iconAdd={iconAdd} iconNotAdd={iconNotAdd} added={added} onFavourite={onFavourite} /> */}
         <AddFavourite id={spot.id} title={spot.name} isCard withPadding added={added} onFavourite={onFavourite} />
 
         <img
-          alt="Dog"
           src={spot.mainImg}
           style={{
             display: 'block',
@@ -35,11 +33,22 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
             objectFit: 'cover',
             width: '100%'
           }}
+          loading="lazy"
         />
 
         <CardCell
           readOnly
-          subtitle={<span dangerouslySetInnerHTML={{ __html: spot.description }} />}
+          subtitle={
+            <span
+              style={{
+                display: '-webkit-box',
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: 'vertical',
+                whiteSpace: 'break-spaces',
+              }}
+              dangerouslySetInnerHTML={{ __html: spot.shortDescription }}
+            />
+          }
         >
           {spot.name}
         </CardCell>
@@ -48,15 +57,24 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   ) : (
     <Section>
       <Cell
-        // after={<AddFavourite id={spot.id} title={spot.name} withPadding iconAdd={iconAdd} iconNotAdd={iconNotAdd} added={added} onFavourite={onFavourite} />}
         after={<AddFavourite id={spot.id} title={spot.name} withPadding added={added} onFavourite={onFavourite} />}
-        before={<Image size={96} src={spot.mainImg} />}
-        description={<span dangerouslySetInnerHTML={{ __html: spot.description }} />}
+        before={<Image size={96} src={spot.mainImg} loading="lazy" />}
         subtitle={`Оценка: ${spot.raiting}`}
         style={{ minHeight: '124px '}}
         onClick={() => {
           navigate('/item/' + spot.id);
         }}
+        description={
+          <span
+            style={{
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              whiteSpace: 'break-spaces',
+            }}
+            dangerouslySetInnerHTML={{ __html: spot.shortDescription }}
+          />
+        }
       >
         {spot.name}
       </Cell>

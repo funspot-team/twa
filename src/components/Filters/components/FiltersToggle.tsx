@@ -28,8 +28,8 @@ export const FiltersToggle: FC = () => {
         size="m"
         style={{
           gap: 0,
-          backgroundColor: 'grey',
-          opacity: isViewAsMap ? 1 : 0.75,
+          // backgroundColor: 'grey',
+          opacity: isViewAsMap ? 1 : 0.7,
           borderRadius: '12px 0 0 12px'
         }}
         // onClick={onClick}
@@ -43,8 +43,8 @@ export const FiltersToggle: FC = () => {
         size="m"
         style={{
           gap: 0,
-          backgroundColor: 'grey',
-          opacity: !isViewAsMap ? 1 : 0.75,
+          // backgroundColor: 'grey',
+          opacity: !isViewAsMap ? 1 : 0.7,
           borderRadius: '0 12px 12px 0'
         }}
         onClick={onClickToggle}

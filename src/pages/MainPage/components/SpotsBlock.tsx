@@ -21,7 +21,7 @@ export const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
       <SectionHeader>{title}</SectionHeader>
 
       <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
-        {spots.map(({ id, name, mainImg, description }: any) => {
+        {spots.map(({ id, name, mainImg, shortDescription }: any) => {
           return (
             <Card key={name} style={{ minWidth: '254px' }} onClick={() => navigate('/item/' + id)}>
               <>
@@ -40,7 +40,7 @@ export const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
 
                 <CardCell
                   readOnly
-                  subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
+                  subtitle={<span dangerouslySetInnerHTML={{ __html: shortDescription }} />}
                 >
                   {name}
                 </CardCell>

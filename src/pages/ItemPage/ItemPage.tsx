@@ -287,23 +287,3 @@ export const ItemPage: FC = () => {
       </div>
   );
 };
-
-// {
-//   "id": 10,
-//   "link": "",
-//   "name": "",
-//   "pets": false,
-//   "tags": ["aктивное", "вождение", "экстрим", "за городом"],
-//   "phone": "",
-//   "coords": [],
-//   "images": [],
-//   "minAge": 7,
-//   "address": "",
-//   "mainImg": "/twa/images/-1.png",
-//   "parking": false,
-//   "raiting": 5.0,
-//   "youtube": "",
-//   "minPrice": 2500,
-//   "schedule": "10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00;10:00/21:00",
-//   "description": ""
-// }

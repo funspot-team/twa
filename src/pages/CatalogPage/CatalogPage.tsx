@@ -37,7 +37,7 @@ export const CatalogPage: FC = () => {
             <Map />
           ) : (
             <>
-              <List>
+              <List style={{ paddingTop: '80px' }}>
                 {!spots.length && (
                   <PageMessage
                     title="Ничего не найдено"

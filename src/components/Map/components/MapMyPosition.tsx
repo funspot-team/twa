@@ -33,7 +33,6 @@ export const MapMyPosition: FC = () => {
           gap: 0,
           padding: 0,
           borderRadius: '22px',
-          backgroundColor: 'grey',
         }}
         onClick={() => {
           setIsLoading(true);

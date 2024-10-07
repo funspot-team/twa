@@ -31,10 +31,10 @@
   line-height: 37px;
   text-align: center;
   width: 40px;
-  color: var(--tgui--button_text_color);
-  /* background: var(--tgui--button_color); 5290F5 */
-  background: #5290F5;
+  color: #231576;
+  background: #cbe5ff;
   font-size: large;
+  border: 1px solid #94bcf5;
 }
 
 .leaflet-bar {

@@ -18,10 +18,39 @@ import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from './mode
 
 import './Map.css';
 
-const customIcon = new L.Icon({
-  iconUrl: '/twa/images/marker2.svg',
+const customIconFood = new L.Icon({
+  iconUrl: '/twa/images/marker-food.svg',
   iconSize: new L.Point(40, 40),
 });
+
+const customIconStay = new L.Icon({
+  iconUrl: '/twa/images/marker-stay.svg',
+  iconSize: new L.Point(40, 40),
+});
+
+const customIconView = new L.Icon({
+  iconUrl: '/twa/images/marker-view.svg',
+  iconSize: new L.Point(40, 40),
+});
+
+const customIconActive = new L.Icon({
+  iconUrl: '/twa/images/marker-active.svg',
+  iconSize: new L.Point(40, 40),
+});
+
+const getCustomIcon = (tags: string[]): any => {
+  if (tags.find((tag) => ['еда', 'бар', 'клуб'].includes(tag))) {
+    return customIconFood;
+  } else if (tags.find((tag) => ['баня/спа'].includes(tag))) {
+    return customIconStay;
+  } else if (tags.find((tag) => ['спокойный', 'экскурсия', 'достопримечательности', 'природа', 'мастерклас'].includes(tag))) {
+    return customIconView;
+  } else {
+    return customIconActive;
+  }
+
+  // 'водное', 'летнее', 'aктивное', 'вождение', 'экстрим', 'эксклюзив', 'бесплатно', 'спорт', 'полеты', 'баня/спа', 'с детьми', 'животные', 'свидание', 'экскурсия', 'достопримечательности', 'природа', 'мастерклас', 'зимние'
+}
 
 // @ts-ignore
 const createClusterCustomIcon = function (cluster) {
@@ -70,14 +99,14 @@ export const Map: FC = () => {
 
         <MarkerClusterGroup
           iconCreateFunction={createClusterCustomIcon}
-          maxClusterRadius={40}
+          maxClusterRadius={20}
           spiderfyOnMaxZoom={true}
           showCoverageOnHover={true}
         >
           {markers
             .map((spot: any) => {
               return (
-                <Marker key={spot.id} position={spot.coords} icon={customIcon} eventHandlers={{
+                <Marker key={spot.id} position={spot.coords} icon={getCustomIcon(spot.tags)} eventHandlers={{
                   click: () => {
                     setData(spot);
                     setIsOpen(true);
@@ -100,7 +129,7 @@ export const Map: FC = () => {
           <Banner
             before={<Image size={96} src={data.mainImg} />}
             header={data.name}
-            subheader={<span dangerouslySetInnerHTML={{ __html: data.description }} />}
+            subheader={<span dangerouslySetInnerHTML={{ __html: data.shortDescription }} />}
             type="section"
             onClick={() => navigate('/item/' + data.id)}
           >
