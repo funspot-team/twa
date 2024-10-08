@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { List } from '@telegram-apps/telegram-ui';
 import { CatalogItem } from '@/components/CatalogItem/CatalogItem';
-import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { Filters } from '@/components/Filters/components/Filters';
 import { $childrenFilter, $isViewAsMap, $mainFilters, $priceFilter, $searchFilter, onResetFilters } from '@/components/Filters/model';
@@ -14,6 +13,8 @@ import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { Map } from '@/components/Map/Map';
 
 export const CatalogPage: FC = () => {
+  const [isLoading, setLoading] = useState(true);
+
   const filters = useUnit($mainFilters);
   const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
@@ -21,15 +22,18 @@ export const CatalogPage: FC = () => {
   const rawSpots = useUnit($catalog);
   const isLoadingCatalog = useUnit($isLoadingCatalog);
   const isViewAsMap = useUnit($isViewAsMap);
-
-  const { loading: isFakeLoading } = useFakeLoading(0, [filters, childrenFilter, priceFilter]);
   const spots = getSpotsByFilters(rawSpots, filters, childrenFilter, priceFilter, searchFilter);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
 
   return (
     <>
       <Filters isMap={isViewAsMap} />
 
-      {isFakeLoading || isLoadingCatalog ? (
+      {isLoadingCatalog || isLoading ? (
         <SpinnerList height="80" />
       ) : (
         <>
@@ -37,7 +41,7 @@ export const CatalogPage: FC = () => {
             <Map />
           ) : (
             <>
-              <List style={{ paddingTop: '80px' }}>
+              <List style={{ paddingTop: '120px' }}>
                 {!spots.length && (
                   <PageMessage
                     title="Ничего не найдено"

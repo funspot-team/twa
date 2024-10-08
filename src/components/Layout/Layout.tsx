@@ -49,6 +49,8 @@ export const Layout: FC = () => {
     return <StepperGuide />;
   }
 
+  console.log('render layout');
+
   return (
     <>
       <YandexMetrika />

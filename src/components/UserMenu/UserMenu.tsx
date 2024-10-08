@@ -19,7 +19,7 @@ export const UserMenu: FC = () => {
 
   const onClick = () => {
     if (initData?.chatInstance) {
-      utils.openTelegramLink('https://t.me/fun_spot_official_bot')
+      utils.openTelegramLink('https://t.me/fun_spot_official_bot');
     }
     miniApp.close();
   }

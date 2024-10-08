@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Icon28Share } from '@/icons/share';
 import { IconContainer } from '@telegram-apps/telegram-ui';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
@@ -17,6 +18,9 @@ export const ShareButton: FC<IShareButtonProps> = ({ spotId, title }) => {
 
 
   const onShare = async () => {
+    // @ts-ignore
+    ym(97751698,'reachGoal','btn-click-share');
+
     if (navigator.share) {
       try {
         await navigator.share(shareData);

@@ -5,6 +5,7 @@ import { type FC } from 'react';
 interface IModalHeaderProps {
   title: string;
   titleAction?: string;
+  rightSlot?: React.ReactNode;
   onAction?: () => void;
   onClose?: () => void;
 }
@@ -12,6 +13,7 @@ interface IModalHeaderProps {
 export const ModalHeader: FC<IModalHeaderProps> = ({
   title,
   titleAction,
+  rightSlot,
   onClose,
   onAction,
 }) => {
@@ -27,7 +29,8 @@ export const ModalHeader: FC<IModalHeaderProps> = ({
       position: 'relative',
       height: '60px',
     }}>
-      <div style={{
+      <div
+        style={{
           justifyContent: 'flex-start',
           alignItems: 'center',
           display: 'flex',
@@ -53,13 +56,17 @@ export const ModalHeader: FC<IModalHeaderProps> = ({
           flex: '1 0 0'
         }}
       >
-        {onClose && <IconButton
-          mode="plain"
-          size="s"
-          onClick={onClose}
-        >
-          <Icon28Close />
-        </IconButton>}
+        {rightSlot ? (
+          rightSlot
+        ) : (
+          onClose && <IconButton
+            mode="plain"
+            size="s"
+            onClick={onClose}
+          >
+            <Icon28Close />
+          </IconButton>
+        )}
       </div>
     </div>
   );

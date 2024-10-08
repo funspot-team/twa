@@ -1,9 +1,10 @@
 import { useUnit } from "effector-react";
-import { Input, Tappable } from '@telegram-apps/telegram-ui';
+import { IconContainer, Input, Tappable } from '@telegram-apps/telegram-ui';
 import { useEffect, useState, type FC } from 'react';
 import { Icon24Close } from "@telegram-apps/telegram-ui/dist/icons/24/close";
 import { useDebounce } from "use-debounce";
 import { $searchFilter } from "../model";
+import { Icon28Search } from "@/icons/search";
 
 import './FiltersSearch.css';
 
@@ -37,6 +38,11 @@ export const FiltersSearch: FC<IFiltersSearchProps> = ({
             <Icon24Close />
           </Tappable>
         )}
+        before={<IconContainer style={{
+          height: '28px',
+        }}>
+          <Icon28Search />
+        </IconContainer>}
       />
     </div>
   );

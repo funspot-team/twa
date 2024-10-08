@@ -33,6 +33,11 @@ const customIconView = new L.Icon({
   iconSize: new L.Point(40, 40),
 });
 
+const customIconBino = new L.Icon({
+  iconUrl: '/twa/images/marker-bino.svg',
+  iconSize: new L.Point(40, 40),
+});
+
 const customIconActive = new L.Icon({
   iconUrl: '/twa/images/marker-active.svg',
   iconSize: new L.Point(40, 40),
@@ -43,8 +48,10 @@ const getCustomIcon = (tags: string[]): any => {
     return customIconFood;
   } else if (tags.find((tag) => ['баня/спа'].includes(tag))) {
     return customIconStay;
-  } else if (tags.find((tag) => ['спокойный', 'экскурсия', 'достопримечательности', 'природа', 'мастерклас'].includes(tag))) {
+  } else if (tags.find((tag) => ['природа'].includes(tag))) {
     return customIconView;
+  } else if (tags.find((tag) => ['спокойный', 'экскурсия', 'достопримечательности', 'природа', 'мастерклас'].includes(tag))) {
+    return customIconBino;
   } else {
     return customIconActive;
   }
@@ -138,7 +145,7 @@ export const Map: FC = () => {
                 Подробнее
               </Button>
 
-              <AddFavourite id={data.id} title={data.name} withPadding />
+              <AddFavourite id={data.id} title={data.name} />
             </>
           </Banner>
         )}

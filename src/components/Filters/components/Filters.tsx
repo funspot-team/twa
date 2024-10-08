@@ -12,6 +12,7 @@ import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
 import { LastItem } from "@/components/LastItem/LastItem";
 import { FiltersSearch } from "./FiltersSearch";
 import { FiltersToggle } from "./FiltersToggle";
+import { FiltersQuick } from "./FiltersQuick";
 
 interface IFiltersProps {
   isMap?: boolean;
@@ -46,33 +47,34 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
     }
   }
 
-  let style = {
-    margin: '10px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    width: 'calc(100% - 20px)',
-    zIndex: 50,
-    position: 'fixed' as any,
-  };
-
-  if (!isMap) {
-    style = {
-      ...style,
-      ...{ margin:'16px 18px 10px 18px', width: 'calc(100% - 36px)' }};
-  }
-
   return (
     <>
       {(!isOpen || !isMap) && (
         <>
-          <div style={style}>
-            <FiltersSearch onSearch={(str) => onChangeSearch(str)}/>
+          <div style={{
+            padding: '10px',
+            zIndex: 50,
+            position: 'fixed' as any,
+            width: 'calc(100% - 20px)',
+            display: 'flex',
+            gap: '8px',
+            flexDirection: 'column',
+            background: isMap ? 'none' : 'var(--tg-theme-secondary-bg-color, white)',
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              width: '100%',
+            }}>
+              <FiltersSearch onSearch={(str) => onChangeSearch(str)}/>
 
-            <FiltersButton
-              isMap={isMap}
-              onClick={() => setIsOpen(true)}
-            />
+              <FiltersButton
+                isMap={isMap}
+                onClick={() => setIsOpen(true)}
+              />
+            </div>
+            <FiltersQuick />
 
             <FiltersToggle />
           </div>
@@ -86,10 +88,17 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
             title="Фильтры"
             titleAction='Очистить'
             onAction={onResetFilters}
-            onClose={() => {
-              setIsOpen(false);
-              setExpanded('');
-            }}
+            rightSlot={
+              <Button
+                size="s"
+                onClick={() => {
+                  setIsOpen(false);
+                  setExpanded('');
+                }}
+              >
+                Готово
+              </Button>
+            }
           />
         }
         open={isOpen}

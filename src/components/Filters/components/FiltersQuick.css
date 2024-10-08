@@ -1,0 +1,15 @@
+.filters-quick-scroll-container {
+  flex-direction: row;
+  width: max-content;
+  display: flex;
+  overflow-x: scroll;
+  gap: 8px;
+}
+
+.filters-quick-chip {
+  box-shadow: none;
+
+  &.selected h6 {
+    color: hsla(0,0%,100%,.95);
+  }
+}

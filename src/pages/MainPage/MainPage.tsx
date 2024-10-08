@@ -37,7 +37,7 @@ const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
           return (
             <Card key={name} style={{ minWidth: '254px' }} onClick={() => navigate('/item/' + id)}>
               <>
-                <AddFavourite id={id} title={name} isCard withPadding />
+                <AddFavourite id={id} title={name} isCard />
                 
                 <img
                   alt="Dog"

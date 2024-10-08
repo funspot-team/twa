@@ -23,34 +23,34 @@ export const FiltersToggle: FC = () => {
         bottom: isIos ? '80px' : '60px',
       }}
     >
-      <Button
+      {!isViewAsMap && <Button
         mode="filled"
         size="m"
         style={{
-          gap: 0,
+          // gap: 0,
           // backgroundColor: 'grey',
-          opacity: isViewAsMap ? 1 : 0.7,
-          borderRadius: '12px 0 0 12px'
+          // opacity: isViewAsMap ? 1 : 0.7,
+          // borderRadius: '12px 0 0 12px'
         }}
         // onClick={onClick}
         onClick={onClickToggle}
       >
-        Карта
-      </Button>
+        На карте
+      </Button>}
 
-      <Button
+      {isViewAsMap && <Button
         mode="filled"
         size="m"
         style={{
-          gap: 0,
+          // gap: 0,
           // backgroundColor: 'grey',
-          opacity: !isViewAsMap ? 1 : 0.7,
-          borderRadius: '0 12px 12px 0'
+          // opacity: !isViewAsMap ? 1 : 0.7,
+          // borderRadius: '0 12px 12px 0'
         }}
         onClick={onClickToggle}
       >
-        Список
-      </Button>
+        Списком
+      </Button>}
     </div>
   );
 };

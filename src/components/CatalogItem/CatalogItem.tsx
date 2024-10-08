@@ -23,7 +23,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   return isLarge ? (
     <Card style={{ width: '100%' }} onClick={() => navigate('/item/' + spot.id)}>
       <>
-        <AddFavourite id={spot.id} title={spot.name} isCard withPadding added={added} onFavourite={onFavourite} />
+        <AddFavourite id={spot.id} title={spot.name} isCard added={added} onFavourite={onFavourite} />
 
         <img
           src={spot.mainImg}
@@ -57,7 +57,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   ) : (
     <Section>
       <Cell
-        after={<AddFavourite id={spot.id} title={spot.name} withPadding added={added} onFavourite={onFavourite} />}
+        after={<AddFavourite id={spot.id} title={spot.name} added={added} onFavourite={onFavourite} />}
         before={<Image size={96} src={spot.mainImg} loading="lazy" />}
         subtitle={`Оценка: ${spot.raiting}`}
         style={{ minHeight: '124px '}}

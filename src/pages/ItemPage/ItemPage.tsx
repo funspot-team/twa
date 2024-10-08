@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Cell, Chip, Divider, IconContainer, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
+import { Button, Cell, Chip, Divider, IconContainer, Image, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
 import { useEffect, useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
@@ -19,8 +20,13 @@ import { onChangeSnackbar } from '@/components/Snackbar/model';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
+import { decodeHtmlEntities } from '@/helpers/helpers';
+import { initUtils } from '@telegram-apps/sdk-react';
+import { SpotDescription } from '@/components/Spot/components/SpotDescription';
 
 export const ItemPage: FC = () => {
+  const utils = initUtils();
+
   const [item, setItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -57,7 +63,28 @@ export const ItemPage: FC = () => {
 
   {/* https://github.com/xiaolin/react-image-gallery */}
   return (
-      <div className="spot-page">  
+      <div className="spot-page">
+        <div>
+          <Cell
+            after={
+              <Button
+                size="s"
+                // onClick={() => navigate('/item/' + data.id)}
+              >
+                В группу
+              </Button>
+            }
+            before={<Image size={40} src="/twa/images/shpargalki-spb.jpeg" />}
+            // style={{ minHeight: '124px '}}
+            onClick={() => {
+              utils.openTelegramLink('https://t.me/+INJJi1d5O8QzOGVi');
+            }}
+            description="Путеводитель, который поможет вам узнать Петербург с новой стороны и побывать в местах, известных только местным жителям."
+          >
+            Шпаргалки Петербурга
+          </Cell>
+        </div>
+
         <ImageGallery
           items={[{
               original: mainImg,
@@ -73,7 +100,7 @@ export const ItemPage: FC = () => {
           slideDuration={200}
         />
         
-        <AddFavourite id={Number(id)} title={name} isCard withPadding />
+        <AddFavourite id={Number(id)} title={name} isCard topOffset="80px" />
 
         <List style={{
             background: 'var(--tg-theme-secondary-bg-color, white)'
@@ -85,7 +112,7 @@ export const ItemPage: FC = () => {
               weight="1"
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}
             >
-              {name}
+              {decodeHtmlEntities(name)}
 
               <Subheadline
                 level="2"
@@ -113,7 +140,11 @@ export const ItemPage: FC = () => {
             {phone && (
               <InlineButtonsItem
                 text="Позвонить"
-                onClick={() => window.open(`tel:${phone}`, '_blank')}
+                onClick={() => {
+                  // @ts-ignore
+                  ym(97751698,'reachGoal','btn-click-phone');
+                  window.open(`tel:${phone}`, '_blank');
+                }}
               >
                 <IconContainer>
                   <Icon28Chat />
@@ -123,7 +154,11 @@ export const ItemPage: FC = () => {
 
             <InlineButtonsItem
               text="Открыть сайт"
-              onClick={() => window.open(link, '_blank')}
+              onClick={() => {
+                // @ts-ignore
+                ym(97751698,'reachGoal','btn-click-site');
+                window.open(link, '_blank');
+              }}
             >
               <IconContainer>
                 <Icon28Link />
@@ -162,6 +197,9 @@ export const ItemPage: FC = () => {
               subtitle={address}
               after={<Icon16ChevronRight />}
               onClick={() => {
+                // @ts-ignore
+                ym(97751698,'reachGoal','btn-click-address');
+
                 if (navigator.clipboard) {
                   navigator.clipboard.writeText(address).then(function() {
                     onChangeSnackbar({
@@ -184,7 +222,11 @@ export const ItemPage: FC = () => {
             <Cell
               subtitle="Построить маршрут"
               after={<Icon16ChevronRight />}
-              onClick={() => window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank')}
+              onClick={() => {
+                // @ts-ignore
+                ym(97751698,'reachGoal','btn-click-navi');
+                window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank');
+              }}
               before={
                 <IconContainer>
                   <Icon28Navi />
@@ -193,31 +235,7 @@ export const ItemPage: FC = () => {
             />
           </Section>
 
-          {youtube ? (
-            <Section header="Описание">
-              <Cell
-                after={<Icon16ChevronRight />}
-                subtitle="Открыть обзор"
-                onClick={() => window.open(youtube, '_blank')}
-              >
-                Youtube
-              </Cell>
-
-              <Divider />
-
-              <Cell
-                multiline
-                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
-                />
-            </Section>
-          ) : (
-            <Section header="Описание">
-              <Cell
-                multiline
-                subtitle={<span dangerouslySetInnerHTML={{ __html: description }} />}
-              />
-            </Section>
-          )}
+          <SpotDescription description={description} youtube={youtube} />
 
           <Section
             header="Детали"
