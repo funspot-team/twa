@@ -10,10 +10,10 @@ import ReactImageGallery from 'react-image-gallery';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
-import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { useUnit } from 'effector-react';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
+import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
 
 import './MainPage.css';
 

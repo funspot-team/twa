@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, type FC } from 'react';
 import { List } from '@telegram-apps/telegram-ui';
 import { CatalogItem } from '@/components/CatalogItem/CatalogItem';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
@@ -9,12 +9,11 @@ import { useUnit } from 'effector-react';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { getSpotsByFilters } from '@/components/Filters/helpers/filtersHelpers';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
-import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { Map } from '@/components/Map/Map';
+import { $catalog, $catalogScroll, $isLoadingCatalog } from './model';
 
 export const CatalogPage: FC = () => {
-  const [isLoading, setLoading] = useState(true);
-
+  const catalogScroll = useUnit($catalogScroll);
   const filters = useUnit($mainFilters);
   const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
@@ -25,15 +24,18 @@ export const CatalogPage: FC = () => {
   const spots = getSpotsByFilters(rawSpots, filters, childrenFilter, priceFilter, searchFilter);
 
   useEffect(() => {
-    setLoading(false);
+    if (catalogScroll) {
+      setTimeout(() => {
+        window.scrollTo(0, catalogScroll);
+      }, 0);
+    }
   }, []);
-
 
   return (
     <>
       <Filters isMap={isViewAsMap} />
 
-      {isLoadingCatalog || isLoading ? (
+      {isLoadingCatalog ? (
         <SpinnerList height="80" />
       ) : (
         <>
@@ -57,6 +59,7 @@ export const CatalogPage: FC = () => {
                       key={spot.id}
                       spot={spot}
                       isLarge={(i + 1) % 4 == 0 ? true : false}
+                      isCatalog
                     />
                   );
                 })}

@@ -8,8 +8,8 @@ import { useFakeLoading } from '@/hooks/useFakeLoading';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { useUnit } from 'effector-react';
-import { $catalog } from '@/components/Layout/model';
 import { useParams } from 'react-router-dom';
+import { $catalog } from '../CatalogPage/model';
 
 export const RecommendedGroupsPage: FC = () => {
   const { id } = useParams();

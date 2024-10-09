@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useMemo, useRef, type FC } from 'react';
-import { $isShowStepperGuide, fetchCatalog, onChangeUserData } from './model';
+import { $isShowStepperGuide, onChangeUserData } from './model';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
 import { useInitData } from '@telegram-apps/sdk-react';
 import { StepperGuide } from '../StepperGuide /StepperGuide';
 import { useUnit } from 'effector-react';
 import { Snackbar } from '../Snackbar/Snackbar';
+import { fetchCatalog, onChangeCatalogScroll } from '@/pages/CatalogPage/model';
 
 export const Layout: FC = () => {
+  const location = useLocation();
   const redirectAllow = useRef(true);
   const navigate = useNavigate();
   const initData = useInitData();
@@ -43,13 +45,25 @@ export const Layout: FC = () => {
         }, 0);
       }
     }
+
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
   }, []);
+
+  useEffect(() => {
+    const isItem = location.pathname.startsWith('/item');
+    const isCatalog = location.pathname.startsWith('/catalog');
+
+    if (!isItem && !isCatalog) {
+      onChangeCatalogScroll(0);
+    }
+  }, [location])
+
 
   if (isShowGuide) {
     return <StepperGuide />;
   }
-
-  console.log('render layout');
 
   return (
     <>

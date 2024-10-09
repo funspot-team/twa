@@ -11,7 +11,6 @@ import {
 import { AppRoot } from '@telegram-apps/telegram-ui';
 import { type FC, useEffect, useMemo } from 'react';
 import { Router } from 'react-router-dom';
-
 import { Layout } from './Layout/Layout';
 
 export const App: FC = () => {

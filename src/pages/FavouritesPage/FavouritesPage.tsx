@@ -7,10 +7,10 @@ import { CatalogItem } from '@/components/CatalogItem/CatalogItem';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { useUnit } from 'effector-react';
-import { $catalog } from '@/components/Layout/model';
 import { $favourites, $isLoadingFavourites, deleteFavourite, fetchFavourites } from './model';
 import { useParams } from 'react-router-dom';
 import { onChangeSnackbar } from '@/components/Snackbar/model';
+import { $catalog } from '../CatalogPage/model';
 
 export const FavouritesPage: FC = () => {
   const { id: groupId } = useParams();

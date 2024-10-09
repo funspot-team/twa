@@ -4,7 +4,6 @@ import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slide
 import { useState, type FC } from 'react';
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types';
 import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onChangeChildrenFilter, onResetFilters, $childrenFilter, $priceFilter, onChangeSearch } from '../model';
-import { $catalog } from "@/components/Layout/model";
 import { ModalHeader } from '../../ModalHeader/ModalHeader';
 import { FiltersButton } from './FiltersButton';
 import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
@@ -13,6 +12,7 @@ import { LastItem } from "@/components/LastItem/LastItem";
 import { FiltersSearch } from "./FiltersSearch";
 import { FiltersToggle } from "./FiltersToggle";
 import { FiltersQuick } from "./FiltersQuick";
+import { $catalog } from "@/pages/CatalogPage/model";
 
 interface IFiltersProps {
   isMap?: boolean;

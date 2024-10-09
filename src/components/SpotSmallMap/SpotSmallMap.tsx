@@ -5,6 +5,7 @@ import L, { CRS } from 'leaflet';
 import { FC } from 'react';
 import { Button } from '@telegram-apps/telegram-ui';
 import { useNavigate } from 'react-router-dom';
+import { useLaunchParams } from '@telegram-apps/sdk-react';
 
 import './SpotSmallMap.css';
 
@@ -19,9 +20,19 @@ interface ISpotSmallMapProps {
 
 export const SpotSmallMap: FC<ISpotSmallMapProps> = ({ center }) => {
   const navigate = useNavigate();
+  const { platform } = useLaunchParams();
+  const isIos = platform === 'ios';
 
   return (
-    <>
+    <div style={{
+      height: '150px',
+      overflow: 'hidden',
+      marginBottom: '100px',
+      display: 'flex',
+      justifyContent: 'center',
+      borderRadius: '16px',
+      margin: isIos ? '0px 18px 100px' : '0px 18px 80px',
+    }}>
       <Button
         mode="filled"
         size="s"
@@ -29,7 +40,7 @@ export const SpotSmallMap: FC<ISpotSmallMapProps> = ({ center }) => {
         // @ts-ignore
         onClick={() => navigate('/spot/map/' + center[0] + '/' + center[1])}
       >
-        Открыть
+        Открыть карту
       </Button>
 
       <MapContainer crs={CRS.EPSG3395} center={center} attributionControl={false} zoom={14} scrollWheelZoom={false} zoomControl={false} dragging={false} className='small-map'>
@@ -38,6 +49,6 @@ export const SpotSmallMap: FC<ISpotSmallMapProps> = ({ center }) => {
 
         <Marker position={center} icon={customIcon}/>        
       </MapContainer>
-    </>
+    </div>
   );
 };

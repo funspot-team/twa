@@ -9,12 +9,12 @@ import { Banner, Button, Image, Modal } from '@telegram-apps/telegram-ui';
 import { ModalHeader } from '@telegram-apps/telegram-ui/dist/components/Overlays/Modal/components/ModalHeader/ModalHeader';
 import { useNavigate } from 'react-router-dom';
 import { $childrenFilter, $mainFilters, $priceFilter, $searchFilter } from '../Filters/model';
-import { $catalog } from '../Layout/model';
 import { LastItem } from '../LastItem/LastItem';
 import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { MapMyPosition } from './components/MapMyPosition';
 import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from './model';
+import { $catalog } from '@/pages/CatalogPage/model';
 
 import './Map.css';
 

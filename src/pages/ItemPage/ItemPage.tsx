@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Cell, Chip, Divider, IconContainer, Image, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
+import { Button, Cell, Chip, IconContainer, Image, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
 import { useEffect, useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
@@ -17,12 +17,12 @@ import { getWeekRange } from './helpers/itemPageHelpers';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { ShareButton } from '@/components/ShareButton/ShareButton';
 import { onChangeSnackbar } from '@/components/Snackbar/model';
-
-import "react-image-gallery/styles/css/image-gallery.css";
-import './ItemPage.css';
 import { decodeHtmlEntities } from '@/helpers/helpers';
 import { initUtils } from '@telegram-apps/sdk-react';
 import { SpotDescription } from '@/components/Spot/components/SpotDescription';
+
+import "react-image-gallery/styles/css/image-gallery.css";
+import './ItemPage.css';
 
 export const ItemPage: FC = () => {
   const utils = initUtils();
@@ -49,7 +49,7 @@ export const ItemPage: FC = () => {
       }
     }
 
-    fetchSpot();
+    fetchSpot();  
   }, []);
 
   if (isLoading) {
@@ -69,17 +69,17 @@ export const ItemPage: FC = () => {
             after={
               <Button
                 size="s"
-                // onClick={() => navigate('/item/' + data.id)}
+                onClick={() => {
+                  // @ts-ignore
+                  ym(97751698,'reachGoal','btn-click-go-to-group');
+                  utils.openTelegramLink('https://t.me/+INJJi1d5O8QzOGVi');
+                }}
               >
                 В группу
               </Button>
             }
             before={<Image size={40} src="/twa/images/shpargalki-spb.jpeg" />}
-            // style={{ minHeight: '124px '}}
-            onClick={() => {
-              utils.openTelegramLink('https://t.me/+INJJi1d5O8QzOGVi');
-            }}
-            description="Путеводитель, который поможет вам узнать Петербург с новой стороны и побывать в местах, известных только местным жителям."
+            description="Спот добавлен партнером"
           >
             Шпаргалки Петербурга
           </Cell>
@@ -238,7 +238,7 @@ export const ItemPage: FC = () => {
           <SpotDescription description={description} youtube={youtube} />
 
           <Section
-            header="Детали"
+            header="Дополнительно"
           >
             <Cell
               multiline
@@ -262,23 +262,21 @@ export const ItemPage: FC = () => {
               }
             />
 
-            <Divider />
+            {Number(minAge) < 18 && (
+              <>
+                <Cell>
+                  Можно с детьми
+                </Cell>
+              </>
+            )}
 
-            <Cell
-              multiline
-              subtitle={minAge < 18 ? 'Да' : 'Нет'}
-            >
-              С детьми
-            </Cell>
-
-            <Divider />
-
-            <Cell
-              multiline
-              subtitle={parking ? 'Да' : 'Нет'}
-            >
-              Парковка
-            </Cell>
+            {parking && (
+              <>
+                <Cell>
+                  Есть парковка
+                </Cell>
+              </>
+            )}
           </Section>
           
           {scheduleArr.length > 0 && <Section

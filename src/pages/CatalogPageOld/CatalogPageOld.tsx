@@ -10,7 +10,7 @@ import { useUnit } from 'effector-react';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { getSpotsByFilters } from '@/components/Filters/helpers/filtersHelpers';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
-import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
+import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
 
 export const CatalogPageOld: FC = () => {
   const filters = useUnit($mainFilters);

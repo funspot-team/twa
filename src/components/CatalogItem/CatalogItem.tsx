@@ -4,12 +4,14 @@ import { SyntheticEvent, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
+import { onChangeCatalogScroll } from '@/pages/CatalogPage/model';
 
 interface ICatalogItemProps {
   spot: any;
   added?: boolean;
   onFavourite?: (e: SyntheticEvent, id: number) => void;
   isLarge?: boolean;
+  isCatalog?: boolean;
 }
 
 export const CatalogItem: FC<ICatalogItemProps> = ({
@@ -17,11 +19,20 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   added,
   onFavourite,
   isLarge = false,
+  isCatalog = false,
 }) => {
   const navigate = useNavigate();
 
+  const goToSpot = () => {
+    if (isCatalog) {
+      onChangeCatalogScroll(window.scrollY);
+    }
+
+    navigate(`/item/${spot.id}`);
+  };
+
   return isLarge ? (
-    <Card style={{ width: '100%' }} onClick={() => navigate('/item/' + spot.id)}>
+    <Card style={{ width: '100%' }} onClick={goToSpot}>
       <>
         <AddFavourite id={spot.id} title={spot.name} isCard added={added} onFavourite={onFavourite} />
 
@@ -61,9 +72,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
         before={<Image size={96} src={spot.mainImg} loading="lazy" />}
         subtitle={`Оценка: ${spot.raiting}`}
         style={{ minHeight: '124px '}}
-        onClick={() => {
-          navigate('/item/' + spot.id);
-        }}
+        onClick={goToSpot}
         description={
           <span
             style={{

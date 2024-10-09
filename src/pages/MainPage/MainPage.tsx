@@ -10,7 +10,6 @@ import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
-import { $catalog, $isLoadingCatalog } from '@/components/Layout/model';
 import { useUnit } from 'effector-react';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
@@ -19,6 +18,7 @@ import { GroupsBlock } from './components/GroupsBlock';
 import { onChangeIsViewAsMap } from '@/components/Filters/model';
 
 import './MainPage.css';
+import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
 
 interface ISpotsBlockProps {
   title: string;
@@ -146,7 +146,7 @@ export const MainPage: FC = () => {
         <SpotsBlock title="Популярное" spots={popular} />
       </List>
 
-      <div style={{
+      {/* <div style={{
         height: '100px',
         backgroundImage: 'url(/twa/images/add-spot.jpeg)',
         backgroundSize: 'contain',
@@ -154,7 +154,7 @@ export const MainPage: FC = () => {
         backgroundPosition: 'center',
         backgroundColor: '#C9E3FF',
         backgroundRepeat: 'no-repeat',
-      }}/>
+      }}/> */}
 
       <LastItem />
     </>
