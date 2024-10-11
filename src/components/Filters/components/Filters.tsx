@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUnit } from "effector-react";
-import { Button, Cell, Chip, Divider, IconContainer, List, Modal, Section, Slider, Switch, Text } from '@telegram-apps/telegram-ui';
+import { Button, List, Modal, Section, Slider, Text } from '@telegram-apps/telegram-ui';
 import { useState, type FC } from 'react';
 import { MultiselectOption } from '@telegram-apps/telegram-ui/dist/components/Form/Multiselect/types';
-import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onChangeChildrenFilter, onResetFilters, $childrenFilter, $priceFilter, onChangeSearch } from '../model';
+import { $mainFilters, onChangeMainFilters, onChangePriceFilters, onResetFilters, $priceFilter, onChangeSearch } from '../model';
 import { ModalHeader } from '../../ModalHeader/ModalHeader';
 import { FiltersButton } from './FiltersButton';
-import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
-import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
+// import { Icon20ChevronDown } from '@telegram-apps/telegram-ui/dist/icons/20/chevron_down';
+// import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
 import { LastItem } from "@/components/LastItem/LastItem";
 import { FiltersSearch } from "./FiltersSearch";
 import { FiltersToggle } from "./FiltersToggle";
@@ -20,32 +20,33 @@ interface IFiltersProps {
 
 export const Filters: FC<IFiltersProps> = ({ isMap }) => {
   const filters = useUnit($mainFilters);
-  const childrenFilter = useUnit($childrenFilter);
   const priceFilter = useUnit($priceFilter);
   const spots = useUnit($catalog);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [expanded, setExpanded] = useState('');
 
-  const allTags = spots.reduce((acc: string[], { tags }) => {
-    return [...acc, ...tags];
+  const allTags: string[] = spots.reduce((acc, spot: any) => {
+    // if (spot.tags.some((tag) => tag === null)) {
+    //   console.log(spot.name);
+    // }
+    return acc.concat(spot.tags);
   }, []);
-  
-  const tags = [...new Set(allTags)]
-    .filter((tag) => !['в городе', 'за городом', 'плохая погода'].includes(tag));
+  const uniqueTags = [...new Set(allTags)]
+    .filter(tag => tag && !['активно', 'еда', 'прогулка', 'жилье'].includes(tag));
+  uniqueTags.sort();
+  const importantTags = ['в городе', 'за городом'];
+  importantTags.forEach((tag: any) => {
+    const index = uniqueTags.indexOf(tag);
+    if (index !== -1) {
+      uniqueTags.splice(index, 1);
+      uniqueTags.unshift(tag);
+    }
+  });
       
-  const FILTER_OPTIONS: MultiselectOption[] = tags.map((value) => {
+  const filterWithUpperCase: MultiselectOption[] = uniqueTags.map((value) => {
     const label = value.charAt(0).toUpperCase() + value.slice(1);
     return { value, label }
   });
-
-  const expandHandler = (id: string) => {
-    if (expanded === id) {
-      setExpanded('');
-    } else {
-      setExpanded(id);
-    }
-  }
 
   return (
     <>
@@ -74,7 +75,6 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
                 onClick={() => setIsOpen(true)}
               />
             </div>
-            <FiltersQuick />
 
             <FiltersToggle />
           </div>
@@ -91,10 +91,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
             rightSlot={
               <Button
                 size="s"
-                onClick={() => {
-                  setIsOpen(false);
-                  setExpanded('');
-                }}
+                onClick={() => setIsOpen(false)}
               >
                 Готово
               </Button>
@@ -104,113 +101,36 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
         open={isOpen}
         onOpenChange={setIsOpen}
       >
-        {filters.length > 0 && !expanded && (
-          <div style={{
+        <div style={{
             display: 'flex',
             padding: '10px 18px',
             gap: '8px',
             flexWrap: 'wrap',
+          }}
+        >
+          <FiltersQuick />
+        </div>
+
+        <List>
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap',
           }}>
-            {filters.map(({ value, label }) => {
+            {filterWithUpperCase.map((filter) => {
               return (
-                <Chip
-                  key={value}
-                  mode="elevated"
-                  after={<Icon16Cancel />}
-                  onClick={() => onChangeMainFilters({ value, label })}
+                <Button
+                  key={filter.value}
+                  stretched={false}
+                  size="s"
+                  mode={filters.find(({ value }) => value === filter.value) ? 'filled' : 'bezeled'}
+                  onClick={() => onChangeMainFilters(filter)}
                 >
-                  {label}
-                </Chip>
+                  {filter.label}
+                </Button>
               );
             })}
           </div>
-        )}
-
-        <List>
-          <Section>
-            <Cell after={<IconContainer><Icon20ChevronDown /></IconContainer>} onClick={() => expandHandler('1')}>
-              Направление активности
-            </Cell>
-
-            {expanded === '1' && (
-              <>
-                <Divider />
-
-                <div style={{
-                  display: 'flex',
-                  padding: '16px 20px',
-                  gap: '8px',
-                  flexWrap: 'wrap',
-                }}>
-                  {FILTER_OPTIONS.map((filter) => {
-                    return (
-                      <Button
-                        key={filter.value}
-                        stretched={false}
-                        size="s"
-                        mode={filters.find(({ value }) => value === filter.value) ? 'filled' : 'bezeled'}
-                        onClick={() => onChangeMainFilters(filter)}
-                      >
-                        {filter.label}
-                      </Button>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-
-            <Divider />
-
-            <Cell after={<IconContainer><Icon20ChevronDown /></IconContainer>} onClick={() => expandHandler('2')}>
-              Расположение
-            </Cell>
-
-            {expanded === '2' && (
-              <>
-                <Divider />
-
-                <div style={{
-                  display: 'flex',
-                  padding: '16px 20px',
-                  gap: '8px',
-                  flexWrap: 'wrap',
-                }}>
-                  {[
-                    { value: 'в городе', label: 'В городе' },
-                    { value: 'за городом', label: 'За городом' },
-                    { value: 'плохая погода', label: 'Плохая погода' },
-                  ].map((filter) => {
-                    return (
-                      <Button
-                        key={filter.value}
-                        stretched={false}
-                        size="s"
-                        mode={filters.find(({ value }) => value === filter.value) ? 'filled' : 'bezeled'}
-                        onClick={() => onChangeMainFilters(filter)}
-                      >
-                        {filter.label}
-                      </Button>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-
-            <Divider />
-
-            <Cell
-              Component="label"
-              after={
-                <Switch
-                  checked={childrenFilter}
-                  onChange={() => onChangeChildrenFilter(!childrenFilter)}
-                />
-              }
-              multiline
-            >
-              Отдых с детьми
-            </Cell>
-          </Section>
 
           <Section
             header='Цена до'

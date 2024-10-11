@@ -3,6 +3,7 @@ import { decodeHtmlEntities } from '@/helpers/helpers';
 import { createEvent, createStore, createEffect } from 'effector';
 
 export const fetchCatalog = createEvent();
+
 export const fetchCatalogFx = createEffect(async () => {
   const response = await fetch('https://funspot.ru/places/ '); 
 
@@ -16,6 +17,7 @@ export const fetchCatalogFx = createEffect(async () => {
     throw new Error('Failed to parse JSON response');
   }
 });
+
 export const $catalog = createStore([])
   .on(fetchCatalogFx.doneData, (_, result) => {
     if (!result?.data) return [];
@@ -31,7 +33,9 @@ export const $catalog = createStore([])
         return parseFloat(b.raiting) - parseFloat(a.raiting);
       });
   });
+
 export const $isLoadingCatalog = fetchCatalogFx.pending;
+
 fetchCatalog.watch(fetchCatalogFx);
 
 

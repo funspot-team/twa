@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { List, Card, Button } from '@telegram-apps/telegram-ui';
-import { type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 
 import { useNavigate } from 'react-router-dom';
@@ -16,9 +16,10 @@ import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import RECOMMENDED from '@/mocks/recommended.json';
 import { GroupsBlock } from './components/GroupsBlock';
 import { onChangeIsViewAsMap } from '@/components/Filters/model';
+import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
+import { BannerContest } from '@/components/BannerContest/BannerContest';
 
 import './MainPage.css';
-import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
 
 interface ISpotsBlockProps {
   title: string;
@@ -70,7 +71,13 @@ export const MainPage: FC = () => {
   const spots = useUnit($catalog);
   const isLoading = useUnit($isLoadingCatalog);
 
-  if (isLoading) {
+  const [disableScroll, setDisableScroll] = useState(true);
+
+  useEffect(() => {
+    setDisableScroll(false);
+  }, []);
+
+  if (isLoading || disableScroll) {
     return <SpinnerList />;
   }
 
@@ -139,6 +146,8 @@ export const MainPage: FC = () => {
       </div>
 
       <List>
+        <BannerContest />
+
         <SpotsBlock title="Вам понравится" spots={recomended} />
 
         <BannerSpot spot={baner} />

@@ -2,7 +2,7 @@
 import { type FC } from 'react';
 import RECOMMENDED from '@/mocks/recommended.json';
 import { LastItem } from '@/components/LastItem/LastItem';
-import { Cell, Image, Section } from '@telegram-apps/telegram-ui';
+import { Cell, Headline, Image, Section } from '@telegram-apps/telegram-ui';
 import { useNavigate } from 'react-router-dom';
 
 export const RecommendedGroups: FC = () => {
@@ -10,6 +10,18 @@ export const RecommendedGroups: FC = () => {
 
   return (
     <>
+      <Headline
+        weight="3"
+        style={{ textAlign: 'center', margin: '8px 0 0' }}
+      >
+        Наши подборки
+      </Headline>
+
+      <Cell
+        description="Вдохновляйтесь нашими специально отобранными коллекциями! Мы собрали лучшие места для вашего отдыха — от активных приключений до уютных уголков для свиданий и семейных прогулок. Найдите новые идеи для своего досуга и откройте для себя интересные места в Санкт-Петербурге."
+        multiline
+      />
+    
       {RECOMMENDED.data
         .map((item) => {
           return (

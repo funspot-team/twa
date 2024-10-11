@@ -20,7 +20,7 @@ export const FiltersToggle: FC = () => {
         zIndex: 50,
         position: 'fixed',
         right: 0,
-        bottom: isIos ? '80px' : '60px',
+        bottom: isIos ? '80px' : '86px',
       }}
     >
       {!isViewAsMap && <Button

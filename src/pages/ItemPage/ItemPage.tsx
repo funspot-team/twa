@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Cell, Chip, IconContainer, Image, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
+import { Button, Cell, Chip, Divider, IconContainer, Image, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
 import { useEffect, useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
@@ -18,18 +18,22 @@ import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { ShareButton } from '@/components/ShareButton/ShareButton';
 import { onChangeSnackbar } from '@/components/Snackbar/model';
 import { decodeHtmlEntities } from '@/helpers/helpers';
-import { initUtils } from '@telegram-apps/sdk-react';
+import { initUtils, useLaunchParams } from '@telegram-apps/sdk-react';
 import { SpotDescription } from '@/components/Spot/components/SpotDescription';
+import { LastItem } from '@/components/LastItem/LastItem';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
 
 export const ItemPage: FC = () => {
+  const { platform } = useLaunchParams();
   const utils = initUtils();
 
   const [item, setItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
+
+  const isIos = platform === 'ios';
 
   useEffect(() => {
     const fetchSpot = async () => {
@@ -64,27 +68,6 @@ export const ItemPage: FC = () => {
   {/* https://github.com/xiaolin/react-image-gallery */}
   return (
       <div className="spot-page">
-        <div>
-          <Cell
-            after={
-              <Button
-                size="s"
-                onClick={() => {
-                  // @ts-ignore
-                  ym(97751698,'reachGoal','btn-click-go-to-group');
-                  utils.openTelegramLink('https://t.me/+INJJi1d5O8QzOGVi');
-                }}
-              >
-                В группу
-              </Button>
-            }
-            before={<Image size={40} src="/twa/images/shpargalki-spb.jpeg" />}
-            description="Спот добавлен партнером"
-          >
-            Шпаргалки Петербурга
-          </Cell>
-        </div>
-
         <ImageGallery
           items={[{
               original: mainImg,
@@ -99,74 +82,100 @@ export const ItemPage: FC = () => {
           showBullets
           slideDuration={200}
         />
+
+        <Cell
+          after={
+            <Button
+              size="s"
+              onClick={() => {
+                // @ts-ignore
+                ym(97751698,'reachGoal','btn-click-go-to-group');
+                utils.openTelegramLink('https://t.me/+INJJi1d5O8QzOGVi');
+              }}
+            >
+              В группу
+            </Button>
+          }
+          before={<Image size={40} src="/twa/images/shpargalki-spb.jpeg" />}
+          description="Спот добавлен партнером"
+        >
+          Шпаргалки Петербурга
+        </Cell>
+
+        <Divider />
+        <Divider />
         
-        <AddFavourite id={Number(id)} title={name} isCard topOffset="80px" />
+        <AddFavourite id={Number(id)} title={name} isCard />
 
         <List style={{
             background: 'var(--tg-theme-secondary-bg-color, white)'
           }}
         >
-          <div style={{ marginBottom: '24px' }}>
-            <Title
-              level="2"
-              weight="1"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}
-            >
-              {decodeHtmlEntities(name)}
-
-              <Subheadline
+          <div style={{
+            padding: !isIos ? '4px 18px 4px' : '',
+          }}>
+            <div style={{ marginBottom: '24px' }}>
+              <Title
                 level="2"
                 weight="1"
-                style={{ display: 'flex', alignItems: 'end', minWidth: '70px' }}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}
               >
-                <IconContainer>
-                  {raiting} <IconStar style={{ marginBottom: '-5px' }} />
-                </IconContainer>
-              </Subheadline>
-            </Title>
+                {decodeHtmlEntities(name)}
 
-            {minPrice && <Subheadline
-              level="1"
-              weight="3"
-              style={{
-                color: 'var(--tgui--section_header_text_color)',
-              }}
-            >
-              {`от ${minPrice} ₽`}
-            </Subheadline>}
-          </div>
+                <Subheadline
+                  level="2"
+                  weight="1"
+                  style={{ display: 'flex', alignItems: 'end', minWidth: '70px' }}
+                >
+                  <IconContainer>
+                    {raiting} <IconStar style={{ marginBottom: '-5px' }} />
+                  </IconContainer>
+                </Subheadline>
+              </Title>
 
-          <InlineButtons mode="bezeled">
-            {phone && (
+              {minPrice && <Subheadline
+                level="1"
+                weight="3"
+                style={{
+                  color: 'var(--tgui--section_header_text_color)',
+                }}
+              >
+                {`от ${minPrice} ₽`}
+              </Subheadline>}
+            </div>
+
+            <InlineButtons mode="bezeled">
+              {phone && (
+                <InlineButtonsItem
+                  text="Позвонить"
+                  onClick={() => {
+                    // @ts-ignore
+                    ym(97751698,'reachGoal','btn-click-phone');
+                    window.open(`tel:${phone}`, '_blank');
+                  }}
+                >
+                  <IconContainer>
+                    <Icon28Chat />
+                  </IconContainer>
+                </InlineButtonsItem>
+              )}
+
               <InlineButtonsItem
-                text="Позвонить"
+                text="Открыть сайт"
                 onClick={() => {
                   // @ts-ignore
-                  ym(97751698,'reachGoal','btn-click-phone');
-                  window.open(`tel:${phone}`, '_blank');
+                  ym(97751698,'reachGoal','btn-click-site');
+                  window.open(link, '_blank');
                 }}
               >
                 <IconContainer>
-                  <Icon28Chat />
+                  <Icon28Link />
                 </IconContainer>
               </InlineButtonsItem>
-            )}
 
-            <InlineButtonsItem
-              text="Открыть сайт"
-              onClick={() => {
-                // @ts-ignore
-                ym(97751698,'reachGoal','btn-click-site');
-                window.open(link, '_blank');
-              }}
-            >
-              <IconContainer>
-                <Icon28Link />
-              </IconContainer>
-            </InlineButtonsItem>
-
-            <ShareButton spotId={id} title={name} />
-          </InlineButtons>
+              <ShareButton spotId={id} title={name} />
+            </InlineButtons>
+          </div>
 
           {/* {id === '55' && (
             <Section header="Предложение для друзей">
@@ -300,6 +309,8 @@ export const ItemPage: FC = () => {
         </List>
 
         <SpotSmallMap center={coords as L.LatLngExpression} />
+
+        <LastItem />
       </div>
   );
 };

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, Cell, Image, Section } from '@telegram-apps/telegram-ui';
+import { Caption, Card, Cell, IconContainer, Image, Section } from '@telegram-apps/telegram-ui';
 import { SyntheticEvent, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
-import { onChangeCatalogScroll } from '@/pages/CatalogPage/model';
+import { Icon16Star } from '@/icons/star';
 
 interface ICatalogItemProps {
   spot: any;
@@ -19,15 +19,11 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   added,
   onFavourite,
   isLarge = false,
-  isCatalog = false,
+  // isCatalog = false,
 }) => {
   const navigate = useNavigate();
 
   const goToSpot = () => {
-    if (isCatalog) {
-      onChangeCatalogScroll(window.scrollY);
-    }
-
     navigate(`/item/${spot.id}`);
   };
 
@@ -49,7 +45,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
 
         <CardCell
           readOnly
-          subtitle={
+          description={
             <span
               style={{
                 display: '-webkit-box',
@@ -59,6 +55,17 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
               }}
               dangerouslySetInnerHTML={{ __html: spot.shortDescription }}
             />
+          }
+          subtitle={
+            <div style={{ display: 'flex' }}>
+              <IconContainer>
+                <Icon16Star/>
+              </IconContainer>
+  
+              <Caption weight='1' style={{ color: 'var(--tgui--link_color'}}>
+                {` ${spot.raiting}`}
+              </Caption>
+            </div>
           }
         >
           {spot.name}
@@ -70,7 +77,17 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
       <Cell
         after={<AddFavourite id={spot.id} title={spot.name} added={added} onFavourite={onFavourite} />}
         before={<Image size={96} src={spot.mainImg} loading="lazy" />}
-        subtitle={`Оценка: ${spot.raiting}`}
+        subtitle={
+          <div style={{ display: 'flex' }}>
+            <IconContainer>
+              <Icon16Star/>
+            </IconContainer>
+
+            <Caption weight='1' style={{ color: 'var(--tgui--link_color'}}>
+              {` ${spot.raiting}`}
+            </Caption>
+          </div>
+        }
         style={{ minHeight: '124px '}}
         onClick={goToSpot}
         description={

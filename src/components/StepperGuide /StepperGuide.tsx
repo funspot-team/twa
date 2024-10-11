@@ -102,7 +102,7 @@ export const StepperGuide: FC = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '12px',
-          paddingBottom: isIos ? '20px' : '0',
+          paddingBottom: isIos ? '20px' : '12px',
         }}>
           <Text weight='2'>
             {`${step} из ${TOTAL_STEPS}`}

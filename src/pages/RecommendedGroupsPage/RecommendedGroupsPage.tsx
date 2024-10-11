@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { List } from '@telegram-apps/telegram-ui';
+import { Cell, Headline, List } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
 import RECOMMENDED from '@/mocks/recommended.json';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
@@ -32,6 +32,18 @@ export const RecommendedGroupsPage: FC = () => {
 
   return (
     <List>
+      <Headline
+        weight="3"
+        style={{ textAlign: 'center', margin: '8px 0 0' }}
+      >
+        {recommendedItem?.title}
+      </Headline>
+
+      <Cell
+        description={recommendedItem?.description}
+        multiline
+      />
+
       {!favouritesList.length && (
         <PageMessage title="Пока пусто" description="Вы ничего не добавили в избранное" />
       )}

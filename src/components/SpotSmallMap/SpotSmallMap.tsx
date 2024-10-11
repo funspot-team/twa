@@ -27,11 +27,10 @@ export const SpotSmallMap: FC<ISpotSmallMapProps> = ({ center }) => {
     <div style={{
       height: '150px',
       overflow: 'hidden',
-      marginBottom: '100px',
       display: 'flex',
       justifyContent: 'center',
       borderRadius: '16px',
-      margin: isIos ? '0px 18px 100px' : '0px 18px 80px',
+      margin: isIos ? '0px 18px 20px' : '0px 18px 0px',
     }}>
       <Button
         mode="filled"

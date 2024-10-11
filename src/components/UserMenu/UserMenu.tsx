@@ -18,6 +18,9 @@ export const UserMenu: FC = () => {
   const miniApp = useMiniApp();
 
   const onClick = () => {
+    // @ts-ignore
+    ym(97751698,'reachGoal','btn-click-go-feedback');
+    
     if (initData?.chatInstance) {
       utils.openTelegramLink('https://t.me/fun_spot_official_bot');
     }

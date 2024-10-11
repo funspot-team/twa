@@ -7,6 +7,7 @@ import { $searchFilter } from "../model";
 import { Icon28Search } from "@/icons/search";
 
 import './FiltersSearch.css';
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 
 interface IFiltersSearchProps {
   onSearch: (searchStr: string) => void;
@@ -15,6 +16,9 @@ interface IFiltersSearchProps {
 export const FiltersSearch: FC<IFiltersSearchProps> = ({
   onSearch,
 }) => {
+  const { platform } = useLaunchParams();
+  const isIos = platform === 'ios';
+
   const search = useUnit($searchFilter);
   const [searchStr, setSearchStr] = useState(search);
   const [debouncedSearchStr] = useDebounce(searchStr, 300);
@@ -23,8 +27,10 @@ export const FiltersSearch: FC<IFiltersSearchProps> = ({
     onSearch(debouncedSearchStr);
   }, [debouncedSearchStr]);
 
+  const className = isIos ? 'filters-search' : 'filters-search android';
+
   return (
-    <div style={{ width: 'inherit' }} className="filters-search">
+    <div style={{ width: 'inherit' }} className={className}>
       <Input
         value={searchStr}
         placeholder="Поиск"
@@ -38,11 +44,17 @@ export const FiltersSearch: FC<IFiltersSearchProps> = ({
             <Icon24Close />
           </Tappable>
         )}
-        before={<IconContainer style={{
-          height: '28px',
-        }}>
-          <Icon28Search />
-        </IconContainer>}
+        before={
+          <IconContainer style={{
+              height: '28px',
+            }}
+          >
+            <Icon28Search />
+          </IconContainer>
+        }
+        style={{
+          background: 'none'
+        }}
       />
     </div>
   );

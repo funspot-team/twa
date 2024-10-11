@@ -8,12 +8,12 @@ import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
 import './FiltersQuick.css';
 
 const mapFilterToClor = {
-  ['aктивности']: '#fb9519',
-  ['поесть']: '#16056b',
-  ['погулять']: '#4886eb',
+  ['активно']: '#fb9519',
+  ['еда']: '#16056b',
+  ['прогулка']: '#4886eb',
   ['жилье']: '#707697',
 }
-const QUICK_FILTERS = ['aктивности', 'поесть', 'погулять', 'жилье'];
+const QUICK_FILTERS = ['активно', 'еда', 'прогулка', 'жилье'];
 const quickFilters = QUICK_FILTERS.map((value) => {
   const label = value.charAt(0).toUpperCase() + value.slice(1);
   return { value, label }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { $userData } from '@/components/Layout/model';
+import { $isNewUser, $userData } from '@/components/Layout/model';
 import { createEvent, createStore, createEffect, attach, sample } from 'effector';
 
 export const fetchGroups = createEvent();
@@ -96,4 +96,12 @@ createGroup.watch((name) => {
 deleteGroup.watch((group) => {
   // @ts-ignore
   deleteGroupFx(group);
+});
+
+sample({
+  clock: $isNewUser,
+  filter: (isNewUser: any) => isNewUser,
+  // source: $userData,
+  fn: () => 'Подборка Санкт-Петербург',
+  target: createGroup,
 });
