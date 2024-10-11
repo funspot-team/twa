@@ -13,7 +13,7 @@ export const BannerContest: FC = () => {
 
   const mainImg = '/twa/images/contest.png';
   const name = 'Призы за лучшие идеи';
-  const shortDescription = 'Предложите классную идею<br />по улучшению Funspot!<br />А за лучшие идеи мы подарим<br />головоломки Woozle!';
+  const shortDescription = 'Предложите классную идею<br />по улучшению Funspot!<br />А за лучшие идеи мы подарим<br />головоломки Wuzl!';
   const url = 'https://t.me/+INJJi1d5O8QzOGVi';
 
   const onClick = () => {
