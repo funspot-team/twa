@@ -85,7 +85,7 @@ export const FavoriteGroupsPage: FC = () => {
 
         <Section header="Добавить новую подборку">
           <Input
-            autoFocus
+            // autoFocus
             id="favorite-groups-input"
             value={name}
             placeholder="Название подборки"

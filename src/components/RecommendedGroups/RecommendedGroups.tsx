@@ -18,7 +18,7 @@ export const RecommendedGroups: FC = () => {
       </Headline>
 
       <Cell
-        description="Вдохновляйтесь нашими специально отобранными коллекциями! Мы собрали лучшие места для вашего отдыха — от активных приключений до уютных уголков для свиданий и семейных прогулок. Найдите новые идеи для своего досуга и откройте для себя интересные места в Санкт-Петербурге."
+        description="Мы собрали лучшие места для вашего отдыха — от активных приключений до уютных уголков для свиданий и семейных прогулок. Найдите новые идеи для своего досуга и откройте для себя интересные места в Санкт-Петербурге."
         multiline
       />
     
@@ -28,7 +28,19 @@ export const RecommendedGroups: FC = () => {
             <Section key={item.id}>
               <Cell
                 before={<Image size={96} src={item.img} />}
-                description={item.description}
+                description={
+                  <span
+                    style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 5,
+                      WebkitBoxOrient: 'vertical',
+                      whiteSpace: 'break-spaces',
+                    }}
+                  >
+                    {item.description}
+                  </span>
+                }
+                subtitle={`Спотов в подборке: ${item.spots.length}`}
                 style={{ minHeight: '124px '}}
                 onClick={() => {
                   navigate('/ideas/recommended-groups/' + item.id);

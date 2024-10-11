@@ -13,12 +13,16 @@ import { FiltersSearch } from "./FiltersSearch";
 import { FiltersToggle } from "./FiltersToggle";
 import { FiltersQuick } from "./FiltersQuick";
 import { $catalog } from "@/pages/CatalogPage/model";
+import { useLaunchParams } from "@telegram-apps/sdk-react";
 
 interface IFiltersProps {
   isMap?: boolean;
 }
 
 export const Filters: FC<IFiltersProps> = ({ isMap }) => {
+  const { platform } = useLaunchParams();
+  const isIos = platform === 'ios';
+
   const filters = useUnit($mainFilters);
   const priceFilter = useUnit($priceFilter);
   const spots = useUnit($catalog);
@@ -116,6 +120,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
             display: 'flex',
             gap: '8px',
             flexWrap: 'wrap',
+            padding: !isIos ? '0 18px' : '',
           }}>
             {filterWithUpperCase.map((filter) => {
               return (

@@ -8,14 +8,14 @@ import { ROUTE_NAMES } from '@/navigation/routes';
 import { useHapticFeedback, useLaunchParams } from '@telegram-apps/sdk-react';
 import { UserMenu } from '../UserMenu/UserMenu';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
-import { Icon28Lightbulb } from '@/icons/lightbulb';
 import { $userData } from '../Layout/model';
 import { useUnit } from 'effector-react';
+import { Icon28Home } from '@/icons/home';
 
 const tabs = [
   {
     path: ROUTE_NAMES.MAIN_ROUTE,
-    Icon: Icon28Lightbulb,
+    Icon: Icon28Home,
     text: 'Главная',
   },
   {

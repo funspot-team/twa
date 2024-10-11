@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ButtonCell, Cell, List, Modal, Section } from '@telegram-apps/telegram-ui';
+import { ButtonCell, Cell, IconContainer, List, Modal, Section } from '@telegram-apps/telegram-ui';
 import { useEffect, type FC } from 'react';
 import { ModalHeader } from '../ModalHeader/ModalHeader';
 import { useUnit } from 'effector-react';
@@ -14,6 +14,7 @@ import { addFavourite } from '@/pages/FavouritesPage/model';
 import { ROUTE_NAMES } from '@/navigation/routes';
 import { $userData } from '../Layout/model';
 import { onChangeSnackbar } from '../Snackbar/model';
+import { Icon24Folder } from '@/icons/folder';
 
 const FavoriteDefaultState = { isShow: false, spotId: null, title: '' };
 
@@ -53,6 +54,7 @@ export const AddFavouriteModal: FC = () => {
               <Section header='Мои подборки'>
                 {groups.map((group: any) => (
                   <Cell
+                    before={<IconContainer><Icon28Add /></IconContainer>}
                     key={group.id}
                     after={<Icon16ChevronRight />}
                     onClick={() => {
@@ -78,7 +80,7 @@ export const AddFavouriteModal: FC = () => {
 
             <Section>
               <ButtonCell
-                before={<Icon28Add />}
+                before={<Icon24Folder />}
                 interactiveAnimation="opacity"
                 mode="default"
                 onClick={() => {

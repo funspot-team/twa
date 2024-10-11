@@ -85,28 +85,30 @@ export const MainPage: FC = () => {
     return null;
   }
 
-  const recomended = spots
-    .filter(({id}) => [21, 22, 13].includes(Number(id)))
+  const youLiked = spots
+    .filter(({id}) => [14, 18, 55, 56, 59, 85, 268, 276, 305, 309].includes(Number(id)))
     .slice(0).reverse();
-  const popular = spots.filter(({id}) => [19, 12, 15, 26, 27].includes(Number(id)));
+  const popular = spots.filter(({id}) => [26, 54, 78, 115, 124, 129, 209, 273, 308, 312].includes(Number(id)));
   const baner = spots.find(({id}) => 34 === Number(id));
 
   return (
     <>
       <div style={{
-        height: '200px',
-        backgroundImage: 'url(/twa/images/catalogue0.png)',
+        // height: '210px',
+        backgroundImage: 'url(/twa/images/catalogue.jpeg)',
         backgroundSize: 'cover',
-        backgroundPosition: 'bottom -60px right 0px',
+        backgroundPosition: 'bottom -30px right 0px',
         backgroundRepeat: 'no-repeat',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'relative',
+        aspectRatio: '16 / 9',
       }}>
         <Button
           mode="white"
           size="s"
-          style={{ marginTop: '100px', opacity: 0.7 }}
+          style={{ position: 'absolute', bottom: '7%', opacity: 0.85 }}
           onClick={() => {
             onChangeIsViewAsMap(false);
             navigate(ROUTE_NAMES.CATALOGUE_ROUTE);
@@ -148,7 +150,7 @@ export const MainPage: FC = () => {
       <List>
         <BannerContest />
 
-        <SpotsBlock title="Вам понравится" spots={recomended} />
+        <SpotsBlock title="Вам понравится" spots={youLiked} />
 
         <BannerSpot spot={baner} />
 
