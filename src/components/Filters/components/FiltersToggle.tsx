@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useUnit } from "effector-react";
 import { Button } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
@@ -10,6 +11,8 @@ export const FiltersToggle: FC = () => {
   const isIos = platform === 'ios';
 
   const onClickToggle = () => {
+    // @ts-ignore
+    ym(97751698,'reachGoal','btn-click-map-list');
     onChangeIsViewAsMap(!isViewAsMap);
   }
 
