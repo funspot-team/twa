@@ -18,6 +18,7 @@ import { GroupsBlock } from './components/GroupsBlock';
 import { onChangeIsViewAsMap } from '@/components/Filters/model';
 import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
 import { BannerContest } from '@/components/BannerContest/BannerContest';
+import { onChangeSpotVisible } from '../ItemPage/model';
 
 import './MainPage.css';
 
@@ -29,6 +30,30 @@ interface ISpotsBlockProps {
 const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
   const navigate = useNavigate();
 
+  const onOpenSpot = (id: string) => {
+    // navigate('');
+    // const newUrl = `${window.location.pathname}?spot=open`;
+    // window.history.pushState(null, '', newUrl);
+    // @ts-ignore
+    const { history } = JSON.parse(sessionStorage.getItem('app-navigation-state')) || {};
+
+    // console.log({ history, index });
+    const item = history[history.length - 1];
+
+    navigate(item);
+    // const data = {
+    //   history: [ ...history, history[history.length - 1] ],
+    //   index: index + 1,
+    // }
+    
+    // console.log(data);
+
+    // sessionStorage.setItem('app-navigation-state', JSON.stringify(data));
+
+    onChangeSpotVisible(id);
+    // onChangeRestoreScroll(window.scrollY);
+  }
+
   return (
     <>
       <SectionHeader>{title}</SectionHeader>
@@ -36,7 +61,7 @@ const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
       <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
         {spots.map(({ id, name, mainImg, shortDescription }: any) => {
           return (
-            <Card key={name} style={{ minWidth: '254px' }} onClick={() => navigate('/item/' + id)}>
+            <Card key={name} style={{ minWidth: '254px' }} onClick={() => onOpenSpot(id)}>
               <>
                 <AddFavourite id={id} title={name} isCard />
                 
@@ -75,6 +100,25 @@ export const MainPage: FC = () => {
 
   useEffect(() => {
     setDisableScroll(false);
+    
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        behavior: "smooth"
+      });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollIntoView({ behavior: 'smooth' });
+    }, 2000);
+
+    const scrollToTop = () => {
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    };
+  
+    scrollToTop();
   }, []);
 
   if (isLoading || disableScroll) {
@@ -156,16 +200,6 @@ export const MainPage: FC = () => {
 
         <SpotsBlock title="Популярное" spots={popular} />
       </List>
-
-      {/* <div style={{
-        height: '100px',
-        backgroundImage: 'url(/twa/images/add-spot.jpeg)',
-        backgroundSize: 'contain',
-        padding: '20px 0',
-        backgroundPosition: 'center',
-        backgroundColor: '#C9E3FF',
-        backgroundRepeat: 'no-repeat',
-      }}/> */}
 
       <LastItem />
     </>

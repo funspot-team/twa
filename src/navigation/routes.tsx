@@ -2,7 +2,7 @@ import type { ComponentType, JSX } from 'react';
 
 import { MainPage } from '@/pages/MainPage/MainPage';
 import { PartnerPage } from '@/pages/PartnerPage/PartnerPage';
-import { ItemPage } from '@/pages/ItemPage/ItemPage';
+// import { ItemPage } from '@/pages/ItemPage/ItemPage';
 import { CatalogPage } from '@/pages/CatalogPage/CatalogPage';
 import { SpotMapPage } from '@/pages/SpotMapPage/SpotMapPage';
 import { RecommendedGroupsPage } from '@/pages/RecommendedGroupsPage/RecommendedGroupsPage';
@@ -39,6 +39,6 @@ export const routes: Route[] = [
   { path: ROUTE_NAMES.FAVOURITE_GROUPS_ROUTE, Component: FavoriteGroupsPage, title: 'Избранное' },
   { path: ROUTE_NAMES.FAVOURITE_GROUP_ROUTE, Component: FavouritesPage, title: 'Избранное' },
   { path: ROUTE_NAMES.PARTNER_ROUTE, Component: PartnerPage, title: 'Стать партнером' },
-  { path: ROUTE_NAMES.ITEM_ROUTE, Component: ItemPage },
+  // { path: ROUTE_NAMES.ITEM_ROUTE, Component: ItemPage },
   { path: ROUTE_NAMES.SPOT_MAP_ROUTE, Component: SpotMapPage },
 ];

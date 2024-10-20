@@ -6,7 +6,7 @@ import { useEffect, useState, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
-import { useParams } from 'react-router-dom';
+import { $spotVisible } from '@/pages/ItemPage/model';
 import { Icon28Chat } from '@/icons/chat';
 import { Icon28Link } from '@/icons/link';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
@@ -21,6 +21,7 @@ import { decodeHtmlEntities } from '@/helpers/helpers';
 import { initUtils, useLaunchParams } from '@telegram-apps/sdk-react';
 import { SpotDescription } from '@/components/Spot/components/SpotDescription';
 import { LastItem } from '@/components/LastItem/LastItem';
+import { useUnit } from 'effector-react';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
@@ -31,7 +32,7 @@ export const ItemPage: FC = () => {
 
   const [item, setItem] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { id } = useParams();
+  const id = useUnit($spotVisible);
 
   const isIos = platform === 'ios';
 
@@ -53,7 +54,7 @@ export const ItemPage: FC = () => {
       }
     }
 
-    fetchSpot();  
+    fetchSpot();
   }, []);
 
   if (isLoading) {

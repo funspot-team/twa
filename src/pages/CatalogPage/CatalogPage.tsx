@@ -26,6 +26,25 @@ export const CatalogPage: FC = () => {
 
   useEffect(() => {
     setDisableScroll(false);
+    
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        behavior: "smooth"
+      });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollIntoView({ behavior: 'smooth' });
+    }, 2000);
+
+    const scrollToTop = () => {
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    };
+  
+    scrollToTop();
   }, []);
 
   return (

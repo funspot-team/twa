@@ -28,14 +28,6 @@ export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
         <Button size="s" onClick={() => navigate('/item/' + id)}>
           Попробовать сквош
         </Button>
-
-        {/* <Button
-          mode="plain"
-          size="s"
-          onClick={() => navigate('/item/' + id)}
-        >
-          В избранное
-        </Button> */}
       </>
     </Banner>
   );
