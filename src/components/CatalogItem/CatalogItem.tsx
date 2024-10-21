@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption, Card, Cell, IconContainer, Image, Section } from '@telegram-apps/telegram-ui';
 import { SyntheticEvent, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { Icon16Star } from '@/icons/star';
@@ -20,36 +19,9 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   added,
   onFavourite,
   isLarge = false,
-  // isCatalog = false,
 }) => {
-  const navigate = useNavigate();
-
-  // const goToSpot = () => {
-  //   navigate('/item/' + spot.id);
-  // };
   const goToSpot = () => {
-    // navigate('');
-    // const newUrl = `${window.location.pathname}?spot=open`;
-    // window.history.pushState(null, '', newUrl);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { history } = JSON.parse(sessionStorage.getItem('app-navigation-state')) || {};
-
-    // console.log({ history, index });
-    const item = history[history.length - 1];
-
-    navigate(item);
-    // const data = {
-    //   history: [ ...history, history[history.length - 1] ],
-    //   index: index + 1,
-    // }
-    
-    // console.log(data);
-
-    // sessionStorage.setItem('app-navigation-state', JSON.stringify(data));
-
     onChangeSpotVisible(spot.id);
-    // onChangeRestoreScroll(window.scrollY);
   }
 
   return isLarge ? (

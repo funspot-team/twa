@@ -15,6 +15,7 @@ import { ROUTE_NAMES } from '@/navigation/routes';
 import { $userData } from '../Layout/model';
 import { onChangeSnackbar } from '../Snackbar/model';
 import { Icon24Folder } from '@/icons/folder';
+import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 
 const FavoriteDefaultState = { isShow: false, spotId: null, title: '' };
 
@@ -85,6 +86,7 @@ export const AddFavouriteModal: FC = () => {
                 mode="default"
                 onClick={() => {
                   onChangeFavouriteModal(FavoriteDefaultState);
+                  onChangeSpotVisible(null);
                   navigate(ROUTE_NAMES.FAVOURITE_GROUPS_ROUTE);
                 }}
               >

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, type FC } from 'react';
 import { $isShowStepperGuide, onChangeUserData } from './model';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
 import { useInitData } from '@telegram-apps/sdk-react';
@@ -13,31 +13,16 @@ import { useUnit } from 'effector-react';
 import { Snackbar } from '../Snackbar/Snackbar';
 import { fetchCatalog } from '@/pages/CatalogPage/model';
 import { $spotVisible, onChangeSpotVisible } from '@/pages/ItemPage/model';
-import { ItemPage } from '@/pages/ItemPage/ItemPage';
-import { Modal } from '@telegram-apps/telegram-ui';
+import { SpotModal } from '../SpotModal/SpotModal';
 
-const useHandleBackButton = (handleBack: any) => {
-  useEffect(() => {
-    const onPopState = (event: any) => {
-      handleBack(event);
-    };
-
-    window.addEventListener('popstate', onPopState);
-
-    return () => {
-      window.removeEventListener('popstate', onPopState);
-    };
-  }, [handleBack]);
-};
+import './Layout.css';
 
 export const Layout: FC = () => {
   const redirectAllow = useRef(true);
-  const navigate = useNavigate();
   const initData = useInitData();
 
   const isShowGuide = useUnit($isShowStepperGuide);
   const spotVisible = useUnit($spotVisible);
-  // const restoreScroll = useUnit($restoreScroll);
 
   const userData = useMemo(() => {
     return initData && initData.user ? initData.user : undefined;
@@ -62,32 +47,11 @@ export const Layout: FC = () => {
         redirectAllow.current = false;
         
         setTimeout(() => {
-          navigate('/item/' + right);
+          onChangeSpotVisible(right);
         }, 0);
       }
     }
   }, []);
-
-  // useEffect(() => {
-  //   if (!spotVisible) {
-  //       window.scrollTo(0, restoreScroll);
-  //   }
-  // }, [spotVisible]);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     window.scrollTo(0, 0);
-  //   }, 500);
-  // }, []);
-
-  useHandleBackButton((event: any) => {
-    if (spotVisible) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      onChangeSpotVisible(null);
-    }
-  });
 
   if (isShowGuide) {
     return <StepperGuide />;
@@ -106,33 +70,7 @@ export const Layout: FC = () => {
         </Routes>
       </div>
 
-      {/* {spotVisible && 
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            background: 'var(--tg-theme-secondary-bg-color, white)',
-            zIndex: 1,
-            overflowY: 'auto',
-            height: '100vh',
-            width: '100%',
-            opacity: 0.4,
-          }}
-        >
-          <ItemPage />
-        </div>
-      } */}
-      <Modal
-        // header={<ModalHeader />}
-        open={!!spotVisible}
-        // onOpenChange={() => onChangeSpotVisible(null)}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) onChangeSpotVisible(null);
-        }}
-        style={{ zIndex: 70 }}
-      >
-        <ItemPage />
-      </Modal>
+      <SpotModal />
 
       <AddFavouriteModal />
 

@@ -28,30 +28,8 @@ interface ISpotsBlockProps {
 }
 
 const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
-  const navigate = useNavigate();
-
   const onOpenSpot = (id: string) => {
-    // navigate('');
-    // const newUrl = `${window.location.pathname}?spot=open`;
-    // window.history.pushState(null, '', newUrl);
-    // @ts-ignore
-    const { history } = JSON.parse(sessionStorage.getItem('app-navigation-state')) || {};
-
-    // console.log({ history, index });
-    const item = history[history.length - 1];
-
-    navigate(item);
-    // const data = {
-    //   history: [ ...history, history[history.length - 1] ],
-    //   index: index + 1,
-    // }
-    
-    // console.log(data);
-
-    // sessionStorage.setItem('app-navigation-state', JSON.stringify(data));
-
     onChangeSpotVisible(id);
-    // onChangeRestoreScroll(window.scrollY);
   }
 
   return (
@@ -102,6 +80,7 @@ export const MainPage: FC = () => {
     setDisableScroll(false);
     
     setTimeout(() => {
+      // в хроме работают все способы
       window.scrollTo(0, 0);
       window.scroll({
         top: 0,
@@ -110,7 +89,7 @@ export const MainPage: FC = () => {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
       document.documentElement.scrollIntoView({ behavior: 'smooth' });
-    }, 2000);
+    }, 200);
 
     const scrollToTop = () => {
       window.requestAnimationFrame(() => {

@@ -26,7 +26,7 @@ export const CatalogPage: FC = () => {
 
   useEffect(() => {
     setDisableScroll(false);
-    
+
     setTimeout(() => {
       window.scrollTo(0, 0);
       window.scroll({
@@ -36,7 +36,7 @@ export const CatalogPage: FC = () => {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
       document.documentElement.scrollIntoView({ behavior: 'smooth' });
-    }, 2000);
+    }, 100);
 
     const scrollToTop = () => {
       window.requestAnimationFrame(() => {

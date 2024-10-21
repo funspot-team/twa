@@ -59,13 +59,17 @@ export const ModalHeader: FC<IModalHeaderProps> = ({
         {rightSlot ? (
           rightSlot
         ) : (
-          onClose && <IconButton
-            mode="plain"
-            size="s"
-            onClick={onClose}
-          >
-            <Icon28Close />
-          </IconButton>
+          onClose && (
+            <>
+              <IconButton
+                mode="plain"
+                size="s"
+                onClick={onClose}
+              >
+                <Icon28Close style={{ color: 'var(--tgui--plain_foreground)' }} />
+              </IconButton>
+            </>
+          )
         )}
       </div>
     </div>
