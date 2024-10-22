@@ -138,6 +138,7 @@ export const Map: FC = () => {
             type="section"
             onClick={() => {
               onChangeSpotVisible(data.id);
+              setIsOpen(false);
               // navigate('/item/' + data.id)
             }}
           >
