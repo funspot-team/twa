@@ -7,7 +7,6 @@ import { useState, type FC } from 'react';
 import { useUnit } from "effector-react";
 import { Banner, Button, Image, Modal } from '@telegram-apps/telegram-ui';
 import { ModalHeader } from '@telegram-apps/telegram-ui/dist/components/Overlays/Modal/components/ModalHeader/ModalHeader';
-import { useNavigate } from 'react-router-dom';
 import { $childrenFilter, $mainFilters, $priceFilter, $searchFilter } from '../Filters/model';
 import { LastItem } from '../LastItem/LastItem';
 import { getSpotsByFilters } from '../Filters/helpers/filtersHelpers';
@@ -15,6 +14,7 @@ import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { MapMyPosition } from './components/MapMyPosition';
 import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from './model';
 import { $catalog } from '@/pages/CatalogPage/model';
+import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 
 import './Map.css';
 
@@ -82,8 +82,6 @@ function HandlerContainer() {
 }
 
 export const Map: FC = () => {
-  const navigate = useNavigate();
-
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState<any>(null);
   
@@ -138,10 +136,17 @@ export const Map: FC = () => {
             header={data.name}
             subheader={<span dangerouslySetInnerHTML={{ __html: data.shortDescription }} />}
             type="section"
-            onClick={() => navigate('/item/' + data.id)}
+            onClick={() => {
+              onChangeSpotVisible(data.id);
+              setIsOpen(false);
+              // navigate('/item/' + data.id)
+            }}
           >
             <>
-              <Button size="s" onClick={() => navigate('/item/' + data.id)}>
+              <Button size="s" onClick={() => {
+                onChangeSpotVisible(data.id);
+                // navigate('/item/' + data.id)
+              }}>
                 Подробнее
               </Button>
 

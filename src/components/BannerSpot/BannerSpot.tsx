@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Banner, Button } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 
 import './BannerSpot.css';
 
@@ -10,8 +10,11 @@ interface IBannerSpotProps {
 }
 
 export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
-  const navigate = useNavigate();
   const { id, mainImg, name, shortDescription } = spot;
+
+  const goToSpot = () => {
+    onChangeSpotVisible(id);
+  }
 
   return (
     <Banner
@@ -25,17 +28,9 @@ export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
       }}
     >
       <>
-        <Button size="s" onClick={() => navigate('/item/' + id)}>
+        <Button size="s" onClick={goToSpot}>
           Попробовать сквош
         </Button>
-
-        {/* <Button
-          mode="plain"
-          size="s"
-          onClick={() => navigate('/item/' + id)}
-        >
-          В избранное
-        </Button> */}
       </>
     </Banner>
   );

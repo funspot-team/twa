@@ -4,9 +4,9 @@ import { Card } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 
-import { useNavigate } from 'react-router-dom';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks/Section/components/SectionHeader/SectionHeader';
+import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 
 interface ISpotsBlockProps {
   title: string;
@@ -14,7 +14,9 @@ interface ISpotsBlockProps {
 }
 
 export const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
-  const navigate = useNavigate();
+  const goToSpot = (id: string) => {
+    onChangeSpotVisible(id);
+  }
 
   return (
     <>
@@ -23,7 +25,7 @@ export const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
       <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
         {spots.map(({ id, name, mainImg, shortDescription }: any) => {
           return (
-            <Card key={name} style={{ minWidth: '254px' }} onClick={() => navigate('/item/' + id)}>
+            <Card key={name} style={{ minWidth: '254px' }} onClick={() => goToSpot(id)}>
               <>
                 <AddFavourite id={id} title={name} isCard />
                 

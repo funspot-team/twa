@@ -5,6 +5,10 @@
   z-index: 1;
 }
 
+.spot-map.leaflet-container {
+  height: 95vh;
+}
+
 .leaflet-div-icon {
   background: transparent;
   border: none;

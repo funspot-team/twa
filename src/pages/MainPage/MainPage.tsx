@@ -18,6 +18,7 @@ import { GroupsBlock } from './components/GroupsBlock';
 import { onChangeIsViewAsMap } from '@/components/Filters/model';
 import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
 import { BannerContest } from '@/components/BannerContest/BannerContest';
+import { onChangeSpotVisible } from '../ItemPage/model';
 
 import './MainPage.css';
 
@@ -27,7 +28,9 @@ interface ISpotsBlockProps {
 }
 
 const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
-  const navigate = useNavigate();
+  const onOpenSpot = (id: string) => {
+    onChangeSpotVisible(id);
+  }
 
   return (
     <>
@@ -36,7 +39,7 @@ const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
       <div style={{ display: 'flex', gap: '12px', marginBottom: '12px', overflowX: 'scroll' }}>
         {spots.map(({ id, name, mainImg, shortDescription }: any) => {
           return (
-            <Card key={name} style={{ minWidth: '254px' }} onClick={() => navigate('/item/' + id)}>
+            <Card key={name} style={{ minWidth: '254px' }} onClick={() => onOpenSpot(id)}>
               <>
                 <AddFavourite id={id} title={name} isCard />
                 
@@ -75,6 +78,26 @@ export const MainPage: FC = () => {
 
   useEffect(() => {
     setDisableScroll(false);
+    
+    setTimeout(() => {
+      // в хроме работают все способы
+      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        behavior: "smooth"
+      });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollIntoView({ behavior: 'smooth' });
+    }, 200);
+
+    const scrollToTop = () => {
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    };
+  
+    scrollToTop();
   }, []);
 
   if (isLoading || disableScroll) {
@@ -156,16 +179,6 @@ export const MainPage: FC = () => {
 
         <SpotsBlock title="Популярное" spots={popular} />
       </List>
-
-      {/* <div style={{
-        height: '100px',
-        backgroundImage: 'url(/twa/images/add-spot.jpeg)',
-        backgroundSize: 'contain',
-        padding: '20px 0',
-        backgroundPosition: 'center',
-        backgroundColor: '#C9E3FF',
-        backgroundRepeat: 'no-repeat',
-      }}/> */}
 
       <LastItem />
     </>

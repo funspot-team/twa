@@ -75,7 +75,7 @@ export const StepperGuide: FC = () => {
           onClick={() => onChangeStepperGuide(false)}
           style={{ position: 'absolute', right: '8px', top: '8px' }}
         >
-          <Icon28Close />
+          <Icon28Close style={{ color: 'var(--tgui--plain_foreground)' }} />
         </IconButton>
 
         <div style={{ width: '50%' }} onClick={onBack} />

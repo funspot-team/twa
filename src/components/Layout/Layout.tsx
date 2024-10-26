@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useMemo, useRef, type FC } from 'react';
 import { $isShowStepperGuide, onChangeUserData } from './model';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
 import { useInitData } from '@telegram-apps/sdk-react';
@@ -11,12 +12,17 @@ import { StepperGuide } from '../StepperGuide /StepperGuide';
 import { useUnit } from 'effector-react';
 import { Snackbar } from '../Snackbar/Snackbar';
 import { fetchCatalog } from '@/pages/CatalogPage/model';
+import { $spotVisible, onChangeSpotVisible } from '@/pages/ItemPage/model';
+import { SpotModal } from '../SpotModal/SpotModal';
+
+import './Layout.css';
 
 export const Layout: FC = () => {
   const redirectAllow = useRef(true);
-  const navigate = useNavigate();
   const initData = useInitData();
+
   const isShowGuide = useUnit($isShowStepperGuide);
+  const spotVisible = useUnit($spotVisible);
 
   const userData = useMemo(() => {
     return initData && initData.user ? initData.user : undefined;
@@ -41,7 +47,7 @@ export const Layout: FC = () => {
         redirectAllow.current = false;
         
         setTimeout(() => {
-          navigate('/item/' + right);
+          onChangeSpotVisible(right);
         }, 0);
       }
     }
@@ -55,10 +61,16 @@ export const Layout: FC = () => {
     <>
       <YandexMetrika />
 
-      <Routes>
-        {routes.map((route) => <Route key={route.path} {...route} />)}
-          <Route path='*' element={<Navigate to='/'/>}/>
-      </Routes>
+      <div
+        style={{ overflow: spotVisible ? 'hidden' : 'initial' }}
+      >
+        <Routes>
+          {routes.map((route) => <Route key={route.path} {...route} />)}
+            <Route path='*' element={<Navigate to='/'/>}/>
+        </Routes>
+      </div>
+
+      <SpotModal />
 
       <AddFavouriteModal />
 

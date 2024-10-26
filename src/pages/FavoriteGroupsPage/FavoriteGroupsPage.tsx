@@ -126,7 +126,7 @@ export const FavoriteGroupsPage: FC = () => {
         />}
         open={isShowModal}
         onOpenChange={setIsShowModal}
-        style={{ zIndex: 30 }}
+        style={{ zIndex: 55 }}
       >
         <div
           style={{

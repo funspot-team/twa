@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption, Card, Cell, IconContainer, Image, Section } from '@telegram-apps/telegram-ui';
 import { SyntheticEvent, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { Icon16Star } from '@/icons/star';
+import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 
 interface ICatalogItemProps {
   spot: any;
@@ -19,13 +19,10 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   added,
   onFavourite,
   isLarge = false,
-  // isCatalog = false,
 }) => {
-  const navigate = useNavigate();
-
   const goToSpot = () => {
-    navigate(`/item/${spot.id}`);
-  };
+    onChangeSpotVisible(spot.id);
+  }
 
   return isLarge ? (
     <Card style={{ width: '100%' }} onClick={goToSpot}>
