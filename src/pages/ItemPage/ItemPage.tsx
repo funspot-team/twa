@@ -43,6 +43,9 @@ export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
   const isIos = platform === 'ios';
 
   useEffect(() => {
+    // @ts-ignore
+    ym(97751698,'reachGoal', `page-open-spot-${id}`);
+
     const fetchSpot = async () => {
       const response = await fetch(`https://funspot.ru/places/?SpotID=${id}`); 
 
