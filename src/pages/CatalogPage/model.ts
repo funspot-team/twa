@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { decodeHtmlEntities } from '@/helpers/helpers';
 import { createEvent, createStore, createEffect } from 'effector';
 
 export const fetchCatalog = createEvent();
 
-export const fetchCatalogFx = createEffect(async () => {
-  const response = await fetch('https://funspot.ru/places/ '); 
+export const fetchCatalogFx = createEffect(async (city: string) => {
+  const response = await fetch('https://funspot.ru/places/?City=' + city); 
 
   if (!response.ok) {
     throw new Error('Failed to fetch catalog');
@@ -36,8 +37,10 @@ export const $catalog = createStore([])
 
 export const $isLoadingCatalog = fetchCatalogFx.pending;
 
-fetchCatalog.watch(fetchCatalogFx);
-
+fetchCatalog.watch((city) => {
+  // @ts-ignore
+  fetchCatalogFx(city);
+});
 
 export const onChangeCatalogScroll = createEvent<number>();
 export const $catalogScroll = createStore<number>(0);

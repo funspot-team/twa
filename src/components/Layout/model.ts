@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LSgetItem, LSsetItem } from '@/helpers/helpers';
+import { fetchCatalog } from '@/pages/CatalogPage/model';
 import { attach, createEffect, createEvent, createStore, sample } from 'effector';
+import { $cities, fetchCitiesFx, onChangeShowCity } from '../CitySelector/model';
+import { $mapCenter, $mapZoom } from '../Map/model';
 
 // userData
 export const onChangeUserData = createEvent<any>();
@@ -24,10 +27,10 @@ $isShowStepperGuide
     return value;
   });
 
-// create user
-export const createUser = createEvent();
+// User Settings
+export const $userSettings = createStore({ city: '' });
 
-const createUserFx = attach({
+const getUserSettingsFx = attach({
   source: $userData,
   mapParams: (user) => ({ user }),
   effect: createEffect(async ({ user }: any) => { 
@@ -48,19 +51,114 @@ const createUserFx = attach({
   }),
 });
 
+export const updateUserSettings = createEvent();
+
+const updateUserSettingsFx = attach({
+  source: $userData,
+  mapParams: ({ city }, user) => ({ city, user }),
+  effect: createEffect(async ({ user, city }: any) => {
+    const response = await fetch('https://funspot.ru/api/', {
+      method: 'POST',
+      body: JSON.stringify({ method: 'updateUser', user: user.id, city })
+    }); 
+  
+    if (!response.ok) {
+      throw new Error('Failed to update user');
+    }
+  
+    try {
+      const result = await response.json();
+      return result.message === 'success' ? { city } : response.json();
+    } catch (error) {
+      throw new Error('Failed to parse JSON response');
+    }
+  }),
+});
+
+updateUserSettings.watch((city) => {
+  // @ts-ignore
+  updateUserSettingsFx(city);
+});
+
+sample({
+  clock: updateUserSettingsFx.doneData,
+  fn: () => false,
+  target: onChangeShowCity,
+});
+
+const fetchAllDataFx = attach({
+  source: $userData,
+  mapParams: (user) => ({ user }),
+  effect: createEffect(async ({ user }: any) => { 
+    const [cities, userSettings] = await Promise.all([fetchCitiesFx(), getUserSettingsFx(user)]);
+    return { cities, userSettings };
+  }),
+});
+
+export const $isLoadingAllData = fetchAllDataFx.pending;
+export const $isLoadingUser = updateUserSettingsFx.pending;
+
+sample({
+  clock: $userData,
+  target: fetchAllDataFx,
+});
+
+sample({
+  clock: fetchAllDataFx.doneData,
+  fn: ({ userSettings }: any) => {
+    if (userSettings.message === 'user already exists') {
+      return { city: userSettings.city };
+    }
+    return { city: '' }
+  },
+  target: $userSettings,
+});
+
+sample({
+  clock: updateUserSettingsFx.doneData,
+  target: $userSettings,
+});
+
+sample({
+  clock: $userSettings,
+  source: $cities,
+  fn: (cities, { city }) => {
+    return (cities.find(({ id }) => id === city) as any).zoom;
+  },
+  target: $mapZoom,
+});
+
+sample({
+  clock: $userSettings,
+  source: $cities,
+  fn: (cities, { city }) => {
+    return (cities.find(({ id }) => id === city) as any).coords;
+  },
+  target: $mapCenter,
+});
+
 export const $isNewUser = createStore(false)
-  .on(createUserFx.doneData, (_, response) => {
+  .on(getUserSettingsFx.doneData, (_, response) => {
     return response.message === 'success';
   });
 
 sample({
-  clock: $userData,
-  target: createUser,
+  clock: $isNewUser,
+  filter: (isNewUser: any) => isNewUser,
+  fn: () => true,
+  target: onChangeShowCity,
 });
 
-// sample({
-//   clock: createUserFx.done,
-//   target: fetchGroups,
-// });
+sample({
+  clock: $isNewUser,
+  filter: (isNewUser: any) => isNewUser,
+  fn: () => true,
+  target: onChangeStepperGuide,
+});
 
-createUser.watch(createUserFx);
+sample({
+  clock: $userSettings,
+  filter: ({ city }: any) => !!city,
+  fn: ({ city }) => city,
+  target: fetchCatalog,
+});

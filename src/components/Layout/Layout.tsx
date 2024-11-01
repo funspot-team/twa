@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useMemo, useRef, type FC } from 'react';
-import { $isShowStepperGuide, onChangeUserData } from './model';
+import { $isLoadingAllData, $isLoadingUser, $isShowStepperGuide, onChangeUserData } from './model';
 import { Tabbar } from '../Tabbar/Tabbar';
 import { routes } from '@/navigation/routes';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
 import { useInitData } from '@telegram-apps/sdk-react';
-import { StepperGuide } from '../StepperGuide /StepperGuide';
 import { useUnit } from 'effector-react';
 import { Snackbar } from '../Snackbar/Snackbar';
-import { fetchCatalog } from '@/pages/CatalogPage/model';
 import { $spotVisible, onChangeSpotVisible } from '@/pages/ItemPage/model';
 import { SpotModal } from '../SpotModal/SpotModal';
+import { CitySelector } from '../CitySelector/CitySelector';
+import { SpinnerList } from '../SpinnerList/SpinnerList';
+import { $isShowCity } from '../CitySelector/model';
+import { StepperGuide } from '../StepperGuide /StepperGuide';
 
 import './Layout.css';
 
@@ -21,6 +23,10 @@ export const Layout: FC = () => {
   const redirectAllow = useRef(true);
   const initData = useInitData();
 
+  const isLoadingAllData = useUnit($isLoadingAllData);
+  const isLoadingUser = useUnit($isLoadingUser);
+
+  const isShowCity = useUnit($isShowCity);
   const isShowGuide = useUnit($isShowStepperGuide);
   const spotVisible = useUnit($spotVisible);
 
@@ -35,8 +41,6 @@ export const Layout: FC = () => {
   useEffect(() => {
     onChangeUserData(userData);
     
-    fetchCatalog();
-
     if (startParam) {
       const parsedParam = startParam.split('_');
       const left = parsedParam[0];
@@ -52,6 +56,14 @@ export const Layout: FC = () => {
       }
     }
   }, []);
+
+  if (isLoadingAllData || isLoadingUser) {
+    return <SpinnerList />;
+  }
+
+  if (isShowCity) {
+    return <CitySelector />;
+  }
 
   if (isShowGuide) {
     return <StepperGuide />;

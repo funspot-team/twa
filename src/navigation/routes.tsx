@@ -1,6 +1,6 @@
 import type { ComponentType, JSX } from 'react';
 
-import { MainPage } from '@/pages/MainPage/MainPage';
+import { MainPageFallback } from '@/pages/MainPageFallback/MainPageFallback';
 import { PartnerPage } from '@/pages/PartnerPage/PartnerPage';
 import { CatalogPage } from '@/pages/CatalogPage/CatalogPage';
 import { RecommendedGroupsPage } from '@/pages/RecommendedGroupsPage/RecommendedGroupsPage';
@@ -28,7 +28,7 @@ interface Route {
 }
 
 export const routes: Route[] = [
-  { path: ROUTE_NAMES.MAIN_ROUTE, Component: MainPage, title: 'Главная' },
+  { path: ROUTE_NAMES.MAIN_ROUTE, Component: MainPageFallback, title: 'Главная' },
   { path: ROUTE_NAMES.CATALOGUE_ROUTE, Component: CatalogPage, title: 'Каталог' },
   { path: ROUTE_NAMES.IDEAS_ROUTE, Component: IdeasPage, title: 'Идеи' },
   { path: ROUTE_NAMES.IDEAS_RECOMMENDED_ITEM_ROUTE, Component: RecommendedGroupsPage, title: 'Рекомендованное' },

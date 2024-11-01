@@ -101,7 +101,6 @@ deleteGroup.watch((group) => {
 sample({
   clock: $isNewUser,
   filter: (isNewUser: any) => isNewUser,
-  // source: $userData,
   fn: () => 'Подборка Санкт-Петербург',
   target: createGroup,
 });
