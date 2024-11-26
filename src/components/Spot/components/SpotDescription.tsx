@@ -15,6 +15,12 @@ export const SpotDescription: FC<ICatalogItemProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const onExpand = () => {
+    // @ts-ignore
+    ym(97751698,'reachGoal','btn-click-description');
+    setIsExpanded(!isExpanded);
+  }
+
   return youtube ? (
     <Section header="Описание">
       <Cell
@@ -50,16 +56,15 @@ export const SpotDescription: FC<ICatalogItemProps> = ({
                 marginBottom: '-8px',
               }}
             >
-              <Button size="s" mode="plain" onClick={() => {
-                // @ts-ignore
-                ym(97751698,'reachGoal','btn-click-description');
-                setIsExpanded(!isExpanded);
-              }}>
+              <Button size="s" mode="plain"
+                onClick={onExpand}
+              >
                 {!isExpanded ? 'Раскрыть' : 'Свернуть'}
               </Button>
             </div>
           </>
         }
+        onClick={onExpand}
       />
     </Section>
   ) : (
@@ -83,16 +88,13 @@ export const SpotDescription: FC<ICatalogItemProps> = ({
                 marginBottom: '-8px',
               }}
             >
-              <Button size="s" mode="plain" onClick={() => {
-                // @ts-ignore
-                ym(97751698,'reachGoal','btn-click-description');
-                setIsExpanded(!isExpanded);
-              }}>
+              <Button size="s" mode="plain" onClick={onExpand}>
                 {!isExpanded ? 'Раскрыть' : 'Свернуть'}
               </Button>
             </div>
           </>
         }
+        onClick={onExpand}
       />
     </Section>
   )

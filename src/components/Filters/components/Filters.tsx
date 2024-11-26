@@ -94,6 +94,7 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
             onAction={onResetFilters}
             rightSlot={
               <Button
+                id="apply-filters-btn"
                 size="s"
                 onClick={() => setIsOpen(false)}
               >
@@ -122,9 +123,10 @@ export const Filters: FC<IFiltersProps> = ({ isMap }) => {
             flexWrap: 'wrap',
             padding: !isIos ? '0 18px' : '',
           }}>
-            {filterWithUpperCase.map((filter) => {
+            {filterWithUpperCase.map((filter, i) => {
               return (
                 <Button
+                  id={`${filter.value}` || `${i}`}
                   key={filter.value}
                   stretched={false}
                   size="s"

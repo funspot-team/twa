@@ -14,21 +14,25 @@ import { Icon28Home } from '@/icons/home';
 
 const tabs = [
   {
+    id: 'tb-main',
     path: ROUTE_NAMES.MAIN_ROUTE,
     Icon: Icon28Home,
     text: 'Главная',
   },
   {
+    id: 'tb-catalog',
     path: ROUTE_NAMES.CATALOGUE_ROUTE,
     Icon: Icon28Catalogue,
     text: 'Каталог',
   },
   {
+    id: 'tb-favourite',
     path: ROUTE_NAMES.FAVOURITE_GROUPS_ROUTE,
     Icon: Icon28Heart,
     text: 'Избранное',
   },
   {
+    id: 'tb-usermenu',
     path: ROUTE_NAMES.USER_ROUTE,
     Icon: Icon28Burger,
     text: 'Меню',
@@ -71,6 +75,7 @@ export const Tabbar: FC = () => {
         }}
       >
         {tabs.map(({
+          id,
           path,
           text,
           Icon
@@ -81,6 +86,7 @@ export const Tabbar: FC = () => {
 
           return (
             <UITabbar.Item
+              id={id}
               key={path}
               text={text}
               selected={!!match || (contained && !isMainPage)}

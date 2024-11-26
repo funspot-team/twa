@@ -1,39 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Caption, Card, Cell, IconContainer, Image, Section } from '@telegram-apps/telegram-ui';
-import { SyntheticEvent, type FC } from 'react';
+import { type FC } from 'react';
 import { CardCell } from '@telegram-apps/telegram-ui/dist/components/Blocks/Card/components/CardCell/CardCell';
 import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { Icon16Star } from '@/icons/star';
-import { onChangeSpotVisible } from '@/pages/ItemPage/model';
+import { useOpenSpot } from '@/hooks/useOpenSpot';
 
 interface ICatalogItemProps {
   spot: any;
-  added?: boolean;
-  onFavourite?: (e: SyntheticEvent, id: number) => void;
   isLarge?: boolean;
-  isCatalog?: boolean;
+  withRemove?: boolean;
 }
 
 export const CatalogItem: FC<ICatalogItemProps> = ({
   spot,
-  added,
-  onFavourite,
   isLarge = false,
+  withRemove,
 }) => {
-  const goToSpot = () => {
-    onChangeSpotVisible(spot.id);
-  }
+  const { openSpot } = useOpenSpot();
 
   return isLarge ? (
-    <Card style={{ width: '100%' }} onClick={goToSpot}>
+    <Card style={{ width: '100%' }} onClick={() => openSpot(spot.id)}>
       <>
-        <AddFavourite id={spot.id} title={spot.name} isCard added={added} onFavourite={onFavourite} />
+        <AddFavourite id={spot.id} title={spot.name} isCard withRemove={withRemove} />
 
         <img
           src={spot.mainImg}
           style={{
             display: 'block',
-            height: 200,
+            height: 170,
             objectFit: 'cover',
             width: '100%'
           }}
@@ -72,7 +67,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
   ) : (
     <Section>
       <Cell
-        after={<AddFavourite id={spot.id} title={spot.name} added={added} onFavourite={onFavourite} />}
+        after={<AddFavourite id={spot.id} title={spot.name} withRemove={withRemove} />}
         before={<Image size={96} src={spot.mainImg} loading="lazy" />}
         subtitle={
           <div style={{ display: 'flex' }}>
@@ -86,7 +81,7 @@ export const CatalogItem: FC<ICatalogItemProps> = ({
           </div>
         }
         style={{ minHeight: '124px '}}
-        onClick={goToSpot}
+        onClick={() => openSpot(spot.id)}
         description={
           <span
             style={{

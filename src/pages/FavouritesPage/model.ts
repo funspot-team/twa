@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { $userData } from '@/components/Layout/model';
 import { createEvent, createStore, createEffect, attach, sample } from 'effector';
+import { $commonGroup } from '../FavoriteGroupsPage/model';
 
 export const fetchFavourites = createEvent();
 export const addFavourite = createEvent();
@@ -84,11 +85,11 @@ sample({
   target: fetchFavourites,
 });
 
-// sample({
-//   clock: deleteFavouriteFx.done,
-//   fn: ({ params }) => params.group,
-//   target: fetchFavourites,
-// });
+sample({
+  clock: deleteFavouriteFx.done,
+  fn: ({ params }) => params.group,
+  target: fetchFavourites,
+});
 
 fetchFavourites.watch((group) => {
   // @ts-ignore
@@ -101,4 +102,38 @@ addFavourite.watch((params) => {
 deleteFavourite.watch((params) => {
   // @ts-ignore
   deleteFavouriteFx(params);
+});
+
+// System group favourites
+export const $addedSpotsDict = createStore({});
+
+sample({
+  clock: $commonGroup,
+  fn: ({ id }: any) => {
+    // console.log('Favourites - update common group');
+    return id;
+  },
+  target: fetchFavouritesFx,
+});
+
+sample({
+  clock: $favourites,
+  source: $commonGroup,
+  filter: (commonGroup: any, favourites: any) => {
+    if (favourites.length > 0 && favourites[0].groupId === commonGroup.id) {
+      // console.log('Favourites - update $favourites, check commonGroup - true');
+      return true;
+    }
+    // console.log('Favourites - update $favourites, check commonGroup - false');
+    return false;
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  fn: (_: any, favourites: any) => {
+    const result = favourites.reduce((acc: any, item: any) => {
+      return {...acc, [item.spot]: true };
+    }, {});
+    // console.log('Favourites - addedSpotsDict - ', result);
+    return result;
+  },
+  target: $addedSpotsDict,
 });

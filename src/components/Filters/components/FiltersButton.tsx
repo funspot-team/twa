@@ -26,6 +26,7 @@ export const FiltersButton: FC<IFiltersButtonProps> = ({ onClick }) => {
 
   return (
     <Button
+      id="filters-btn"
       before={<Icon28Filter />}
       mode="filled"
       size="m"

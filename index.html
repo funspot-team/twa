@@ -73,6 +73,7 @@
       // Expand the application.
       postEvent('web_app_expand');
       postEvent('web_app_setup_swipe_behavior', { allow_vertical_swipe: false });
+      // postEvent('web_app_request_phone');
 
       document.body.classList.add('mobile-body');
       document.getElementById('wrap').classList.add('mobile-wrap');

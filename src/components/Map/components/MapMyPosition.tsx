@@ -1,9 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Marker, useMapEvents } from 'react-leaflet';
 import { Button } from '@telegram-apps/telegram-ui';
 import { MapControl } from './MapControl';
 import L, { LatLng } from 'leaflet';
 import { Icon28Location } from '@/icons/location';
+import { useUnit } from 'effector-react';
+import { $mapLoadLocation, onChangeMapLoadLocation } from '../model';
 
 const customIcon = new L.Icon({
   iconUrl: '/twa/images/marker1.svg',
@@ -11,6 +13,8 @@ const customIcon = new L.Icon({
 });
 
 export const MapMyPosition: FC = () => {
+  const loadMap = useUnit($mapLoadLocation);
+
   const [isLoading, setIsLoading] = useState(false);
   const [position, setPosition] = useState<LatLng | null>(null);
 
@@ -21,6 +25,14 @@ export const MapMyPosition: FC = () => {
       setIsLoading(false);
     }
   });
+
+  useEffect(() => {
+    if (loadMap) {
+      setIsLoading(true);
+      map.locate();
+      onChangeMapLoadLocation(false);
+    }
+  }, [map]);
 
   return (
     <MapControl position={'bottomright'}>

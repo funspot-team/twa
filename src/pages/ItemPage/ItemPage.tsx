@@ -2,84 +2,70 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Cell, Chip, Divider, IconContainer, Image, InlineButtons, List, Section, Subheadline, Title } from '@telegram-apps/telegram-ui';
 import { IconStar } from '@telegram-apps/telegram-ui/dist/components/Form/Rating/icons/star';
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
-import { $spotVisible, onChangeSpotVisible } from '@/pages/ItemPage/model';
-import { Icon28Chat } from '@/icons/chat';
+import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 import { Icon28Link } from '@/icons/link';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
 import { Icon28Location } from '@/icons/location';
-import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { Icon28Navi } from '@/icons/navi';
 import { getWeekRange } from './helpers/itemPageHelpers';
 import { AddFavourite } from '@/components/AddFavourite/AddFavourite';
 import { ShareButton } from '@/components/ShareButton/ShareButton';
 import { onChangeSnackbar } from '@/components/Snackbar/model';
 import { decodeHtmlEntities } from '@/helpers/helpers';
-import { initUtils, useLaunchParams } from '@telegram-apps/sdk-react';
+import { initUtils, useLaunchParams, useMainButton } from '@telegram-apps/sdk-react';
 import { SpotDescription } from '@/components/Spot/components/SpotDescription';
 import { LastItem } from '@/components/LastItem/LastItem';
-import { useUnit } from 'effector-react';
 import { SpotFullMap } from '@/components/SpotFullMap/SpotFullMap';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
 
 interface IItemPageProps {
+  spot: any;
   isShowMap: boolean;
   onShowMap: (val: boolean) => void;
 }
 
-export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
+export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => {
   const { platform } = useLaunchParams();
   const utils = initUtils();
-
-  const [item, setItem] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const id = useUnit($spotVisible);
+  const mainButton = useMainButton();
 
   const isIos = platform === 'ios';
 
+  const { id, name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = spot;
+  const scheduleArr = schedule ? getWeekRange(schedule) : [];
+
+  const phoneClick = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    ym(97751698,'reachGoal','btn-click-phone');
+    // utils.openLink(`tel:${phone}`);
+    window.open(`tel:${phone}`, '_blank');
+  };
+
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     ym(97751698,'reachGoal', `page-open-spot-${id}`);
 
-    const fetchSpot = async () => {
-      const response = await fetch(`https://funspot.ru/places/?SpotID=${id}`); 
+    mainButton.setParams({
+      text: "Позвонить",
+      isEnabled: true,
+      isVisible: true,
+    })
+    .on('click', phoneClick);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch catalog');
-      }
-
-      try {
-        const result = await response.json();
-
-        setItem(result.data[0]);
-        setIsLoading(false);
-      } catch (error) {
-        throw new Error('Failed to parse JSON response');
-      }
+    return () => {
+      mainButton.off('click', phoneClick);
+      mainButton.hide();
     }
-
-    setTimeout(() => {
-      fetchSpot();
-    }, 200);
   }, []);
 
-  if (isLoading) {
-    return <div style={{
-      height: '800px'
-    }}>
-      <SpinnerList />
-    </div>;
-  }
-
-  if (!item || !id) return null;
-
-  const { name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = item as any;
-  const scheduleArr = schedule ? getWeekRange(schedule) : [];
 
   {/* https://github.com/xiaolin/react-image-gallery */}
   return (
@@ -109,7 +95,9 @@ export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
                 top: '16px',
                 left: '16px',
               }}
-              onClick={() => onChangeSpotVisible(null)}
+              onClick={() => {
+                onChangeSpotVisible(null);
+              }}
             >
               Закрыть
             </Button>
@@ -122,7 +110,7 @@ export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
               <Icon28Close style={{ color: 'var(--tgui--plain_foreground)' }} />
             </IconButton> */}
             
-            <AddFavourite id={Number(id)} title={name} isCard />
+            <AddFavourite id={Number(id)} title={name} isCard isSpotPage />
           </div>
 
           <Cell
@@ -147,10 +135,7 @@ export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
           <Divider />
           <Divider />
 
-          <List style={{
-              background: 'var(--tg-theme-secondary-bg-color, white)'
-            }}
-          >
+          <List>
             <div style={{
               padding: !isIos ? '4px 18px 4px' : '',
             }}>
@@ -185,7 +170,7 @@ export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
               </div>
 
               <InlineButtons mode="bezeled">
-                {phone && (
+                {/* {phone && (
                   <InlineButtonsItem
                     text="Позвонить"
                     onClick={() => {
@@ -198,7 +183,7 @@ export const ItemPage: FC<IItemPageProps> = ({ isShowMap, onShowMap }) => {
                       <Icon28Chat />
                     </IconContainer>
                   </InlineButtonsItem>
-                )}
+                )} */}
 
                 <InlineButtonsItem
                   text="Открыть сайт"

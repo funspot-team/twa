@@ -1,4 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createEvent, createStore } from "effector";
+
+interface IAction {
+  fn: () => void;
+  name: string;
+}
 
 interface ISnackbar {
   isShow: boolean;
@@ -6,6 +12,8 @@ interface ISnackbar {
   title: string;
   description: string;
   isDelete: boolean;
+  action?: IAction | null;
+  withBottom?: boolean;
 }
 
 export const onChangeSnackbar = createEvent<ISnackbar>();
@@ -16,6 +24,8 @@ export const $snakbar = createStore<ISnackbar>({
   title: '',
   description: '',
   isDelete: false,
+  action: null,
+  withBottom: true,
 });
 
 $snakbar

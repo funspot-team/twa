@@ -10,7 +10,7 @@ import { useUnit } from 'effector-react';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { getSpotsByFilters } from '@/components/Filters/helpers/filtersHelpers';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
-import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
+import { $catalog, $isLoadingAppData } from '../CatalogPage/model';
 
 export const CatalogPageOld: FC = () => {
   const filters = useUnit($mainFilters);
@@ -18,7 +18,7 @@ export const CatalogPageOld: FC = () => {
   const priceFilter = useUnit($priceFilter);
   const searchFilter = useUnit($searchFilter);
   const rawSpots = useUnit($catalog);
-  const isLoadingCatalog = useUnit($isLoadingCatalog);
+  const isLoadingAppData = useUnit($isLoadingAppData);
 
   const { loading: isFakeLoading } = useFakeLoading(0, [filters, childrenFilter, priceFilter]);
   const spots = getSpotsByFilters(rawSpots, filters, childrenFilter, priceFilter, searchFilter);
@@ -27,7 +27,7 @@ export const CatalogPageOld: FC = () => {
     <>
       <Filters />
 
-      {isFakeLoading || isLoadingCatalog ? (
+      {isFakeLoading || isLoadingAppData ? (
         <SpinnerList height="80" />
       ) : (
         <List>

@@ -5,7 +5,7 @@ import { useUnit } from 'effector-react';
 import { $snakbar, onChangeSnackbar } from './model';
 
 export const Snackbar: FC = () => {
-  const { isShow, title, description, isDelete } = useUnit($snakbar);
+  const { isShow, title, description, action, withBottom } = useUnit($snakbar);
 
   return (
     <>
@@ -19,13 +19,15 @@ export const Snackbar: FC = () => {
             spotId: null,
             isShow: false,
             isDelete: false,
+            withBottom: true,
           })}
-          style={{ bottom: '96px' }}
-          after={(isDelete && (
-            // <Snackbar.Button onClick={undoHandler}>
-            //     Отменить
-            // </Snackbar.Button>
-            null
+          style={
+            withBottom ? { bottom: '96px', zIndex: 101 } : { zIndex: 101 }
+          }
+          after={(action && (
+            <SnackbarUI.Button onClick={action.fn}>
+                {action.name}
+            </SnackbarUI.Button>
           ))}
         >
           {title}

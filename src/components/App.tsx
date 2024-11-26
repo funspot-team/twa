@@ -19,6 +19,8 @@ export const App: FC = () => {
   const themeParams = useThemeParams();
   const viewport = useViewport();
 
+  console.log(themeParams);
+
   useEffect(() => {
     return bindMiniAppCSSVars(miniApp, themeParams);
   }, [miniApp, themeParams]);
@@ -42,6 +44,17 @@ export const App: FC = () => {
     navigator.attach();
     return () => navigator.detach();
   }, [navigator]);
+
+  useEffect(() => {
+    miniApp.ready();
+    // linear-gradient(215deg, #FD9518 3.57%, #FF7410 98.78%)
+    // miniApp.setHeaderColor('#FD9518');
+
+    // document.documentElement.style.setProperty('--tg-theme-header-bg-color', 'red'); // Красный фон
+    // document.documentElement.style.setProperty('--tg-theme-text-color', 'white'); // Белый текст
+    // document.documentElement.style.setProperty('--tg-theme-section-header-text-color', 'white');
+    
+  }, []);
 
   return (
     <AppRoot

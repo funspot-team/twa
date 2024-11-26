@@ -1,3 +1,7 @@
+:root {
+  --red: red;
+}
+
 body {
   background: var(--tg-theme-secondary-bg-color, white);
   padding: 0;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Banner, Button } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
-import { onChangeSpotVisible } from '@/pages/ItemPage/model';
+import { useOpenSpot } from '@/hooks/useOpenSpot';
 
 import './BannerSpot.css';
 
@@ -11,10 +11,7 @@ interface IBannerSpotProps {
 
 export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
   const { id, mainImg, name, shortDescription } = spot;
-
-  const goToSpot = () => {
-    onChangeSpotVisible(id);
-  }
+  const { openSpot } = useOpenSpot();
 
   return (
     <Banner
@@ -24,12 +21,11 @@ export const BannerSpot: FC<IBannerSpotProps> = ({ spot }) => {
       className="banerspot"
       style={{
         backgroundImage: `url(${mainImg})`,
-        marginTop: '24px'
       }}
     >
       <>
-        <Button size="s" onClick={goToSpot}>
-          Попробовать сквош
+        <Button size="s" onClick={() => openSpot(id)}>
+          Попробовать
         </Button>
       </>
     </Banner>

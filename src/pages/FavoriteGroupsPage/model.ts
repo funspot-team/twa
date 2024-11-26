@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { $isNewUser, $userData } from '@/components/Layout/model';
+import { $userData } from '@/components/Layout/model';
 import { createEvent, createStore, createEffect, attach, sample } from 'effector';
+
+export const SYSTEM_GROUP = 'funspot_system_all';
 
 export const fetchGroups = createEvent();
 export const createGroup = createEvent();
 export const deleteGroup = createEvent();
 
-const fetchGroupsFx = attach({
+export const fetchGroupsFx = attach({
   source: $userData,
   effect: createEffect(async (user: number) => {
     const response = await fetch('https://funspot.ru/api/', {
@@ -73,7 +75,17 @@ const deleteGroupFx = attach({
 export const $groups = createStore([])
   .on(fetchGroupsFx.doneData, (_, result) => {
     if (!result?.data) return [];
-    return result.data;
+    return result.data.filter((group: any) => {
+      return group.name !== SYSTEM_GROUP;
+    });
+  });
+
+export const $commonGroup = createStore([])
+  .on(fetchGroupsFx.doneData, (_, result) => {
+    if (!result?.data) return [];
+    return result.data.find((group: any) => {
+      return group.name === SYSTEM_GROUP;
+    });
   });
 
 export const $isLoadingGroups = fetchGroupsFx.pending || createGroupFx.pending || deleteGroupFx.pending;
@@ -99,9 +111,21 @@ deleteGroup.watch((group) => {
 });
 
 sample({
-  clock: $isNewUser,
-  filter: (isNewUser: any) => isNewUser,
-  // source: $userData,
-  fn: () => 'Подборка Санкт-Петербург',
+  clock: $userData,
+  target: fetchGroupsFx
+})
+
+sample({
+  clock: fetchGroupsFx.doneData,
+  filter: ({ message, data }: any) => {
+    if (message === 'success' && data && data.length > 0) {
+        return data.find((group: any) => group.name === SYSTEM_GROUP)
+          ? false : true;
+    } else if (message === 'no groups found') {
+      return true;
+    }
+    return false;
+  },
+  fn: () => SYSTEM_GROUP,
   target: createGroup,
 });

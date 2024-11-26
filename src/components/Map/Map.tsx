@@ -14,7 +14,7 @@ import { AddFavourite } from '../AddFavourite/AddFavourite';
 import { MapMyPosition } from './components/MapMyPosition';
 import { $mapCenter, $mapZoom, onChangeMapCenter, onChangeMapZoom } from './model';
 import { $catalog } from '@/pages/CatalogPage/model';
-import { onChangeSpotVisible } from '@/pages/ItemPage/model';
+import { useOpenSpot } from '@/hooks/useOpenSpot';
 
 import './Map.css';
 
@@ -44,9 +44,9 @@ const customIconActive = new L.Icon({
 });
 
 const getCustomIcon = (tags: string[]): any => {
-  if (tags.find((tag) => ['еда', 'бар', 'клуб'].includes(tag))) {
+  if (tags.find((tag) => ['еда'].includes(tag))) {
     return customIconFood;
-  } else if (tags.find((tag) => ['баня/спа'].includes(tag))) {
+  } else if (tags.find((tag) => ['жилье'].includes(tag))) {
     return customIconStay;
   } else if (tags.find((tag) => ['природа'].includes(tag))) {
     return customIconView;
@@ -93,6 +93,8 @@ export const Map: FC = () => {
   const searchFilter = useUnit($searchFilter);
   const spots = useUnit($catalog);
 
+  const { openSpot } = useOpenSpot();
+
   const markers = getSpotsByFilters(spots, filters, childrenFilter, priceFilter, searchFilter);
 
   return (
@@ -137,15 +139,16 @@ export const Map: FC = () => {
             subheader={<span dangerouslySetInnerHTML={{ __html: data.shortDescription }} />}
             type="section"
             onClick={() => {
-              onChangeSpotVisible(data.id);
+              openSpot(data.id);
               setIsOpen(false);
-              // navigate('/item/' + data.id)
             }}
           >
             <>
-              <Button size="s" onClick={() => {
-                onChangeSpotVisible(data.id);
-                // navigate('/item/' + data.id)
+              <Button size="s" onClick={(e) => {
+                e.stopPropagation();
+
+                openSpot(data.id);
+                setIsOpen(false);
               }}>
                 Подробнее
               </Button>

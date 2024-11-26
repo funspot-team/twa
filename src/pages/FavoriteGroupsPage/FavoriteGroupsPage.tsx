@@ -4,16 +4,18 @@ import { useEffect, useState, type FC } from 'react';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { Badge, Button, Cell, IconButton, Input, List, Modal, Section, Tappable } from '@telegram-apps/telegram-ui';
 import { Icon24Close } from '@telegram-apps/telegram-ui/dist/icons/24/close';
-import { $groups, $isLoadingGroups, createGroup, deleteGroup, fetchGroups } from './model';
+import { $commonGroup, $groups, $isLoadingGroups, createGroup, deleteGroup, fetchGroups } from './model';
 import { useUnit } from 'effector-react';
 import { useNavigate } from 'react-router-dom';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { Icon28Ellipsis } from '@/icons/ellipsis';
 import { ModalHeader } from '@/components/ModalHeader/ModalHeader';
+import { Header } from '../MainPageNew/components/Header';
 
 export const FavoriteGroupsPage: FC = () => {
   const navigate = useNavigate();
 
+  const commonGroup: any = useUnit($commonGroup);
   const groups = useUnit($groups);
   const isLoading = useUnit($isLoadingGroups);
   const [name, setName] = useState('');
@@ -47,6 +49,25 @@ export const FavoriteGroupsPage: FC = () => {
   return (
     <>
       <List>
+        <Header title="Избранное" />
+
+        <Section>
+          <Cell
+            onClick={() => {
+              navigate('/favourite-groups/' + commonGroup.id);
+            }}
+          >
+            Все места
+
+            <Badge
+              mode="gray"
+              type="number"
+            >
+              {commonGroup.count}
+            </Badge>
+          </Cell>
+        </Section>
+
         {groups && groups.length > 0 && (
           <Section header="Мои подборки">
             {groups.map((group: any) => (
@@ -103,6 +124,11 @@ export const FavoriteGroupsPage: FC = () => {
                 <Icon24Close />
               </Tappable>
             )}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onCreateGroup();
+              }
+            }}
           />
         </Section>
 

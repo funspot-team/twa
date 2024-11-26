@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useMemo, useState, type FC } from 'react';
 import { List } from '@telegram-apps/telegram-ui';
 import { CatalogItem } from '@/components/CatalogItem/CatalogItem';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
@@ -10,7 +10,10 @@ import { LastItem } from '@/components/LastItem/LastItem';
 import { getSpotsByFilters } from '@/components/Filters/helpers/filtersHelpers';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
 import { Map } from '@/components/Map/Map';
-import { $catalog, $isLoadingCatalog } from './model';
+import { $catalog, $isLoadingAppData } from './model';
+import { getDataForCategories } from '../MainPageNew/helpers/mainPageHelpers';
+import { CategoriesBlock } from '../MainPageNew/components/CategoriesBlock';
+import { Header } from '../MainPageNew/components/Header';
 
 export const CatalogPage: FC = () => {
   const [disableScroll, setDisableScroll] = useState(true);
@@ -20,7 +23,7 @@ export const CatalogPage: FC = () => {
   const priceFilter = useUnit($priceFilter);
   const searchFilter = useUnit($searchFilter);
   const rawSpots = useUnit($catalog);
-  const isLoadingCatalog = useUnit($isLoadingCatalog);
+  const isLoadingCatalog = useUnit($isLoadingAppData);
   const isViewAsMap = useUnit($isViewAsMap);
   const spots = getSpotsByFilters(rawSpots, filters, childrenFilter, priceFilter, searchFilter);
 
@@ -47,6 +50,17 @@ export const CatalogPage: FC = () => {
     scrollToTop();
   }, []);
 
+  const {
+    active,
+    drive,
+    water,
+    fly,
+    sport,
+    hotels,
+    master,
+    animal,
+  } = useMemo(() => getDataForCategories(spots), [spots]);
+
   return (
     <>
       <Filters isMap={isViewAsMap} />
@@ -60,25 +74,39 @@ export const CatalogPage: FC = () => {
           ) : (
             <>
               <List style={{ paddingTop: '74px' }}>
-                {!spots.length && (
+                {!spots.length ? (
                   <PageMessage
                     title="Ничего не найдено"
                     description="Попробуйте изменить параметры поиска"
                     actionTitle="Сбросить фильтры"
                     onAction={onResetFilters}
                   />
+                ) : (
+                  <>
+                    {filters.length === 0 && !searchFilter &&  (
+                      <>
+                        <Header title="Категории" />
+    
+                        <CategoriesBlock items={[active, drive]} />
+                        <CategoriesBlock items={[water, fly]} />
+                        <CategoriesBlock items={[sport, master]} />
+                        <CategoriesBlock items={[hotels, animal]} />
+                      </>
+                    )}
+    
+    <               Header title="Каталог" />
+    
+                    {spots.map((spot: any) => {
+                      return (
+                        <CatalogItem
+                          key={spot.id}
+                          spot={spot}
+                          isLarge
+                        />
+                      );
+                    })}
+                  </>
                 )}
-
-                {spots.map((spot: any, i: number) => {
-                  return (
-                    <CatalogItem
-                      key={spot.id}
-                      spot={spot}
-                      isLarge={(i + 1) % 4 == 0 ? true : false}
-                      isCatalog
-                    />
-                  );
-                })}
               </List>
 
               <LastItem />

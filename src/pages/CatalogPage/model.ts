@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { decodeHtmlEntities } from '@/helpers/helpers';
-import { createEvent, createStore, createEffect } from 'effector';
+import { createStore, createEffect } from 'effector';
+import { fetchRecommendedFx } from '../RecommendedGroupsPage/model';
 
-export const fetchCatalog = createEvent();
-
-export const fetchCatalogFx = createEffect(async () => {
-  const response = await fetch('https://funspot.ru/places/ '); 
+export const fetchCatalogFx = createEffect(async (city: string) => {
+  const response = await fetch('https://funspot.ru/places/?City=' + city);
 
   if (!response.ok) {
     throw new Error('Failed to fetch catalog');
@@ -34,13 +34,13 @@ export const $catalog = createStore([])
       });
   });
 
-export const $isLoadingCatalog = fetchCatalogFx.pending;
+export const fetchAppDataFx = createEffect(async (city: string) => { 
+  const [catalog, recommended] = await Promise.all([
+    fetchCatalogFx(city),
+    fetchRecommendedFx(city),
+  ]);
+  return { catalog, recommended };
+});
 
-fetchCatalog.watch(fetchCatalogFx);
-
-
-export const onChangeCatalogScroll = createEvent<number>();
-export const $catalogScroll = createStore<number>(0);
-$catalogScroll
-  .on(onChangeCatalogScroll, (_, scroll) => scroll);
+export const $isLoadingAppData = fetchAppDataFx.pending;
 

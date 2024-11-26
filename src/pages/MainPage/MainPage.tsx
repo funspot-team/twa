@@ -16,7 +16,7 @@ import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import RECOMMENDED from '@/mocks/recommended.json';
 import { GroupsBlock } from './components/GroupsBlock';
 import { onChangeIsViewAsMap } from '@/components/Filters/model';
-import { $catalog, $isLoadingCatalog } from '../CatalogPage/model';
+import { $catalog, $isLoadingAppData } from '../CatalogPage/model';
 import { BannerContest } from '@/components/BannerContest/BannerContest';
 import { onChangeSpotVisible } from '../ItemPage/model';
 
@@ -72,7 +72,7 @@ const SpotsBlock: FC<ISpotsBlockProps> = ({ title, spots }) => {
 export const MainPage: FC = () => {
   const navigate = useNavigate();
   const spots = useUnit($catalog);
-  const isLoading = useUnit($isLoadingCatalog);
+  const isLoadingAppData = useUnit($isLoadingAppData);
 
   const [disableScroll, setDisableScroll] = useState(true);
 
@@ -100,7 +100,7 @@ export const MainPage: FC = () => {
     scrollToTop();
   }, []);
 
-  if (isLoading || disableScroll) {
+  if (isLoadingAppData || disableScroll) {
     return <SpinnerList />;
   }
 

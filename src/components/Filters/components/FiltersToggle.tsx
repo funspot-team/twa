@@ -27,6 +27,7 @@ export const FiltersToggle: FC = () => {
       }}
     >
       {!isViewAsMap && <Button
+        id="map-btn"
         mode="filled"
         size="m"
         style={{

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Chip } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
-import { $mainFilters, onChangeMainFilters } from '../model';
+import { $mainFilters, onChangeMainFilters, onResetFilters } from '../model';
 import { useUnit } from 'effector-react';
 import { Icon16Cancel } from '@telegram-apps/telegram-ui/dist/icons/16/cancel';
 
@@ -48,7 +48,12 @@ export const FiltersQuick: FC = () => {
                   }}
                 />
               ) : (<Icon16Cancel />)}
-              onClick={() => onChangeMainFilters(filter)}
+              onClick={() => {
+                if (!selected) {
+                  onResetFilters();
+                }
+                onChangeMainFilters(filter);
+              }}
             >
               {filter.label}
             </Chip>

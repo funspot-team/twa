@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Cell, Headline, List } from '@telegram-apps/telegram-ui';
+import { Cell, List } from '@telegram-apps/telegram-ui';
 import { type FC } from 'react';
-import RECOMMENDED from '@/mocks/recommended.json';
 import { PageMessage } from '@/components/PageMessage/PageMessage';
 import { CatalogItem } from '@/components/CatalogItem/CatalogItem';
 import { useFakeLoading } from '@/hooks/useFakeLoading';
@@ -10,18 +9,23 @@ import { LastItem } from '@/components/LastItem/LastItem';
 import { useUnit } from 'effector-react';
 import { useParams } from 'react-router-dom';
 import { $catalog } from '../CatalogPage/model';
+import { $recommended } from './model';
+import { Header } from '../MainPageNew/components/Header';
 
+
+// fix me
 export const RecommendedGroupsPage: FC = () => {
   const { id } = useParams();
   
+  const recommended = useUnit($recommended);
   const spots = useUnit($catalog);
 
-  const recommendedItem = RECOMMENDED.data
-    .find((item) => item.id === Number(id));
-  const favouritesIds = recommendedItem?.spots || [];
+  const recommendedItem: any = recommended
+    .find((item: any) => item.id === id);
+  const recommendedItemIds = recommendedItem?.spots || [];
 
-  const favouritesList = spots
-    .filter(({ id }) => favouritesIds.includes(Number(id)))
+  const recommendedItemList = spots
+    .filter(({ id }) => recommendedItemIds.includes(id))
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     .map((spot) => ({ ...spot, show: true }));
@@ -32,31 +36,29 @@ export const RecommendedGroupsPage: FC = () => {
 
   return (
     <List>
-      <Headline
-        weight="3"
-        style={{ textAlign: 'center', margin: '8px 0 0' }}
-      >
-        {recommendedItem?.title}
-      </Headline>
+      <Header title={recommendedItem?.title} />
 
       <Cell
         description={recommendedItem?.description}
         multiline
+        style={{ padding: 0 }}
       />
 
-      {!favouritesList.length && (
+      {!recommendedItemList.length && (
         <PageMessage title="Пока пусто" description="Вы ничего не добавили в избранное" />
       )}
 
-      {favouritesList.length > 0 && favouritesList
+      {recommendedItemList.length > 0 && recommendedItemList
         .map((spot) => {
           return (
             <CatalogItem
               key={spot.id}
               spot={spot}
+              isLarge
             />
           );
         })}
+
       <LastItem />
     </List>
   );

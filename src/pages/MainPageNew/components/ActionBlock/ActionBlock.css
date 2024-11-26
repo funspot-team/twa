@@ -1,0 +1,19 @@
+.action-block {
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+.action-block span,
+.action-block h6 {
+  color: var(--tgui--button_text_color) !important;
+}
+
+.action-block::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0,0,0,0.6);
+}
