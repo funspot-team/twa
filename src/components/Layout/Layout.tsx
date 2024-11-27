@@ -2,15 +2,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect, useMemo, useRef, type FC } from 'react';
 import { $isLoadingSettingsData, $isLoadingUser, $isShowStepperGuide, onChangeUserData } from './model';
-import { Tabbar } from '../Tabbar/Tabbar';
-import { routes } from '@/navigation/routes';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation, useNavigate } from 'react-router-dom';
 import { YandexMetrika } from '../YandexMetrika/YandexMetrika';
 import { AddFavouriteModal } from '../AddFavouriteModal/AddFavouriteModal';
-import { useInitData } from '@telegram-apps/sdk-react';
+import { useBackButton, useInitData } from '@telegram-apps/sdk-react';
 import { useUnit } from 'effector-react';
 import { Snackbar } from '../Snackbar/Snackbar';
-// import { $spotVisible, onChangeSpotVisible } from '@/pages/ItemPage/model';
 import { SpotModal } from '../SpotModal/SpotModal';
 import { CitySelector } from '../CitySelector/CitySelector';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
@@ -21,20 +18,41 @@ import { AcceptDocs } from '../AcceptDocs/AcceptDocs';
 import { $isShowAcceptDocs, AcceptDoscType } from '../AcceptDocs/model';
 import { $isLoadingAppData } from '@/pages/CatalogPage/model';
 import { initClosingBehavior } from '@telegram-apps/sdk';
+import { $spotVisible, onChangeSpotVisible } from '@/pages/ItemPage/model';
+import { Tabbar } from '../Tabbar/Tabbar';
 
 import './Layout.css';
 
-// const useHandleBackButton = (handleBack: any) => {
-//   useEffect(() => {
-//     const onPopState = (event: any) => {
-//       handleBack(event);
-//     };
-//     window.addEventListener('popstate', onPopState);
-//     return () => {
-//       window.removeEventListener('popstate', onPopState);
-//     };
-//   }, [handleBack]);
-// };
+const TelegramBackButtonHandler = () => {
+  const backButton = useBackButton();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const spotVisible = useUnit($spotVisible);
+
+  useEffect(() => {
+      const onBackButtonClick = () => {
+        if (spotVisible) {
+          onChangeSpotVisible(null);
+        } else if (location.pathname !== '/') {
+          navigate(-1);
+        }
+      };
+
+      if (location.pathname !== '/' || spotVisible) {
+          backButton.show();
+          backButton.on('click', onBackButtonClick);
+      } else {
+          backButton.hide();
+          backButton.off('click', onBackButtonClick);
+      }
+
+      return () => {
+        backButton.off('click', onBackButtonClick);
+      };
+  }, [location.pathname, spotVisible, navigate]);
+
+  return null;
+}
 
 export const Layout: FC = () => {
   const redirectAllow = useRef(true);
@@ -50,7 +68,6 @@ export const Layout: FC = () => {
   const isShowAcceptDocs = useUnit($isShowAcceptDocs);
   const isShowCity = useUnit($isShowCity);
   const isShowGuide = useUnit($isShowStepperGuide);
-  // const spotVisible = useUnit($spotVisible);
 
   const { openSpot } = useOpenSpot();
 
@@ -81,14 +98,6 @@ export const Layout: FC = () => {
     }
   }, []);
 
-  // useHandleBackButton((event: any) => {
-  //   if (spotVisible) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //     onChangeSpotVisible(null);
-  //   }
-  // });
-
   if (isLoadingSettingsData || isLoadingAppData || isLoadingUser) {
     return <SpinnerList />;
   }
@@ -105,13 +114,10 @@ export const Layout: FC = () => {
     <>
       <YandexMetrika />
 
-      <div
-        // style={{ overflow: spotVisible ? 'hidden' : 'initial' }}
-      >
-        <Routes>
-          {routes.map((route) => <Route key={route.path} {...route} />)}
-            <Route path='*' element={<Navigate to='/'/>}/>
-        </Routes>
+      <div>
+        <Outlet />
+        <TelegramBackButtonHandler />
+        <ScrollRestoration />
       </div>
 
       <SpotModal />

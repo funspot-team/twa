@@ -3,13 +3,14 @@
 import { Button, List, Placeholder, Select } from '@telegram-apps/telegram-ui';
 import { useEffect, useState, type FC } from 'react';
 import { $userSettings, updateUserSettings } from '../Layout/model';
-import { useLaunchParams } from '@telegram-apps/sdk-react';
+import { useBackButton, useLaunchParams } from '@telegram-apps/sdk-react';
 import { useUnit } from 'effector-react';
 import { $cities } from './model';
 
 import './CitySelector.css';
 
 export const CitySelector: FC = () => {
+  const backButton = useBackButton();
   const { platform } = useLaunchParams();
   const isIos = platform === 'ios';
 
@@ -23,6 +24,14 @@ export const CitySelector: FC = () => {
       setSelectedCity(city || cities[0].id);
     }
   }, [cities]);
+
+  useEffect(() => {
+    backButton.hide();
+
+    return () => {
+      backButton.show();
+    };
+  }, []);
 
   const onSaveCity = () => {
     // @ts-ignore

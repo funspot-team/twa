@@ -1,38 +1,56 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Checkbox, List, Placeholder } from '@telegram-apps/telegram-ui';
-import { useState, type FC } from 'react';
-import { useLaunchParams } from '@telegram-apps/sdk-react';
+import { useEffect, useState, type FC } from 'react';
+import { useBackButton, useLaunchParams } from '@telegram-apps/sdk-react';
 import { Icon28Docs } from '@/icons/docs';
 import { AcceptDoscType, onChangeAcceptDocs } from './model';
 import { Link } from '../Link/Link';
 
 import './AcceptDocs.css';
 
-const Docs = ({ name }: { name: string }) => {
+const Docs = ({ name, link }: { name: string, link: string }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
       <div>
           <Icon28Docs />
       </div>
 
-      <Link to="https://funspot.ru">{name}</Link>
+      <Link to={link} target="_blank">{name}</Link>
     </div>
   );
 }
 export const AcceptDocs: FC<{ type: AcceptDoscType }> = ({ type }) => {
+  const backButton = useBackButton();
   const { platform } = useLaunchParams();
   const isIos = platform === 'ios';
 
   const [checked, setChecked] = useState(false);
 
   const names = [
-    'Политика конфеденциальности',
-    'Условия использования',
-    'Обработка персональных данных',
+    { 
+      name: 'Политика конфеденциальности',
+      link: 'https://docs.google.com/document/d/15tSno7bqr70jR7aicqLIhd6mN5giYSPhqXf2hGbOio4/edit?usp=sharing',
+    },
+    {
+      name: 'Условия использования',
+      link: 'https://docs.google.com/document/d/1Syv_FbXb5jYrzRK9aIZ2Ma8g3q4KHPOZa1hXKogWC9Q/edit?usp=sharing',
+    },
+    {
+      name: 'Обработка персональных данных',
+      link: 'https://docs.google.com/document/d/1Qg9RFMmrxVVWHDJnyYFGnx5kFzjwNMDNDBV5yeDJk8Q/edit?usp=sharing',
+    }
   ];
 
   const isNotAccept = type === AcceptDoscType.SHOW_FULL;
+
+  useEffect(() => {
+    backButton.hide();
+
+    return () => {
+      backButton.show();
+    };
+  }, []);
 
   return (
     <>
@@ -55,7 +73,7 @@ export const AcceptDocs: FC<{ type: AcceptDoscType }> = ({ type }) => {
             description={
               <div style={{ display: 'flex', gap: '40px', flexDirection: 'column', marginTop: 40 }}>
                 <div style={{ display: 'flex', gap: '4px', flexDirection: 'column' }}>
-                  {names.map((name) => <Docs key={name} name={name} />)}
+                  {names.map(({ name, link }) => <Docs key={name} name={name} link={link} />)}
                 </div>
 
                 {isNotAccept && (
@@ -73,7 +91,7 @@ export const AcceptDocs: FC<{ type: AcceptDoscType }> = ({ type }) => {
                         setChecked(!checked);
                       }}
                     >
-                      Я прочитал и согласен
+                      Я ознакомился и принимаю условия
                     </div>
                   </div>
                 )}

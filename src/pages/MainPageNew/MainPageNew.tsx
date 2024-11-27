@@ -4,7 +4,6 @@ import { Cell, IconContainer, List, Section } from '@telegram-apps/telegram-ui';
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { useUnit } from 'effector-react';
-import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import { $catalog } from '../CatalogPage/model';
 import { Header } from './components/Header';
 import { Ideas } from './components/Ideas';
@@ -15,7 +14,6 @@ import { Icon28Location } from '@/icons/location';
 import { getDataForCatalog } from './helpers/mainPageHelpers';
 import { useNavigate } from 'react-router-dom';
 import { CategoriesBlock } from './components/CategoriesBlock';
-import { ROUTE_NAMES } from '@/navigation/routes';
 import { onChangeIsViewAsMap, onResetFilters } from '@/components/Filters/model';
 import { onChangeMapLoadLocation } from '@/components/Map/model';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
@@ -23,6 +21,8 @@ import { $cities, onChangeShowCity } from '@/components/CitySelector/model';
 import { $userSettings } from '@/components/Layout/model';
 import { $recommended } from '../RecommendedGroupsPage/model';
 import { ActionBlock } from './components/ActionBlock/ActionBlock';
+import { ROUTE_NAMES } from '@/navigation/routes';
+import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 
 import './MainPageNew.css';
 

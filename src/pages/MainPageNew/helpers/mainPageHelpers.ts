@@ -57,9 +57,10 @@ export const getSpotByDayOfWeekAndTag = (spots: any, tag: string) => {
 
     const dayOfWeek = new Date().getDay();
 
-    const index = dayOfWeek % filteredSpots.length;
+    const divisionFactor = Math.floor(filteredSpots.length / 7) || 1;
+    const adjustedIndex = (dayOfWeek * divisionFactor) % filteredSpots.length;
 
-    return filteredSpots[index];
+    return filteredSpots[adjustedIndex];
 };
 
 export const getDataForBlocks = (spots: any) => {

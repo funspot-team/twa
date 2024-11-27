@@ -139,7 +139,7 @@ sample({
 export const $isNewUser = createStore(false)
   .on(getUserSettingsFx.doneData, (_, response) => {
     // fix me - replace to ===
-    return response.message !== 'success';
+    return response.message === 'success';
   });
 
 sample({

@@ -19,7 +19,7 @@ export const ShareButton: FC<IShareButtonProps> = ({ spotId, title }) => {
 
   const onShare = async () => {
     // @ts-ignore
-    ym(97751698,'reachGoal','btn-click-share');
+    ym(97751698,'reachGoal','btn-click-share', { spotId });
 
     if (navigator.share) {
       try {

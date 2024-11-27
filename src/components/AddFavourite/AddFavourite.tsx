@@ -12,6 +12,7 @@ import { Icon28HeartFill } from '@/icons/heartFill';
 import { onChangeSnackbar } from '../Snackbar/model';
 import { Icon28Remove } from '@/icons/remove';
 import { onChangeFavouriteModal } from '../AddFavouriteModal/model';
+import { $userData } from '../Layout/model';
 
 interface IAddFavouriteProps {
   id: number;
@@ -33,6 +34,7 @@ export const AddFavourite: FC<IAddFavouriteProps> = ({
   // clicked нужен чтобы моментально менять состояние
   const [clicked, setClicked] = useState<boolean | null>(null);
 
+  const { id: userId, username } = useUnit($userData);
   const commonGroup = useUnit($commonGroup);
   const addedSpotsDict = useUnit($addedSpotsDict);
   // @ts-ignore
@@ -69,6 +71,9 @@ export const AddFavourite: FC<IAddFavouriteProps> = ({
     } else {
       // @ts-ignore
       addFavourite({ spot: id, group: Number(commonGroup.id) });
+
+      // @ts-ignore
+      ym(97751698,'reachGoal','btn-click-favourite', { spotName: title, spotId: id, userId, username, date: new Date() });
 
       onChangeSnackbar({
         isShow: true,

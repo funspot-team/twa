@@ -11,10 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import { SpinnerList } from '../SpinnerList/SpinnerList';
 import { $groups, $isLoadingGroups } from '@/pages/FavoriteGroupsPage/model';
 import { addFavourite } from '@/pages/FavouritesPage/model';
-import { ROUTE_NAMES } from '@/navigation/routes';
 import { onChangeSnackbar } from '../Snackbar/model';
 import { Icon24Folder } from '@/icons/folder';
 import { onChangeSpotVisible } from '@/pages/ItemPage/model';
+import { ROUTE_NAMES } from '@/navigation/routes';
 
 const FavoriteDefaultState = { isShow: false, spotId: null, title: '' };
 

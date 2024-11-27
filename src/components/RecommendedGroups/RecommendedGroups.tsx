@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type FC } from 'react';
 import { LastItem } from '@/components/LastItem/LastItem';
-import { Cell } from '@telegram-apps/telegram-ui';
+import { Cell, List } from '@telegram-apps/telegram-ui';
 import { $recommended } from '@/pages/RecommendedGroupsPage/model';
 import { useUnit } from 'effector-react';
 import { RecommendedBlock } from '@/pages/MainPageNew/components/RecommendedBlock';
@@ -11,7 +11,7 @@ export const RecommendedGroups: FC = () => {
   const recommended = useUnit($recommended);
 
   return (
-    <>
+    <List>
       <Header title="Подборки" />
 
       <Cell
@@ -23,6 +23,6 @@ export const RecommendedGroups: FC = () => {
       <RecommendedBlock recommended={recommended} />
 
       <LastItem />
-    </>
+    </List>
   );
 };

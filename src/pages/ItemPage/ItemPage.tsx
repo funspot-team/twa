@@ -6,7 +6,6 @@ import { useEffect, type FC } from 'react';
 import ImageGallery from 'react-image-gallery';
 import { InlineButtonsItem } from '@telegram-apps/telegram-ui/dist/components/Blocks/InlineButtons/components/InlineButtonsItem/InlineButtonsItem';
 import { SpotSmallMap } from '@/components/SpotSmallMap/SpotSmallMap';
-import { onChangeSpotVisible } from '@/pages/ItemPage/model';
 import { Icon28Link } from '@/icons/link';
 import { Icon16ChevronRight } from '@/icons/chevronRight';
 import { Icon28Location } from '@/icons/location';
@@ -20,6 +19,8 @@ import { initUtils, useLaunchParams, useMainButton } from '@telegram-apps/sdk-re
 import { SpotDescription } from '@/components/Spot/components/SpotDescription';
 import { LastItem } from '@/components/LastItem/LastItem';
 import { SpotFullMap } from '@/components/SpotFullMap/SpotFullMap';
+import { useUnit } from 'effector-react';
+import { $userData } from '@/components/Layout/model';
 
 import "react-image-gallery/styles/css/image-gallery.css";
 import './ItemPage.css';
@@ -35,6 +36,7 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
   const utils = initUtils();
   const mainButton = useMainButton();
 
+  const { id: userId, username } = useUnit($userData);
   const isIos = platform === 'ios';
 
   const { id, name, mainImg, description, tags, address, schedule, minPrice, coords, parking, minAge, link, phone, raiting, images, youtube } = spot;
@@ -43,26 +45,34 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
   const phoneClick = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    ym(97751698,'reachGoal','btn-click-phone');
+    ym(97751698,'reachGoal','btn-click-phone', { spotName: name, spotId: id, userId, username, date: new Date() });
     // utils.openLink(`tel:${phone}`);
-    window.open(`tel:${phone}`, '_blank');
+    if (phone[0] === '7') {
+      window.open(`tel:+${phone}`, '_blank');
+    } else {
+      window.open(`tel:${phone}`, '_blank');
+    }
   };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    ym(97751698,'reachGoal', `page-open-spot-${id}`);
+    ym(97751698,'reachGoal', `page-open-spot-${id}`, { spotId: id });
 
-    mainButton.setParams({
-      text: "Позвонить",
-      isEnabled: true,
-      isVisible: true,
-    })
-    .on('click', phoneClick);
+    if (phone) {
+      mainButton.setParams({
+        text: "Позвонить",
+        isEnabled: true,
+        isVisible: true,
+      })
+      .on('click', phoneClick);
+    }
 
     return () => {
-      mainButton.off('click', phoneClick);
-      mainButton.hide();
+      if (phone) {
+        mainButton.off('click', phoneClick);
+        mainButton.hide();
+      }
     }
   }, []);
 
@@ -87,7 +97,7 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
               slideDuration={200}
             />
 
-            <Button
+            {/* <Button
               mode="filled"
               size="s"
               style={{
@@ -100,7 +110,7 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
               }}
             >
               Закрыть
-            </Button>
+            </Button> */}
             {/* <IconButton
               mode="plain"
               size="s"
@@ -189,7 +199,7 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
                   text="Открыть сайт"
                   onClick={() => {
                     // @ts-ignore
-                    ym(97751698,'reachGoal','btn-click-site');
+                    ym(97751698,'reachGoal','btn-click-site', { spotId: id });
                     window.open(link, '_blank');
                   }}
                 >
@@ -232,7 +242,7 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
                 after={<Icon16ChevronRight />}
                 onClick={() => {
                   // @ts-ignore
-                  ym(97751698,'reachGoal','btn-click-address');
+                  ym(97751698,'reachGoal','btn-click-address', { spotId: id });
 
                   if (navigator.clipboard) {
                     navigator.clipboard.writeText(address).then(function() {
@@ -258,7 +268,7 @@ export const ItemPage: FC<IItemPageProps> = ({ spot, isShowMap, onShowMap }) => 
                 after={<Icon16ChevronRight />}
                 onClick={() => {
                   // @ts-ignore
-                  ym(97751698,'reachGoal','btn-click-navi');
+                  ym(97751698,'reachGoal','btn-click-navi', { spotId: id });
                   window.open(`yandexnavi://build_route_on_map?lat_to=${coords[0]}&lon_to=${coords[1]}`, '_blank');
                 }}
                 before={

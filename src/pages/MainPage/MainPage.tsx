@@ -11,7 +11,6 @@ import { SectionHeader } from '@telegram-apps/telegram-ui/dist/components/Blocks
 import { LastItem } from '@/components/LastItem/LastItem';
 import { BannerSpot } from '@/components/BannerSpot/BannerSpot';
 import { useUnit } from 'effector-react';
-import { ROUTE_NAMES } from '@/navigation/routes';
 import { SpinnerList } from '@/components/SpinnerList/SpinnerList';
 import RECOMMENDED from '@/mocks/recommended.json';
 import { GroupsBlock } from './components/GroupsBlock';
@@ -19,6 +18,7 @@ import { onChangeIsViewAsMap } from '@/components/Filters/model';
 import { $catalog, $isLoadingAppData } from '../CatalogPage/model';
 import { BannerContest } from '@/components/BannerContest/BannerContest';
 import { onChangeSpotVisible } from '../ItemPage/model';
+import { ROUTE_NAMES } from '@/navigation/routes';
 
 import './MainPage.css';
 
